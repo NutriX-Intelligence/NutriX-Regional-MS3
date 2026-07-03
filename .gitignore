@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+env/
+venv/
+ENV/
+.ipynb_checkpoints/
+
+# Database files (database is built/seeded dynamically via scripts)
+output/*.db
+output/*.sqlite
+nutrix_server.log
+google_result.html
+ddg_result.html
+
+# Exclude massive raw datasets (exceeding 10MB/GitHub limits)
+Dataset/PP_recipes.csv
+Dataset/PP_users.csv
+Dataset/RAW_interactions.csv
+Dataset/RAW_recipes.csv
+Dataset/RecipeNLG_dataset.csv
+Dataset/RecipeNLG_code/
+Dataset/epi_r.csv
+Dataset/full_format_recipes.json
+Dataset/interactions_*.csv
+Dataset/ingr_map.pkl
+
+# Local Environment Credentials
+.env
+
+# OS-specific
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
