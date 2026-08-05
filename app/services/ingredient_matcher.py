@@ -174,6 +174,19 @@ SYNONYM_MAP: Dict[str, str] = {
     # Curd / Dahi / Yogurt
     "dahi": "yogurt",
     "yogurt": "yogurt",
+
+    # Dal / Lentils / Pulses
+    "toor dal": "dal",
+    "tuvar dal": "dal",
+    "chana dal": "dal",
+    "moong dal": "dal",
+    "urad dal": "dal",
+    "masoor dal": "dal",
+    "arhar dal": "dal",
+    "yellow dal": "dal",
+    "split chickpeas": "dal",
+    "lentils": "dal",
+    "pulses": "dal",
 }
 
 # ---------------------------------------------------------------------------
@@ -243,6 +256,12 @@ def fuzzy_match_ingredient(user_ing: str, recipe_ing: str) -> bool:
 
     # Exact match after normalisation
     if u_norm == r_norm:
+        return True
+
+    # Word boundary match (e.g. user enters "dal", "paneer", "rice", "curd")
+    if len(u_norm) >= 3 and re.search(rf"\b{re.escape(u_norm)}\b", r_norm):
+        return True
+    if len(r_norm) >= 3 and re.search(rf"\b{re.escape(r_norm)}\b", u_norm):
         return True
 
     # Check if core ingredient is present in the other

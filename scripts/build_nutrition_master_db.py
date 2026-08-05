@@ -1117,6 +1117,252 @@ def seed_data(cursor):
                 (meal_id, ing["ingredient_name"], ing["amount"], ing["unit"], ing["gram_weight"])
             )
 
+    # Ingest all multi-cuisine and regional datasets
+    seed_all_cuisine_datasets(cursor)
+
+def seed_all_cuisine_datasets(cursor):
+    print("Loading all cuisine datasets (Regional, Indian Food Cuisine, Multi-Cuisine)...")
+    import re
+    import ast
+
+    # 1. Regional Cuisines
+    regional_files = [
+        ("bengali_foods.csv", "Bengali", "REG_BENGALI"),
+        ("chinese_foods.csv", "Chinese", "REG_CHINESE"),
+        ("gujarati_kathiyawadi_foods.csv", "Gujarati", "REG_GUJARATI"),
+        ("italian_foods.csv", "Italian", "REG_ITALIAN"),
+        ("japanese_foods.csv", "Japanese", "REG_JAPANESE"),
+        ("maharashtrian_foods.csv", "Maharashtrian", "REG_MAHARASHTRIAN"),
+        ("mexican_foods.csv", "Mexican", "REG_MEXICAN"),
+        ("punjabi_foods.csv", "Punjabi", "REG_PUNJABI"),
+        ("rajasthani_foods.csv", "Rajasthani", "REG_RAJASTHANI"),
+        ("south_indian_foods.csv", "South Indian", "REG_SOUTH_INDIAN"),
+    ]
+
+    reg_count = 0
+    for filename, cuisine_name, prefix in regional_files:
+        filepath = RAW_DIR / filename
+        if not filepath.exists():
+            continue
+        try:
+            df = pd.read_csv(filepath, encoding="utf-8", on_bad_lines='skip')
+            for idx, row in df.iterrows():
+                dish_name = str(row.get('Dish Name', '')).strip()
+                if not dish_name:
+                    continue
+                code = f"{prefix}_{idx:04d}"
+                cat = categorize_recipe(dish_name)
+                instructions = str(row.get('Recipe Instructions', 'Follow standard recipe preparation.')).strip()
+
+                cursor.execute("SELECT id FROM recipes WHERE recipe_code = ?;", (code,))
+                if cursor.fetchone():
+                    continue
+
+                cursor.execute(
+                    """
+                    INSERT INTO recipes (recipe_code, recipe_name, category, cuisine, difficulty, cooking_time_minutes, instructions, primarysource)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+                    """,
+                    (code, dish_name, cat, cuisine_name, "Medium", 30, instructions, filename)
+                )
+                recipe_id = cursor.lastrowid
+
+                # Parse calories & nutrients
+                cal_str = str(row.get('Calories (per serving)', ''))
+                nut_str = str(row.get('Key Nutrients', ''))
+
+                cal_m = re.search(r'(\d+)', cal_str)
+                energy_kcal = float(cal_m.group(1)) if cal_m else 250.0
+
+                p_m = re.search(r'Protein\s*\(([\d\.]+)g\)', nut_str, re.I)
+                f_m = re.search(r'Fat\s*\(([\d\.]+)g\)', nut_str, re.I)
+                c_m = re.search(r'Carbohydrates\s*\(([\d\.]+)g\)', nut_str, re.I)
+                fib_m = re.search(r'Fiber\s*\(([\d\.]+)g\)', nut_str, re.I)
+
+                prot = float(p_m.group(1)) if p_m else 8.0
+                fat = float(f_m.group(1)) if f_m else 10.0
+                carb = float(c_m.group(1)) if c_m else 35.0
+                fib = float(fib_m.group(1)) if fib_m else 3.0
+
+                cursor.execute(
+                    """
+                    INSERT INTO recipe_nutrition (
+                        recipe_id, recipe_code, energy_kcal, carb_g, protein_g, fat_g, freesugar_g, fibre_g, sodium_mg, calcium_mg, iron_mg, vitc_mg, folate_ug,
+                        unit_serving_energy_kcal, unit_serving_carb_g, unit_serving_protein_g, unit_serving_fat_g, unit_serving_freesugar_g, unit_serving_fibre_g,
+                        unit_serving_sodium_mg, unit_serving_calcium_mg, unit_serving_iron_mg, unit_serving_vitc_mg, unit_serving_folate_ug
+                    ) VALUES (?, ?, ?, ?, ?, ?, 0.0, ?, 300.0, 50.0, 2.0, 5.0, 20.0, ?, ?, ?, ?, 0.0, ?, 300.0, 50.0, 2.0, 5.0, 20.0);
+                    """,
+                    (recipe_id, code, energy_kcal, carb, prot, fat, fib, energy_kcal, carb, prot, fat, fib)
+                )
+
+                # Ingredients
+                ings_str = str(row.get('Ingredients Required', ''))
+                if ings_str:
+                    ing_list = [i.strip() for i in ings_str.split(',') if i.strip()]
+                    for ing_name in ing_list:
+                        cursor.execute(
+                            """
+                            INSERT INTO recipe_ingredients (recipe_id, recipe_code, ingredient_name, food_name, amount, unit)
+                            VALUES (?, ?, ?, ?, 1.0, 'portion');
+                            """,
+                            (recipe_id, code, ing_name, ing_name)
+                        )
+
+                # Serving
+                cursor.execute(
+                    "INSERT OR IGNORE INTO servings (recipe_code, no_of_servings, size_of_servings, servings_unit) VALUES (?, 1.0, 1.0, 'serving');",
+                    (code,)
+                )
+                reg_count += 1
+        except Exception as e:
+            print(f"Error reading {filename}: {e}")
+
+    print(f"Inserted {reg_count} recipes from 10 Regional Cuisine datasets.")
+
+    # 2. Indian Food Cuisine Dataset
+    ind_cuisine_file = RAW_DIR / "Indain_Food_Cuisine_Dataset.csv"
+    if ind_cuisine_file.exists():
+        try:
+            df = pd.read_csv(ind_cuisine_file, encoding="utf-8", on_bad_lines='skip')
+            ind_count = 0
+            for idx, row in df.iterrows():
+                dish_name = str(row.get('name_of_Dish', '')).strip()
+                if not dish_name:
+                    continue
+                code = f"IND_CUISINE_{idx:05d}"
+                cat = categorize_recipe(dish_name)
+
+                raw_c = str(row.get('Cuisine_name', ''))
+                c_match = re.search(r'Cuisine:\s*([^\\\'"\]]+)', raw_c)
+                cuisine_name = c_match.group(1).replace("Recipes", "").strip() if c_match else "Indian"
+                if not cuisine_name:
+                    cuisine_name = "Indian"
+
+                instructions = str(row.get('Recipe_Instructions', 'Follow standard recipe preparation.')).strip()
+
+                cursor.execute("SELECT id FROM recipes WHERE recipe_code = ?;", (code,))
+                if cursor.fetchone():
+                    continue
+
+                cursor.execute(
+                    """
+                    INSERT INTO recipes (recipe_code, recipe_name, category, cuisine, difficulty, cooking_time_minutes, instructions, primarysource)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+                    """,
+                    (code, dish_name, cat, cuisine_name, "Medium", 35, instructions, "Indain_Food_Cuisine_Dataset.csv")
+                )
+                recipe_id = cursor.lastrowid
+
+                # Macro estimation
+                energy_kcal = 300.0
+                prot = 10.0
+                carb = 40.0
+                fat = 12.0
+                fib = 4.0
+
+                cursor.execute(
+                    """
+                    INSERT INTO recipe_nutrition (
+                        recipe_id, recipe_code, energy_kcal, carb_g, protein_g, fat_g, freesugar_g, fibre_g, sodium_mg, calcium_mg, iron_mg, vitc_mg, folate_ug,
+                        unit_serving_energy_kcal, unit_serving_carb_g, unit_serving_protein_g, unit_serving_fat_g, unit_serving_freesugar_g, unit_serving_fibre_g,
+                        unit_serving_sodium_mg, unit_serving_calcium_mg, unit_serving_iron_mg, unit_serving_vitc_mg, unit_serving_folate_ug
+                    ) VALUES (?, ?, ?, ?, ?, ?, 0.0, ?, 350.0, 60.0, 2.5, 5.0, 20.0, ?, ?, ?, ?, 0.0, ?, 350.0, 60.0, 2.5, 5.0, 20.0);
+                    """,
+                    (recipe_id, code, energy_kcal, carb, prot, fat, fib, energy_kcal, carb, prot, fat, fib)
+                )
+
+                ing_raw = str(row.get('Ingredients_of_Dish', ''))
+                try:
+                    ing_list = ast.literal_eval(ing_raw) if ing_raw.startswith('[') else ing_raw.split(',')
+                except Exception:
+                    ing_list = re.findall(r"'([^']+)'", ing_raw)
+
+                for ing_item in ing_list:
+                    ing_name = str(ing_item).strip()
+                    if ing_name:
+                        cursor.execute(
+                            """
+                            INSERT INTO recipe_ingredients (recipe_id, recipe_code, ingredient_name, food_name, amount, unit)
+                            VALUES (?, ?, ?, ?, 1.0, 'portion');
+                            """,
+                            (recipe_id, code, ing_name, ing_name)
+                        )
+
+                cursor.execute(
+                    "INSERT OR IGNORE INTO servings (recipe_code, no_of_servings, size_of_servings, servings_unit) VALUES (?, 1.0, 1.0, 'serving');",
+                    (code,)
+                )
+                ind_count += 1
+            print(f"Inserted {ind_count} recipes from Indain_Food_Cuisine_Dataset.csv.")
+        except Exception as e:
+            print(f"Error loading Indain_Food_Cuisine_Dataset.csv: {e}")
+
+    # 3. Multi Cuisine Recipe Dataset
+    multi_file = RAW_DIR / "Multi_Cuisine_Recipe_Dataset.csv"
+    if multi_file.exists():
+        try:
+            df = pd.read_csv(multi_file, encoding="utf-8", on_bad_lines='skip')
+            multi_count = 0
+            for idx, row in df.iterrows():
+                dish_name = str(row.get('name', '')).strip()
+                if not dish_name:
+                    continue
+                code = f"MULTI_CUISINE_{idx:05d}"
+                cat = categorize_recipe(dish_name)
+                cuisine_name = str(row.get('area', 'Multi-Cuisine')).strip() or "Multi-Cuisine"
+                instructions = str(row.get('steps', 'Follow standard preparation steps.')).strip()
+
+                cursor.execute("SELECT id FROM recipes WHERE recipe_code = ?;", (code,))
+                if cursor.fetchone():
+                    continue
+
+                cursor.execute(
+                    """
+                    INSERT INTO recipes (recipe_code, recipe_name, category, cuisine, difficulty, cooking_time_minutes, instructions, primarysource)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+                    """,
+                    (code, dish_name, cat, cuisine_name, "Medium", 30, instructions, "Multi_Cuisine_Recipe_Dataset.csv")
+                )
+                recipe_id = cursor.lastrowid
+
+                energy_kcal = 320.0
+                prot = 12.0
+                carb = 42.0
+                fat = 12.0
+                fib = 4.0
+
+                cursor.execute(
+                    """
+                    INSERT INTO recipe_nutrition (
+                        recipe_id, recipe_code, energy_kcal, carb_g, protein_g, fat_g, freesugar_g, fibre_g, sodium_mg, calcium_mg, iron_mg, vitc_mg, folate_ug,
+                        unit_serving_energy_kcal, unit_serving_carb_g, unit_serving_protein_g, unit_serving_fat_g, unit_serving_freesugar_g, unit_serving_fibre_g,
+                        unit_serving_sodium_mg, unit_serving_calcium_mg, unit_serving_iron_mg, unit_serving_vitc_mg, unit_serving_folate_ug
+                    ) VALUES (?, ?, ?, ?, ?, ?, 0.0, ?, 320.0, 50.0, 2.0, 5.0, 20.0, ?, ?, ?, ?, 0.0, ?, 320.0, 50.0, 2.0, 5.0, 20.0);
+                    """,
+                    (recipe_id, code, energy_kcal, carb, prot, fat, fib, energy_kcal, carb, prot, fat, fib)
+                )
+
+                ings_raw = str(row.get('ingredients', ''))
+                ing_list = [i.strip() for i in ings_raw.split(',') if i.strip()]
+                for ing_item in ing_list:
+                    cursor.execute(
+                        """
+                        INSERT INTO recipe_ingredients (recipe_id, recipe_code, ingredient_name, food_name, amount, unit)
+                        VALUES (?, ?, ?, ?, 1.0, 'portion');
+                        """,
+                        (recipe_id, code, ing_item, ing_item)
+                    )
+
+                cursor.execute(
+                    "INSERT OR IGNORE INTO servings (recipe_code, no_of_servings, size_of_servings, servings_unit) VALUES (?, 1.0, 1.0, 'serving');",
+                    (code,)
+                )
+                multi_count += 1
+            print(f"Inserted {multi_count} recipes from Multi_Cuisine_Recipe_Dataset.csv.")
+        except Exception as e:
+            print(f"Error loading Multi_Cuisine_Recipe_Dataset.csv: {e}")
+
+
 def main():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()

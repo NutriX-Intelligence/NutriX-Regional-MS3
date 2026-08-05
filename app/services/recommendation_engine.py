@@ -3,13 +3,20 @@ from sqlalchemy.orm import Session, joinedload
 from app.models import Recipe, RecipeIngredient, RecipeNutrition, UserPreference, User, HomelyMeal
 
 class RecommendationEngine:
-    NON_VEG_KEYWORDS = [
-        "chicken", "mutton", "fish", "egg", "beef", "pork", "seafood", "prawn", 
+    MEAT_KEYWORDS = [
+        "chicken", "mutton", "fish", "beef", "pork", "seafood", "prawn", 
         "crab", "meat", "shrimp", "lamb", "duck", "turkey", "bacon", "ham", "salami", "gelatin"
     ]
     
+    NON_VEG_KEYWORDS = MEAT_KEYWORDS + ["egg"]
+    
     ANIMAL_KEYWORDS = NON_VEG_KEYWORDS + [
         "milk", "cheese", "butter", "curd", "yogurt", "ghee", "cream", "paneer", "honey", "whey", "casein"
+    ]
+
+    JAIN_KEYWORDS = NON_VEG_KEYWORDS + [
+        "onion", "garlic", "shallot", "scallion", "leek", "potato", "radish", 
+        "carrot", "beetroot", "turnip", "ginger", "kanda", "lhsun", "lasun", "pyaz", "pyaaz", "aloo", "alu"
     ]
 
     @classmethod
@@ -19,7 +26,6 @@ class RecommendationEngine:
             ing_name = (ing.food_name or "").lower()
             if any(kw in ing_name for kw in cls.ANIMAL_KEYWORDS):
                 return False
-        # Also check recipe name itself
         recipe_name = recipe.recipe_name.lower()
         if any(kw in recipe_name for kw in cls.ANIMAL_KEYWORDS):
             return False
@@ -31,11 +37,33 @@ class RecommendationEngine:
         for ing in recipe.ingredients:
             ing_name = (ing.food_name or "").lower()
             if any(kw in ing_name for kw in cls.NON_VEG_KEYWORDS):
-                # Dairy is fine for vegetarians in India, but eggs are not
                 return False
-        # Also check recipe name itself
         recipe_name = recipe.recipe_name.lower()
         if any(kw in recipe_name for kw in cls.NON_VEG_KEYWORDS):
+            return False
+        return True
+
+    @classmethod
+    def is_jain(cls, recipe: Recipe) -> bool:
+        """Check if a recipe is Jain compliant (no meat, eggs, onion, garlic, or root vegetables)."""
+        for ing in recipe.ingredients:
+            ing_name = (ing.food_name or "").lower()
+            if any(kw in ing_name for kw in cls.JAIN_KEYWORDS):
+                return False
+        recipe_name = recipe.recipe_name.lower()
+        if any(kw in recipe_name for kw in cls.JAIN_KEYWORDS):
+            return False
+        return True
+
+    @classmethod
+    def is_eggetarian(cls, recipe: Recipe) -> bool:
+        """Check if a recipe is eggetarian compliant (allows eggs/dairy, no meat/fish)."""
+        for ing in recipe.ingredients:
+            ing_name = (ing.food_name or "").lower()
+            if any(kw in ing_name for kw in cls.MEAT_KEYWORDS):
+                return False
+        recipe_name = recipe.recipe_name.lower()
+        if any(kw in recipe_name for kw in cls.MEAT_KEYWORDS):
             return False
         return True
 
@@ -62,6 +90,72 @@ class RecommendationEngine:
         return True
 
     @classmethod
+    def is_homely_meal_jain(cls, meal: HomelyMeal) -> bool:
+        """Check if a homely meal is Jain compliant."""
+        for ing in meal.ingredients:
+            ing_name = (ing.ingredient_name or "").lower()
+            if any(kw in ing_name for kw in cls.JAIN_KEYWORDS):
+                return False
+        if any(kw in meal.name.lower() for kw in cls.JAIN_KEYWORDS):
+            return False
+        return True
+
+    @classmethod
+    def is_homely_meal_eggetarian(cls, meal: HomelyMeal) -> bool:
+        """Check if a homely meal is eggetarian compliant."""
+        for ing in meal.ingredients:
+            ing_name = (ing.ingredient_name or "").lower()
+            if any(kw in ing_name for kw in cls.MEAT_KEYWORDS):
+                return False
+        if any(kw in meal.name.lower() for kw in cls.MEAT_KEYWORDS):
+            return False
+        return True
+
+    @classmethod
+    def get_dietary_tag(cls, recipe: Recipe) -> str:
+        """Determine the canonical dietary tag for a recipe, respecting explicit dataset tags."""
+        ps = (recipe.primarysource or "").strip()
+        rname = (recipe.recipe_name or "").lower()
+
+        # Explicit dataset tags & dish names
+        if ps == "Jain" or "jain" in rname:
+            return "Jain"
+        if ps == "Vegan" or "vegan" in rname:
+            return "Vegan"
+        if ps == "Vegetarian":
+            return "Vegetarian"
+        if ps == "Eggetarian":
+            return "Eggetarian"
+        if ps == "Non-Vegetarian":
+            return "Non-Vegetarian"
+
+        # Dynamic fallback based on ingredient rules
+        if cls.is_jain(recipe):
+            return "Jain"
+        elif cls.is_vegan(recipe):
+            return "Vegan"
+        elif cls.is_vegetarian(recipe):
+            return "Vegetarian"
+        elif cls.is_eggetarian(recipe):
+            return "Eggetarian"
+        else:
+            return "Non-Vegetarian"
+
+    @classmethod
+    def get_homely_meal_dietary_tag(cls, meal: HomelyMeal) -> str:
+        """Determine the strictest canonical dietary tag for a homely meal."""
+        if cls.is_homely_meal_jain(meal):
+            return "Jain"
+        elif cls.is_homely_meal_vegan(meal):
+            return "Vegan"
+        elif cls.is_homely_meal_vegetarian(meal):
+            return "Vegetarian"
+        elif cls.is_homely_meal_eggetarian(meal):
+            return "Eggetarian"
+        else:
+            return "Non-Vegetarian"
+
+    @classmethod
     def get_recipe_macros_pct(cls, nutrition: RecipeNutrition) -> tuple:
         """Calculate the macronutrient percentage split of a recipe's calories."""
         energy = nutrition.energy_kcal or 0.0
@@ -86,20 +180,17 @@ class RecommendationEngine:
             return 0.0
 
         # 1. Macro Match Score
-        # Calculate target percentages
         target_calories = user.target_calories or 2000.0
         t_p_pct = ((user.target_protein or 150.0) * 4.0) / target_calories
         t_c_pct = ((user.target_carbs or 200.0) * 4.0) / target_calories
         t_f_pct = ((user.target_fat or 67.0) * 9.0) / target_calories
         
-        # Calculate recipe percentages
         r_p_pct, r_c_pct, r_f_pct = cls.get_recipe_macros_pct(nutrition)
         
         diff = abs(r_p_pct - t_p_pct) + abs(r_c_pct - t_c_pct) + abs(r_f_pct - t_f_pct)
         macro_score = 100.0 * (1.0 - (diff / 2.0))
 
         # 2. Nutrient Density Score (NDS)
-        # We calculate density per 100 kcal
         kcal_100 = nutrition.energy_kcal / 100.0
         
         prot_density = (nutrition.protein_g or 0.0) / kcal_100
@@ -107,7 +198,6 @@ class RecommendationEngine:
         sod_density = (nutrition.sodium_mg or 0.0) / kcal_100
         sug_density = (nutrition.freesugar_g or 0.0) / kcal_100
 
-        # Reward protein and fiber, penalize sodium and sugar
         nds = (min(prot_density * 2.0, 20.0) + 
                min(fib_density * 4.0, 20.0) - 
                min(sod_density * 0.02, 15.0) - 
@@ -125,7 +215,7 @@ class RecommendationEngine:
                     ing_name = (ing.food_name or "").lower()
                     if like_lower in ing_name:
                         boost += 15.0
-                        break # Only boost once per liked term
+                        break
 
         return round(macro_score + nds + boost, 2)
 
@@ -136,13 +226,11 @@ class RecommendationEngine:
         if not nutrition or not nutrition.energy_kcal or nutrition.energy_kcal <= 0:
             return 0.0
 
-        # Target percentages
         target_calories = user.target_calories or 2000.0
         t_p_pct = ((user.target_protein or 150.0) * 4.0) / target_calories
         t_c_pct = ((user.target_carbs or 200.0) * 4.0) / target_calories
         t_f_pct = ((user.target_fat or 67.0) * 9.0) / target_calories
         
-        # Homely meal percentages
         p_cal = (nutrition.protein_g or 0.0) * 4.0
         c_cal = (nutrition.carb_g or 0.0) * 4.0
         f_cal = (nutrition.fat_g or 0.0) * 9.0
@@ -155,7 +243,6 @@ class RecommendationEngine:
         diff = abs(r_p_pct - t_p_pct) + abs(r_c_pct - t_c_pct) + abs(r_f_pct - t_f_pct)
         macro_score = 100.0 * (1.0 - (diff / 2.0))
 
-        # Nutrient Density Score (NDS)
         kcal_100 = nutrition.energy_kcal / 100.0
         prot_density = (nutrition.protein_g or 0.0) / kcal_100
         fib_density = (nutrition.fibre_g or 0.0) / kcal_100
@@ -167,7 +254,6 @@ class RecommendationEngine:
                min(sod_density * 0.02, 15.0) - 
                min(sug_density * 1.0, 10.0))
 
-        # Preference Boost
         boost = 0.0
         meal_name_lower = meal.name.lower()
         for like in likes:
@@ -209,13 +295,11 @@ class RecommendationEngine:
             elif t == "diet_type":
                 diet_type = val
 
-        # Fetch all recipes with their nutrition and ingredients eager-loaded
         recipes = db.query(Recipe).options(
             joinedload(Recipe.nutrition),
             joinedload(Recipe.ingredients)
         ).all()
         
-        # Fetch all approved or custom homely meals
         homely_meals = db.query(HomelyMeal).options(
             joinedload(HomelyMeal.nutrition),
             joinedload(HomelyMeal.ingredients)
@@ -227,15 +311,20 @@ class RecommendationEngine:
         ).all()
         
         ranked_recipes = []
+        diet_lower = diet_type.lower()
         
         # 1. Evaluate recipes
         for recipe in recipes:
             recipe_name_lower = recipe.recipe_name.lower()
             
             # Check Diet Type constraint
-            if diet_type == "Vegetarian" and not cls.is_vegetarian(recipe):
+            if "jain" in diet_lower and not cls.is_jain(recipe):
                 continue
-            if diet_type == "Vegan" and not cls.is_vegan(recipe):
+            elif "vegan" in diet_lower and not cls.is_vegan(recipe):
+                continue
+            elif "eggetarian" in diet_lower and not cls.is_eggetarian(recipe):
+                continue
+            elif "vegetarian" in diet_lower and "non" not in diet_lower and not cls.is_vegetarian(recipe):
                 continue
 
             # Check Allergy/Dislike filters
@@ -245,7 +334,6 @@ class RecommendationEngine:
                 if term_lower in recipe_name_lower:
                     excluded = True
                     break
-                # Check ingredient list
                 for ing in recipe.ingredients:
                     ing_name = (ing.food_name or "").lower()
                     ing_org_name = (ing.ingredient_name or "").lower()
@@ -258,13 +346,13 @@ class RecommendationEngine:
             if excluded:
                 continue
 
-            # Calculate score
             score = cls.calculate_score(recipe, user, likes)
             ranked_recipes.append({
                 "recipe_code": recipe.recipe_code,
                 "recipe_name": recipe.recipe_name,
                 "category": recipe.category,
                 "score": score,
+                "dietary_tag": cls.get_dietary_tag(recipe),
                 "energy_kcal": recipe.nutrition.energy_kcal if recipe.nutrition else 0.0,
                 "protein_g": recipe.nutrition.protein_g if recipe.nutrition else 0.0,
                 "carb_g": recipe.nutrition.carb_g if recipe.nutrition else 0.0,
@@ -276,9 +364,13 @@ class RecommendationEngine:
             meal_name_lower = meal.name.lower()
             
             # Check Diet Type constraint
-            if diet_type == "Vegetarian" and not cls.is_homely_meal_vegetarian(meal):
+            if "jain" in diet_lower and not cls.is_homely_meal_jain(meal):
                 continue
-            if diet_type == "Vegan" and not cls.is_homely_meal_vegan(meal):
+            elif "vegan" in diet_lower and not cls.is_homely_meal_vegan(meal):
+                continue
+            elif "eggetarian" in diet_lower and not cls.is_homely_meal_eggetarian(meal):
+                continue
+            elif "vegetarian" in diet_lower and "non" not in diet_lower and not cls.is_homely_meal_vegetarian(meal):
                 continue
 
             # Check Allergy/Dislike filters
@@ -288,7 +380,6 @@ class RecommendationEngine:
                 if term_lower in meal_name_lower:
                     excluded = True
                     break
-                # Check ingredient list
                 for ing in meal.ingredients:
                     if term_lower in ing.ingredient_name.lower():
                         excluded = True
@@ -299,19 +390,18 @@ class RecommendationEngine:
             if excluded:
                 continue
 
-            # Calculate score
             score = cls.calculate_homely_score(meal, user, likes)
             ranked_recipes.append({
                 "recipe_code": f"HOMELY_{meal.id}",
                 "recipe_name": meal.name,
-                "category": "Lunch/Dinner",  # Default category
+                "category": "Lunch/Dinner",
                 "score": score,
+                "dietary_tag": cls.get_homely_meal_dietary_tag(meal),
                 "energy_kcal": meal.nutrition.energy_kcal if meal.nutrition else 0.0,
                 "protein_g": meal.nutrition.protein_g if meal.nutrition else 0.0,
                 "carb_g": meal.nutrition.carb_g if meal.nutrition else 0.0,
                 "fat_g": meal.nutrition.fat_g if meal.nutrition else 0.0
             })
 
-        # Sort by score descending
         ranked_recipes.sort(key=lambda x: x["score"], reverse=True)
         return ranked_recipes[:limit]

@@ -706,8 +706,10 @@
                             <label>Diet Type</label>
                             <select id="newDietType">
                                 <option value="Non-Vegetarian">Non-Vegetarian</option>
+                                <option value="Eggetarian">Eggetarian (Vegetarian + Eggs)</option>
                                 <option value="Vegetarian">Vegetarian</option>
-                                <option value="Vegan">Vegan</option>
+                                <option value="Jain">Jain Vegetarian (No onion/garlic/root veg)</option>
+                                <option value="Vegan">Vegan (Plant-based only)</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -880,8 +882,10 @@
                                 <label for="diet_type">Diet Type</label>
                                 <select id="diet_type">
                                     <option value="Non-Vegetarian">Non-Vegetarian (All foods allowed)</option>
+                                    <option value="Eggetarian">Eggetarian (Vegetarian + Eggs allowed)</option>
                                     <option value="Vegetarian">Vegetarian (No meat, fish, eggs)</option>
-                                    <option value="Vegan">Vegan (Plant-based only)</option>
+                                    <option value="Jain">Jain Vegetarian (Strict: No onion, garlic, or root veg)</option>
+                                    <option value="Vegan">Vegan (Strict Plant-based only)</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -1036,7 +1040,10 @@
                             <select id="intelDiet">
                                 <option value="">Any Diet</option>
                                 <option value="vegetarian">Vegetarian</option>
+                                <option value="jain">Jain Vegetarian</option>
+                                <option value="eggetarian">Eggetarian</option>
                                 <option value="vegan">Vegan</option>
+                                <option value="non-vegetarian">Non-Vegetarian</option>
                             </select>
                         </div>
                     </div>
@@ -1045,11 +1052,24 @@
                             <label for="intelCuisine">Cuisine</label>
                             <select id="intelCuisine">
                                 <option value="">Any Cuisine</option>
-                                <option value="Indian">Indian</option>
-                                <option value="Italian">Italian</option>
-                                <option value="Chinese">Chinese</option>
-                                <option value="Mexican">Mexican</option>
-                                <option value="Continental">Continental</option>
+                                <optgroup label="Regional Indian Cuisines">
+                                    <option value="North Indian">North Indian</option>
+                                    <option value="South Indian">South Indian</option>
+                                    <option value="Bengali">Bengali</option>
+                                    <option value="Rajasthani">Rajasthani</option>
+                                    <option value="Gujarati">Gujarati</option>
+                                    <option value="Maharashtrian">Maharashtrian</option>
+                                    <option value="Punjabi">Punjabi</option>
+                                    <option value="Mughlai">Mughlai</option>
+                                    <option value="Kashmiri">Kashmiri</option>
+                                </optgroup>
+                                <optgroup label="International & Fusion Cuisines">
+                                    <option value="Indo-Chinese">Indo-Chinese / Chinese</option>
+                                    <option value="Italian">Italian</option>
+                                    <option value="Mexican">Mexican</option>
+                                    <option value="Continental">Continental</option>
+                                    <option value="Asian">Asian / Thai / Japanese</option>
+                                </optgroup>
                             </select>
                         </div>
                         <div class="form-group">
@@ -1173,7 +1193,7 @@
                     Google OR-Tools Daily Meal Optimizer
                 </div>
 
-                <div style="display: flex; gap: 16px; align-items: flex-end; margin-bottom: 18px; flex-wrap: wrap;">
+                <div style="display: flex; gap: 16px; align-items: flex-end; margin-bottom: 14px; flex-wrap: wrap;">
                     <div class="form-group" style="margin-bottom: 0; flex: 1.5; min-width: 220px;">
                         <label for="dietPreference">Optimizer Preference</label>
                         <select id="dietPreference">
@@ -1181,7 +1201,7 @@
                             <option value="high_protein">High Protein (30% Prot, 40% Carb, 30% Fat)</option>
                             <option value="low_carb">Low Carb (25% Prot, 20% Carb, 55% Fat)</option>
                             <option value="low_fat">Low Fat (20% Prot, 60% Carb, 20% Fat)</option>
-                            <option value="high_fiber">High Fiber (Balanced + Fiber >= 25g)</option>
+                            <option value="high_fiber">High Fibre 🌾 (20% Prot, 55% Carb, 25% Fat, Fibre ≥ 35g)</option>
                         </select>
                     </div>
                     <input type="hidden" id="tolerance" value="0.15">
@@ -1193,6 +1213,73 @@
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
                         Generate Optimized Daily Plan
                     </button>
+                </div>
+
+                <!-- Per-Meal Cuisine Preferences -->
+                <div style="margin-bottom: 18px; padding: 14px; background: rgba(139,92,246,0.06); border-radius: 10px; border: 1px solid rgba(139,92,246,0.2);">
+                    <div style="font-size: 13px; font-weight: 600; color: var(--purple); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                        <span>🍽️ Per-Meal Cuisine Preferences (Customise Each Meal Time)</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px;">
+                        <div>
+                            <label for="optCuisineBreakfast" style="font-size: 11px; font-weight:600; color: var(--text-muted);">🌅 Breakfast Cuisine</label>
+                            <select id="optCuisineBreakfast" style="padding: 6px 10px; font-size: 12px;">
+                                <option value="">Any Cuisine</option>
+                                <option value="South Indian">South Indian</option>
+                                <option value="North Indian">North Indian</option>
+                                <option value="Gujarati">Gujarati</option>
+                                <option value="Punjabi">Punjabi</option>
+                                <option value="Maharashtrian">Maharashtrian</option>
+                                <option value="Rajasthani">Rajasthani</option>
+                                <option value="Bengali">Bengali</option>
+                                <option value="Continental">Continental</option>
+                                <option value="Chinese">Chinese</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="optCuisineLunch" style="font-size: 11px; font-weight:600; color: var(--text-muted);">☀️ Lunch Cuisine</label>
+                            <select id="optCuisineLunch" style="padding: 6px 10px; font-size: 12px;">
+                                <option value="">Any Cuisine</option>
+                                <option value="Gujarati">Gujarati</option>
+                                <option value="Rajasthani">Rajasthani</option>
+                                <option value="Punjabi">Punjabi</option>
+                                <option value="South Indian">South Indian</option>
+                                <option value="Maharashtrian">Maharashtrian</option>
+                                <option value="Bengali">Bengali</option>
+                                <option value="North Indian">North Indian</option>
+                                <option value="Chinese">Chinese</option>
+                                <option value="Italian">Italian</option>
+                                <option value="Mexican">Mexican</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="optCuisineDinner" style="font-size: 11px; font-weight:600; color: var(--text-muted);">🌆 Dinner Cuisine</label>
+                            <select id="optCuisineDinner" style="padding: 6px 10px; font-size: 12px;">
+                                <option value="">Any Cuisine</option>
+                                <option value="Chinese">Chinese</option>
+                                <option value="Italian">Italian</option>
+                                <option value="Mexican">Mexican</option>
+                                <option value="Japanese">Japanese</option>
+                                <option value="Continental">Continental</option>
+                                <option value="Punjabi">Punjabi</option>
+                                <option value="South Indian">South Indian</option>
+                                <option value="Gujarati">Gujarati</option>
+                                <option value="Rajasthani">Rajasthani</option>
+                                <option value="Maharashtrian">Maharashtrian</option>
+                                <option value="Bengali">Bengali</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="optCuisineSnack" style="font-size: 11px; font-weight:600; color: var(--text-muted);">🥪 Snack Cuisine</label>
+                            <select id="optCuisineSnack" style="padding: 6px 10px; font-size: 12px;">
+                                <option value="">Any Cuisine</option>
+                                <option value="Gujarati">Gujarati (Farsan)</option>
+                                <option value="South Indian">South Indian Snacks</option>
+                                <option value="Continental">Continental</option>
+                                <option value="Chinese">Chinese</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="optimizerError" class="status-alert alert-warning"></div>
@@ -1208,6 +1295,7 @@
                                 <div class="meal-macro-item">Prot: <span class="p-val">-</span></div>
                                 <div class="meal-macro-item">Carbs: <span class="cb-val">-</span></div>
                                 <div class="meal-macro-item">Fat: <span class="f-val">-</span></div>
+                                <div class="meal-macro-item">Fibre: <span class="fb-val">-</span></div>
                             </div>
                         </div>
                         <div class="meal-card" id="mealLunch">
@@ -1218,6 +1306,7 @@
                                 <div class="meal-macro-item">Prot: <span class="p-val">-</span></div>
                                 <div class="meal-macro-item">Carbs: <span class="cb-val">-</span></div>
                                 <div class="meal-macro-item">Fat: <span class="f-val">-</span></div>
+                                <div class="meal-macro-item">Fibre: <span class="fb-val">-</span></div>
                             </div>
                         </div>
                         <div class="meal-card" id="mealDinner">
@@ -1228,6 +1317,7 @@
                                 <div class="meal-macro-item">Prot: <span class="p-val">-</span></div>
                                 <div class="meal-macro-item">Carbs: <span class="cb-val">-</span></div>
                                 <div class="meal-macro-item">Fat: <span class="f-val">-</span></div>
+                                <div class="meal-macro-item">Fibre: <span class="fb-val">-</span></div>
                             </div>
                         </div>
                         <div class="meal-card" id="mealSnack">
@@ -1238,6 +1328,7 @@
                                 <div class="meal-macro-item">Prot: <span class="p-val">-</span></div>
                                 <div class="meal-macro-item">Carbs: <span class="cb-val">-</span></div>
                                 <div class="meal-macro-item">Fat: <span class="f-val">-</span></div>
+                                <div class="meal-macro-item">Fibre: <span class="fb-val">-</span></div>
                             </div>
                         </div>
                     </div>
@@ -1260,6 +1351,10 @@
                             <div class="progress-bar-group">
                                 <div class="progress-labels"><span>🥑 Fat</span><span id="labelFat">0 / 0g</span></div>
                                 <div class="progress-container"><div class="progress-fill fill-fat" id="fillFat"></div></div>
+                            </div>
+                            <div class="progress-bar-group">
+                                <div class="progress-labels"><span>🥦 Fibre</span><span id="labelFib">0 / 0g</span></div>
+                                <div class="progress-container"><div class="progress-fill fill-fib" id="fillFib" style="background:var(--accent);"></div></div>
                             </div>
                         </div>
                         <div style="margin-top:12px;font-size:13px;color:var(--text-muted);">
@@ -2362,7 +2457,7 @@ Ask me anything! For example:
                 // Pre-populate Recipe Intelligence search filters to match user profile
                 if (data.diet_type) {
                     const dietVal = data.diet_type.toLowerCase();
-                    if (dietVal === 'vegetarian' || dietVal === 'vegan') {
+                    if (['vegetarian', 'vegan', 'jain', 'eggetarian'].includes(dietVal)) {
                         document.getElementById('intelDiet').value = dietVal;
                     } else {
                         document.getElementById('intelDiet').value = '';
@@ -2727,8 +2822,19 @@ Ask me anything! For example:
             const prefVal = document.getElementById('dietPreference').value;
             const planDate = document.getElementById('planDate').value || null;
 
+            const mealCuisines = {
+                Breakfast: document.getElementById('optCuisineBreakfast')?.value || '',
+                Lunch: document.getElementById('optCuisineLunch')?.value || '',
+                Dinner: document.getElementById('optCuisineDinner')?.value || '',
+                Snack: document.getElementById('optCuisineSnack')?.value || ''
+            };
+
             try {
-                const body = { user_id: userId, preference: prefVal };
+                const body = { 
+                    user_id: userId, 
+                    preference: prefVal,
+                    meal_cuisines: mealCuisines
+                };
                 if (planDate) body.plan_date = planDate;
 
                 const res = await fetchWithAuth('/generate-meal-plan', {
@@ -2755,6 +2861,8 @@ Ask me anything! For example:
                         card.querySelector('.p-val').innerText = Math.round(meal.protein_g) + 'g';
                         card.querySelector('.cb-val').innerText = Math.round(meal.carbs_g) + 'g';
                         card.querySelector('.f-val').innerText = Math.round(meal.fat_g) + 'g';
+                        const fbSpan = card.querySelector('.fb-val');
+                        if (fbSpan) fbSpan.innerText = Math.round(meal.fibre_g || 0) + 'g';
                     }
                 });
 
@@ -2766,17 +2874,22 @@ Ask me anything! For example:
                 function updateProgress(type, planned, target, suffix = '') {
                     const fill = document.getElementById('fill' + type);
                     const label = document.getElementById('label' + type);
-                    const percent = Math.min((planned / target) * 100, 150);
+                    if (!fill || !label) return;
+                    const tgt = target || 1;
+                    const percent = Math.min((planned / tgt) * 100, 150);
                     fill.style.width = percent + '%';
                     const error = Math.abs(percent - 100);
                     fill.style.filter = error <= (tolUsed * 100) ? 'none' : 'hue-rotate(320deg) saturate(1.5)';
-                    label.innerText = Math.round(planned) + suffix + ' / ' + Math.round(target) + suffix + ' (' + Math.round(percent) + '%)';
+                    label.innerText = Math.round(planned || 0) + suffix + ' / ' + Math.round(tgt) + suffix + ' (' + Math.round(percent) + '%)';
                 }
 
                 updateProgress('Cal', totals.calories, targets.calories, ' kcal');
                 updateProgress('Prot', totals.protein_g, targets.protein_g, 'g');
                 updateProgress('Carb', totals.carbs_g, targets.carbs_g, 'g');
                 updateProgress('Fat', totals.fat_g, targets.fat_g, 'g');
+                if (totals.fibre_g !== undefined && targets.fibre_g !== undefined) {
+                    updateProgress('Fib', totals.fibre_g, targets.fibre_g, 'g');
+                }
                 document.getElementById('tolUsed').textContent = Math.round(tolUsed * 100) + '%';
 
                 output.style.display = 'block';
@@ -3057,6 +3170,15 @@ Ask me anything! For example:
                 countSpan.style.display = 'inline-block';
                 container.innerHTML = '<div class="recipe-list"></div>';
                 const list = container.querySelector('.recipe-list');
+                function getDietBadge(tag) {
+                    var t = tag || 'Vegetarian';
+                    if (t === 'Jain') return '<span class="badge" style="background:rgba(234,179,8,0.18);color:#b45309;border:1px solid rgba(234,179,8,0.4);font-weight:600;">🌱 Jain</span>';
+                    if (t === 'Vegan') return '<span class="badge" style="background:rgba(16,185,129,0.18);color:#047857;border:1px solid rgba(16,185,129,0.4);font-weight:600;">🌱 Vegan</span>';
+                    if (t === 'Vegetarian') return '<span class="badge" style="background:rgba(34,197,94,0.18);color:#15803d;border:1px solid rgba(34,197,94,0.4);font-weight:600;">🥛 Veg</span>';
+                    if (t === 'Eggetarian') return '<span class="badge" style="background:rgba(245,158,11,0.18);color:#b45309;border:1px solid rgba(245,158,11,0.4);font-weight:600;">🥚 Eggetarian</span>';
+                    return '<span class="badge" style="background:rgba(239,68,68,0.18);color:#b91c1c;border:1px solid rgba(239,68,68,0.4);font-weight:600;">🍖 Non-Veg</span>';
+                }
+
                 recipes.forEach((r, idx) => {
                     const el = document.createElement('div');
                     el.className = 'recipe-item';
@@ -3071,7 +3193,8 @@ Ask me anything! For example:
                     if (r.category === 'Breakfast') catBadge += ' badge-orange';
                     else if (r.category === 'Snack') catBadge += ' badge-score';
                     else catBadge += ' badge-purple';
-                    el.innerHTML = '<div class="recipe-info"><h4 style="display:flex;align-items:center;gap:8px;">' + (idx + 1) + '. ' + r.recipe_name + (r.cuisine ? '<span class="badge">' + r.cuisine + '</span>' : '') + '</h4><div class="recipe-meta"><span class="' + catBadge + '">' + r.category + '</span><span>' + Math.round(r.calories) + ' cal</span><span>' + Math.round(r.protein_g) + 'g P</span><span>' + Math.round(r.carbs_g) + 'g C</span><span>' + Math.round(r.fat_g) + 'g F</span><span>Score: ' + Math.round(r.health_score) + '</span></div><div style="font-size:12px;color:var(--text-dim);margin-top:4px;">' + extra + (bullets ? ' | ' + bullets : '') + '</div></div><div style="text-align:right;"><div class="badge score-pill" style="background:rgba(139,92,246,0.12);color:var(--purple);border-color:rgba(139,92,246,0.15);">Score: ' + r.final_score + '</div><div style="margin-top:4px;"><span class="badge ' + healthClass + '">' + r.health_category + '</span><span class="badge" style="background:rgba(59,130,246,0.12);color:var(--accent);">' + matchPct + '% match</span></div></div>';
+                    const dBadge = getDietBadge(r.dietary_tag);
+                    el.innerHTML = '<div class="recipe-info"><h4 style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' + (idx + 1) + '. ' + r.recipe_name + dBadge + (r.cuisine ? '<span class="badge">' + r.cuisine + '</span>' : '') + '</h4><div class="recipe-meta"><span class="' + catBadge + '">' + r.category + '</span><span>' + Math.round(r.calories) + ' cal</span><span>' + Math.round(r.protein_g) + 'g P</span><span>' + Math.round(r.carbs_g) + 'g C</span><span>' + Math.round(r.fat_g) + 'g F</span><span>Score: ' + Math.round(r.health_score) + '</span></div><div style="font-size:12px;color:var(--text-dim);margin-top:4px;">' + extra + (bullets ? ' | ' + bullets : '') + '</div></div><div style="text-align:right;"><div class="badge score-pill" style="background:rgba(139,92,246,0.12);color:var(--purple);border-color:rgba(139,92,246,0.15);">Score: ' + r.final_score + '</div><div style="margin-top:4px;"><span class="badge ' + healthClass + '">' + r.health_category + '</span><span class="badge" style="background:rgba(59,130,246,0.12);color:var(--accent);">' + matchPct + '% match</span></div></div>';
                     list.appendChild(el);
                 });
                 showNotification('Found ' + total + ' matching recipes!', 'success');
@@ -3108,10 +3231,11 @@ Ask me anything! For example:
                 } else {
                     instrHtml = '<div style="margin-top:12px;" id="aiInstructionsSection"><h3 style="font-size:14px;font-weight:600;margin-bottom:8px;color:var(--text-muted);">Instructions</h3><p style="font-size:13px;color:var(--text-dim);font-style:italic;">No instructions available in local database.</p><button class="btn btn-sm btn-purple" id="generateAiBtn" onclick="generateAIInstructions(\'' + data.recipe_code + '\', \'' + data.recipe_name.replace(/'/g, "\\'") + '\', ' + JSON.stringify((data.ingredients || []).map(i => i.food_name || i.ingredient_name)) + ')" style="margin-top:10px;width:auto;">✨ Generate Instructions with Gemini</button></div>';
                 }
+                var dTagBadge = getDietBadge(data.dietary_tag);
                 var cuisineBadge = data.cuisine ? '<span class="badge badge-purple">' + data.cuisine + '</span>' : '';
                 var diffBadge = data.difficulty ? '<span class="badge badge-orange">' + data.difficulty + '</span>' : '';
                 var timeBadge = data.cooking_time_minutes ? '<span class="badge badge-score">' + data.cooking_time_minutes + ' min</span>' : '';
-                c.innerHTML = '<div class="card" style="padding:20px;margin-bottom:16px;"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;"><div><h2 style="font-size:20px;font-weight:700;margin-bottom:4px;">' + data.recipe_name + '</h2><div style="display:flex;gap:8px;font-size:13px;color:var(--text-muted);flex-wrap:wrap;"><span class="badge">' + data.category + '</span>' + cuisineBadge + diffBadge + timeBadge + '</div></div><div style="text-align:right;"><div style="font-size:28px;font-weight:800;color:var(--purple);">' + (data.health_score ? Math.round(data.health_score) : '-') + '</div><div style="font-size:12px;color:var(--text-muted);">Health Score ' + (data.health_category || '') + '</div></div></div><div style="margin:16px 0;display:flex;gap:24px;flex-wrap:wrap;"><div style="flex:2;min-width:200px;"><h3 style="font-size:14px;font-weight:600;margin-bottom:8px;color:var(--text-muted);">Ingredients</h3><ul style="list-style:none;padding:0;">' + ingsHtml + '</ul></div><div style="flex:1;min-width:150px;"><h3 style="font-size:14px;font-weight:600;margin-bottom:8px;color:var(--text-muted);">Nutrition (per 100g)</h3>' + nutHtml + '</div></div>' + instrHtml + '<button class="btn btn-sm btn-outline" onclick="findRecipes()" style="width:auto;margin-top:16px;">Back to Results</button></div>';
+                c.innerHTML = '<div class="card" style="padding:20px;margin-bottom:16px;"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;"><div><h2 style="font-size:20px;font-weight:700;margin-bottom:4px;">' + data.recipe_name + '</h2><div style="display:flex;gap:8px;font-size:13px;color:var(--text-muted);flex-wrap:wrap;"><span class="badge">' + data.category + '</span>' + dTagBadge + cuisineBadge + diffBadge + timeBadge + '</div></div><div style="text-align:right;"><div style="font-size:28px;font-weight:800;color:var(--purple);">' + (data.health_score ? Math.round(data.health_score) : '-') + '</div><div style="font-size:12px;color:var(--text-muted);">Health Score ' + (data.health_category || '') + '</div></div></div><div style="margin:16px 0;display:flex;gap:24px;flex-wrap:wrap;"><div style="flex:2;min-width:200px;"><h3 style="font-size:14px;font-weight:600;margin-bottom:8px;color:var(--text-muted);">Ingredients</h3><ul style="list-style:none;padding:0;">' + ingsHtml + '</ul></div><div style="flex:1;min-width:150px;"><h3 style="font-size:14px;font-weight:600;margin-bottom:8px;color:var(--text-muted);">Nutrition (per 100g)</h3>' + nutHtml + '</div></div>' + instrHtml + '<button class="btn btn-sm btn-outline" onclick="findRecipes()" style="width:auto;margin-top:16px;">Back to Results</button></div>';
                 c.scrollIntoView({ behavior: 'smooth', block: 'start' });
             } catch (err) { showNotification('Error: ' + err.message, 'error'); }
         }
@@ -4271,10 +4395,11 @@ Ask me anything! For example:
                     }
                 }
                 
-                let sourceBadge = data.source === 'cache' ? '<span class="badge badge-score">Cached</span>' : '<span class="badge badge-purple">Fetched Fresh</span>';
+                let sourceDetailText = data.source_detail || (data.source === 'cache' ? 'Local Cache' : 'Open Food Facts API');
+                let sourceBadge = `<span class="badge" style="background:#4f46e5;color:#fff;font-size:10px;font-weight:600;padding:2px 8px;border-radius:12px;display:inline-flex;align-items:center;gap:4px;" title="Admin Source Audit">🔍 ${sourceDetailText}</span>`;
                 
                 resDiv.innerHTML = `
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
                         <h4 style="font-weight:600;font-size:15px;color:var(--text-main);">${data.product_name || 'Unknown Product'}</h4>
                         ${sourceBadge}
                     </div>
@@ -4292,19 +4417,19 @@ Ask me anything! For example:
                             <div style="font-size:9px;color:var(--text-dim);">Energy (kcal)</div>
                         </div>
                         <div style="background:var(--bg-color);padding:6px;border-radius:4px;border:1px solid var(--card-border);">
-                            <div style="font-size:14px;font-weight:600;color:var(--accent);">${Math.round(nut.protein_g || 0)}g</div>
+                            <div style="font-size:14px;font-weight:600;color:var(--accent);">${Number(nut.protein_g || 0).toFixed(1)}g</div>
                             <div style="font-size:9px;color:var(--text-dim);">Protein</div>
                         </div>
                         <div style="background:var(--bg-color);padding:6px;border-radius:4px;border:1px solid var(--card-border);">
-                            <div style="font-size:14px;font-weight:600;color:var(--warning);">${Math.round(nut.carb_g || 0)}g</div>
+                            <div style="font-size:14px;font-weight:600;color:var(--warning);">${Number(nut.carb_g || 0).toFixed(1)}g</div>
                             <div style="font-size:9px;color:var(--text-dim);">Carbs</div>
                         </div>
                         <div style="background:var(--bg-color);padding:6px;border-radius:4px;border:1px solid var(--card-border);">
-                            <div style="font-size:14px;font-weight:600;color:var(--danger);">${Math.round(nut.fat_g || 0)}g</div>
+                            <div style="font-size:14px;font-weight:600;color:var(--danger);">${Number(nut.fat_g || 0).toFixed(1)}g</div>
                             <div style="font-size:9px;color:var(--text-dim);">Fat</div>
                         </div>
                         <div style="background:var(--bg-color);padding:6px;border-radius:4px;border:1px solid var(--card-border);">
-                            <div style="font-size:14px;font-weight:600;color:var(--text-main);">${Math.round(nut.fibre_g || 0)}g</div>
+                            <div style="font-size:14px;font-weight:600;color:var(--text-main);">${Number(nut.fibre_g || 0).toFixed(1)}g</div>
                             <div style="font-size:9px;color:var(--text-dim);">Fiber</div>
                         </div>
                         <div style="background:var(--bg-color);padding:6px;border-radius:4px;border:1px solid var(--card-border);">

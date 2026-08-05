@@ -388,6 +388,7 @@ class BarcodeCache(Base):
     nutriments_json = Column(String)  # JSON string
     health_score = Column(Float)
     health_category = Column(String)
+    source_detail = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
 

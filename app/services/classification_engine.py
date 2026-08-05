@@ -64,18 +64,32 @@ class ClassificationEngine:
                     reasons.append(f"Non-jain: contains {name}")
                     break
 
-        # A vegan is always vegetarian and eggetarian
+        # A vegan or jain recipe is always vegetarian and eggetarian
+        if is_jain:
+            is_vegetarian = True
+            is_eggetarian = True
         if is_vegan:
             is_vegetarian = True
             is_eggetarian = True
         elif is_vegetarian:
             is_eggetarian = True
 
+        dietary_tag = "Non-Vegetarian"
+        if is_jain:
+            dietary_tag = "Jain"
+        elif is_vegan:
+            dietary_tag = "Vegan"
+        elif is_vegetarian:
+            dietary_tag = "Vegetarian"
+        elif is_eggetarian:
+            dietary_tag = "Eggetarian"
+
         return {
             "is_vegan": is_vegan,
             "is_vegetarian": is_vegetarian,
             "is_eggetarian": is_eggetarian,
             "is_jain": is_jain,
+            "dietary_tag": dietary_tag,
             "reasons": list(set(reasons))
         }
 

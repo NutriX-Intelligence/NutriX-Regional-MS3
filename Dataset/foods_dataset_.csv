@@ -1,0 +1,1001 @@
+restaurant_id,dish_name,category,cuisine_type,description,price,tax_gst_%,food_type,spice_level,image_url,created_at
+d638fe7074e004cbe8293709,Lemon Iced Tea,Main Course,Other,Main Course with Mild taste,144,18,Vegan,Mild,https://foodimages.com/food_0.jpg,01-10-2025
+d638fe7074e004cbe8293709,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,130,0,Non-Veg,Mild,https://foodimages.com/food_1.jpg,19-09-2025
+d638fe7074e004cbe8293709,Cold Coffee,Beverage,Other,Beverage with Spicy taste,376,0,Jain,Spicy,https://foodimages.com/food_2.jpg,14-09-2025
+d638fe7074e004cbe8293709,Brownie,Dessert,Other,Dessert with Medium taste,423,18,Veg,Medium,https://foodimages.com/food_3.jpg,02-07-2025
+9bc75aff648e50ecb167cf64,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,488,18,Veg,Mild,https://foodimages.com/food_4.jpg,27-09-2025
+9bc75aff648e50ecb167cf64,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,200,0,Veg,Spicy,https://foodimages.com/food_5.jpg,30-09-2025
+9bc75aff648e50ecb167cf64,Lemon Iced Tea,Beverage,Other,Beverage with Mild taste,405,18,Vegan,Mild,https://foodimages.com/food_6.jpg,30-11-2025
+9bc75aff648e50ecb167cf64,Brownie,Dessert,Other,Dessert with Mild taste,489,12,Veg,Mild,https://foodimages.com/food_7.jpg,24-09-2025
+d6eb6bdf0d48fbeecc73bda5,Lemon Iced Tea,Main Course,Other,Main Course with Medium taste,138,5,Vegan,Medium,https://foodimages.com/food_8.jpg,13-11-2025
+d6eb6bdf0d48fbeecc73bda5,Spring Rolls,Starter,Chinese,Starter with Mild taste,229,5,Veg,Mild,https://foodimages.com/food_9.jpg,14-12-2025
+d6eb6bdf0d48fbeecc73bda5,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,153,12,Veg,Spicy,https://foodimages.com/food_10.jpg,28-08-2025
+d6eb6bdf0d48fbeecc73bda5,Cold Coffee,Beverage,Other,Beverage with Medium taste,407,0,Veg,Medium,https://foodimages.com/food_11.jpg,01-10-2025
+491dc6ac06bbf0640c144d0e,Cold Coffee,Beverage,Other,Beverage with Spicy taste,451,18,Veg,Spicy,https://foodimages.com/food_12.jpg,23-10-2025
+491dc6ac06bbf0640c144d0e,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,374,18,Non-Veg,Spicy,https://foodimages.com/food_13.jpg,02-08-2025
+491dc6ac06bbf0640c144d0e,Spring Rolls,Starter,Chinese,Starter with Spicy taste,245,0,Veg,Spicy,https://foodimages.com/food_14.jpg,14-07-2025
+491dc6ac06bbf0640c144d0e,Lemon Iced Tea,Dessert,Other,Dessert with Medium taste,328,5,Vegan,Medium,https://foodimages.com/food_15.jpg,11-12-2025
+ca54f277f7fc376958799033,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,253,0,Veg,Mild,https://foodimages.com/food_16.jpg,07-12-2025
+ca54f277f7fc376958799033,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,205,18,Non-Veg,Spicy,https://foodimages.com/food_17.jpg,13-11-2025
+ca54f277f7fc376958799033,Cold Coffee,Beverage,Other,Beverage with Mild taste,194,5,Veg,Mild,https://foodimages.com/food_18.jpg,18-07-2025
+ca54f277f7fc376958799033,Spring Rolls,Starter,Chinese,Starter with Mild taste,254,0,Veg,Mild,https://foodimages.com/food_19.jpg,10-08-2025
+a34b661444df6c04ca87d237,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,420,18,Non-Veg,Spicy,https://foodimages.com/food_20.jpg,11-07-2025
+a34b661444df6c04ca87d237,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,292,18,Veg,Mild,https://foodimages.com/food_21.jpg,22-07-2025
+a34b661444df6c04ca87d237,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,332,0,Veg,Medium,https://foodimages.com/food_22.jpg,22-09-2025
+a34b661444df6c04ca87d237,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,440,18,Non-Veg,Medium,https://foodimages.com/food_23.jpg,01-08-2025
+be7de24f5ef7919ecb288aef,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,469,12,Veg,Mild,https://foodimages.com/food_24.jpg,09-11-2025
+be7de24f5ef7919ecb288aef,Cold Coffee,Beverage,Other,Beverage with Mild taste,138,0,Veg,Mild,https://foodimages.com/food_25.jpg,22-11-2025
+be7de24f5ef7919ecb288aef,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,238,0,Non-Veg,Medium,https://foodimages.com/food_26.jpg,09-11-2025
+be7de24f5ef7919ecb288aef,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,422,18,Non-Veg,Mild,https://foodimages.com/food_27.jpg,17-11-2025
+fdb05463cc0d15d0e6ef0607,Lemon Iced Tea,Beverage,Other,Beverage with Mild taste,421,0,Jain,Mild,https://foodimages.com/food_28.jpg,07-10-2025
+fdb05463cc0d15d0e6ef0607,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,404,0,Veg,Mild,https://foodimages.com/food_29.jpg,10-11-2025
+fdb05463cc0d15d0e6ef0607,Cold Coffee,Beverage,Other,Beverage with Mild taste,346,12,Jain,Mild,https://foodimages.com/food_30.jpg,07-11-2025
+fdb05463cc0d15d0e6ef0607,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,331,5,Non-Veg,Spicy,https://foodimages.com/food_31.jpg,03-08-2025
+492184d1b188e00bf6257964,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,475,12,Veg,Mild,https://foodimages.com/food_32.jpg,18-12-2025
+492184d1b188e00bf6257964,Cold Coffee,Beverage,Other,Beverage with Medium taste,308,18,Veg,Medium,https://foodimages.com/food_33.jpg,03-07-2025
+492184d1b188e00bf6257964,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,440,12,Veg,Spicy,https://foodimages.com/food_34.jpg,01-10-2025
+492184d1b188e00bf6257964,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,270,0,Non-Veg,Spicy,https://foodimages.com/food_35.jpg,24-12-2025
+ec77be78914b1ec6fddaacbb,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,342,5,Veg,Medium,https://foodimages.com/food_36.jpg,03-11-2025
+ec77be78914b1ec6fddaacbb,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,247,18,Non-Veg,Mild,https://foodimages.com/food_37.jpg,25-07-2025
+ec77be78914b1ec6fddaacbb,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,367,0,Veg,Spicy,https://foodimages.com/food_38.jpg,03-10-2025
+ec77be78914b1ec6fddaacbb,Brownie,Dessert,Other,Dessert with Spicy taste,170,12,Veg,Spicy,https://foodimages.com/food_39.jpg,23-10-2025
+09553d1b50040835338a9f94,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,310,5,Veg,Mild,https://foodimages.com/food_40.jpg,07-07-2025
+09553d1b50040835338a9f94,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,356,5,Veg,Mild,https://foodimages.com/food_41.jpg,05-09-2025
+09553d1b50040835338a9f94,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,141,5,Veg,Medium,https://foodimages.com/food_42.jpg,29-11-2025
+09553d1b50040835338a9f94,Spring Rolls,Starter,Chinese,Starter with Spicy taste,229,0,Veg,Spicy,https://foodimages.com/food_43.jpg,09-12-2025
+9295618df9ba86c2e11dcfc9,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,446,18,Non-Veg,Mild,https://foodimages.com/food_44.jpg,09-11-2025
+9295618df9ba86c2e11dcfc9,Brownie,Dessert,Other,Dessert with Mild taste,152,12,Veg,Mild,https://foodimages.com/food_45.jpg,29-12-2025
+9295618df9ba86c2e11dcfc9,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,246,18,Veg,Medium,https://foodimages.com/food_46.jpg,12-11-2025
+9295618df9ba86c2e11dcfc9,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,484,18,Veg,Spicy,https://foodimages.com/food_47.jpg,12-10-2025
+62fa0cdc30f73b0762da7767,Spring Rolls,Starter,Chinese,Starter with Mild taste,475,5,Veg,Mild,https://foodimages.com/food_48.jpg,10-07-2025
+62fa0cdc30f73b0762da7767,Brownie,Dessert,Other,Dessert with Medium taste,163,12,Veg,Medium,https://foodimages.com/food_49.jpg,30-09-2025
+62fa0cdc30f73b0762da7767,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,126,18,Non-Veg,Spicy,https://foodimages.com/food_50.jpg,02-09-2025
+62fa0cdc30f73b0762da7767,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,247,0,Veg,Spicy,https://foodimages.com/food_51.jpg,30-11-2025
+c09b64c14fc7bfac90073644,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,210,12,Non-Veg,Spicy,https://foodimages.com/food_52.jpg,29-09-2025
+c09b64c14fc7bfac90073644,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,249,18,Veg,Spicy,https://foodimages.com/food_53.jpg,22-08-2025
+c09b64c14fc7bfac90073644,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,136,5,Veg,Medium,https://foodimages.com/food_54.jpg,14-12-2025
+c09b64c14fc7bfac90073644,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,440,0,Non-Veg,Mild,https://foodimages.com/food_55.jpg,26-12-2025
+d0b28a12e44468f69edbd833,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,305,18,Jain,Spicy,https://foodimages.com/food_56.jpg,05-11-2025
+d0b28a12e44468f69edbd833,Spring Rolls,Starter,Chinese,Starter with Spicy taste,229,0,Veg,Spicy,https://foodimages.com/food_57.jpg,28-08-2025
+d0b28a12e44468f69edbd833,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,405,18,Veg,Mild,https://foodimages.com/food_58.jpg,12-10-2025
+d0b28a12e44468f69edbd833,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,467,5,Non-Veg,Spicy,https://foodimages.com/food_59.jpg,19-07-2025
+cb362305835a7d60ad5b6c23,Brownie,Dessert,Other,Dessert with Spicy taste,282,12,Veg,Spicy,https://foodimages.com/food_60.jpg,19-09-2025
+cb362305835a7d60ad5b6c23,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,194,0,Veg,Mild,https://foodimages.com/food_61.jpg,18-12-2025
+cb362305835a7d60ad5b6c23,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,318,18,Veg,Mild,https://foodimages.com/food_62.jpg,04-10-2025
+cb362305835a7d60ad5b6c23,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,480,0,Non-Veg,Spicy,https://foodimages.com/food_63.jpg,27-07-2025
+50d0ae79387085097f02bdf3,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,406,12,Non-Veg,Mild,https://foodimages.com/food_64.jpg,04-12-2025
+50d0ae79387085097f02bdf3,Cold Coffee,Beverage,Other,Beverage with Medium taste,301,18,Veg,Medium,https://foodimages.com/food_65.jpg,27-09-2025
+50d0ae79387085097f02bdf3,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,216,0,Veg,Medium,https://foodimages.com/food_66.jpg,28-10-2025
+50d0ae79387085097f02bdf3,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,170,12,Veg,Spicy,https://foodimages.com/food_67.jpg,28-10-2025
+d1419d4280e71ccaa6aa4809,Spring Rolls,Starter,Chinese,Starter with Spicy taste,433,5,Veg,Spicy,https://foodimages.com/food_68.jpg,13-09-2025
+d1419d4280e71ccaa6aa4809,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,153,12,Jain,Mild,https://foodimages.com/food_69.jpg,23-11-2025
+d1419d4280e71ccaa6aa4809,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,140,12,Veg,Mild,https://foodimages.com/food_70.jpg,02-12-2025
+d1419d4280e71ccaa6aa4809,Brownie,Dessert,Other,Dessert with Spicy taste,303,0,Veg,Spicy,https://foodimages.com/food_71.jpg,03-12-2025
+630e7911b9ffc740a34d8b5a,Lemon Iced Tea,Starter,Other,Starter with Spicy taste,412,5,Vegan,Spicy,https://foodimages.com/food_72.jpg,31-07-2025
+630e7911b9ffc740a34d8b5a,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,183,18,Veg,Medium,https://foodimages.com/food_73.jpg,07-11-2025
+630e7911b9ffc740a34d8b5a,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,243,5,Veg,Mild,https://foodimages.com/food_74.jpg,19-10-2025
+630e7911b9ffc740a34d8b5a,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,220,12,Veg,Spicy,https://foodimages.com/food_75.jpg,22-11-2025
+0e4ee5c8e73c838b07e2c142,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,238,12,Jain,Spicy,https://foodimages.com/food_76.jpg,19-08-2025
+0e4ee5c8e73c838b07e2c142,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,460,0,Veg,Mild,https://foodimages.com/food_77.jpg,11-09-2025
+0e4ee5c8e73c838b07e2c142,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,197,12,Veg,Mild,https://foodimages.com/food_78.jpg,10-10-2025
+0e4ee5c8e73c838b07e2c142,Spring Rolls,Starter,Chinese,Starter with Spicy taste,300,0,Veg,Spicy,https://foodimages.com/food_79.jpg,28-11-2025
+8e3b6d6b6ebb6b85a3542093,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,318,18,Veg,Spicy,https://foodimages.com/food_80.jpg,01-12-2025
+8e3b6d6b6ebb6b85a3542093,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,479,5,Veg,Spicy,https://foodimages.com/food_81.jpg,24-10-2025
+8e3b6d6b6ebb6b85a3542093,Cold Coffee,Beverage,Other,Beverage with Mild taste,309,18,Veg,Mild,https://foodimages.com/food_82.jpg,29-07-2025
+8e3b6d6b6ebb6b85a3542093,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,447,18,Non-Veg,Spicy,https://foodimages.com/food_83.jpg,26-08-2025
+937bc442a5c9340f6ed03079,Lemon Iced Tea,Beverage,Other,Beverage with Spicy taste,222,12,Vegan,Spicy,https://foodimages.com/food_84.jpg,02-10-2025
+937bc442a5c9340f6ed03079,Spring Rolls,Starter,Chinese,Starter with Spicy taste,452,18,Veg,Spicy,https://foodimages.com/food_85.jpg,25-10-2025
+937bc442a5c9340f6ed03079,Cold Coffee,Beverage,Other,Beverage with Medium taste,485,5,Veg,Medium,https://foodimages.com/food_86.jpg,28-08-2025
+937bc442a5c9340f6ed03079,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,394,12,Jain,Medium,https://foodimages.com/food_87.jpg,20-07-2025
+f151fc0141046cf41bb7de26,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,249,12,Non-Veg,Mild,https://foodimages.com/food_88.jpg,22-12-2025
+f151fc0141046cf41bb7de26,Lemon Iced Tea,Main Course,Other,Main Course with Spicy taste,360,12,Jain,Spicy,https://foodimages.com/food_89.jpg,18-12-2025
+f151fc0141046cf41bb7de26,Cold Coffee,Beverage,Other,Beverage with Spicy taste,253,5,Veg,Spicy,https://foodimages.com/food_90.jpg,06-12-2025
+f151fc0141046cf41bb7de26,Spring Rolls,Starter,Chinese,Starter with Mild taste,276,12,Veg,Mild,https://foodimages.com/food_91.jpg,22-11-2025
+fb30976004cf86c627ae6ca2,Brownie,Dessert,Other,Dessert with Mild taste,437,0,Veg,Mild,https://foodimages.com/food_92.jpg,01-08-2025
+fb30976004cf86c627ae6ca2,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,277,5,Veg,Mild,https://foodimages.com/food_93.jpg,11-12-2025
+fb30976004cf86c627ae6ca2,Lemon Iced Tea,Dessert,Other,Dessert with Spicy taste,478,5,Vegan,Spicy,https://foodimages.com/food_94.jpg,04-12-2025
+fb30976004cf86c627ae6ca2,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,309,12,Veg,Medium,https://foodimages.com/food_95.jpg,17-09-2025
+73bae047146fcde8933defde,Brownie,Dessert,Other,Dessert with Mild taste,219,18,Veg,Mild,https://foodimages.com/food_96.jpg,26-11-2025
+73bae047146fcde8933defde,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,171,0,Non-Veg,Spicy,https://foodimages.com/food_97.jpg,23-09-2025
+73bae047146fcde8933defde,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,168,0,Veg,Mild,https://foodimages.com/food_98.jpg,30-08-2025
+73bae047146fcde8933defde,Lemon Iced Tea,Dessert,Other,Dessert with Spicy taste,219,5,Vegan,Spicy,https://foodimages.com/food_99.jpg,21-10-2025
+42503892b56994bdad350a19,Spring Rolls,Starter,Chinese,Starter with Mild taste,370,5,Veg,Mild,https://foodimages.com/food_100.jpg,12-08-2025
+42503892b56994bdad350a19,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,493,0,Non-Veg,Spicy,https://foodimages.com/food_101.jpg,18-09-2025
+42503892b56994bdad350a19,Lemon Iced Tea,Starter,Other,Starter with Mild taste,173,0,Vegan,Mild,https://foodimages.com/food_102.jpg,23-07-2025
+42503892b56994bdad350a19,Cold Coffee,Beverage,Other,Beverage with Medium taste,494,0,Veg,Medium,https://foodimages.com/food_103.jpg,20-10-2025
+4e1608d6db71c24ef9c82ac3,Lemon Iced Tea,Starter,Other,Starter with Mild taste,256,18,Jain,Mild,https://foodimages.com/food_104.jpg,13-10-2025
+4e1608d6db71c24ef9c82ac3,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,281,5,Jain,Mild,https://foodimages.com/food_105.jpg,09-09-2025
+4e1608d6db71c24ef9c82ac3,Brownie,Dessert,Other,Dessert with Medium taste,473,5,Veg,Medium,https://foodimages.com/food_106.jpg,14-11-2025
+4e1608d6db71c24ef9c82ac3,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,411,18,Jain,Mild,https://foodimages.com/food_107.jpg,13-08-2025
+ebbe675b199ca423c86857b3,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,200,12,Veg,Medium,https://foodimages.com/food_108.jpg,06-12-2025
+ebbe675b199ca423c86857b3,Lemon Iced Tea,Beverage,Other,Beverage with Spicy taste,339,12,Vegan,Spicy,https://foodimages.com/food_109.jpg,22-07-2025
+ebbe675b199ca423c86857b3,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,204,0,Veg,Medium,https://foodimages.com/food_110.jpg,06-12-2025
+ebbe675b199ca423c86857b3,Brownie,Dessert,Other,Dessert with Medium taste,202,18,Veg,Medium,https://foodimages.com/food_111.jpg,12-07-2025
+292d7bdebebf3cb3cc86df65,Spring Rolls,Starter,Chinese,Starter with Spicy taste,438,5,Veg,Spicy,https://foodimages.com/food_112.jpg,24-12-2025
+292d7bdebebf3cb3cc86df65,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,186,5,Non-Veg,Medium,https://foodimages.com/food_113.jpg,19-12-2025
+292d7bdebebf3cb3cc86df65,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,353,18,Veg,Medium,https://foodimages.com/food_114.jpg,29-10-2025
+292d7bdebebf3cb3cc86df65,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,317,18,Non-Veg,Spicy,https://foodimages.com/food_115.jpg,20-10-2025
+b925f86d960937de3b20d14b,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,378,18,Non-Veg,Mild,https://foodimages.com/food_116.jpg,04-07-2025
+b925f86d960937de3b20d14b,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,296,12,Veg,Mild,https://foodimages.com/food_117.jpg,07-07-2025
+b925f86d960937de3b20d14b,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,417,18,Veg,Medium,https://foodimages.com/food_118.jpg,14-09-2025
+b925f86d960937de3b20d14b,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,399,18,Veg,Mild,https://foodimages.com/food_119.jpg,02-11-2025
+83b9583b4e5bcd237fdd216d,Spring Rolls,Starter,Chinese,Starter with Mild taste,419,12,Veg,Mild,https://foodimages.com/food_120.jpg,21-08-2025
+83b9583b4e5bcd237fdd216d,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,248,0,Non-Veg,Medium,https://foodimages.com/food_121.jpg,17-11-2025
+83b9583b4e5bcd237fdd216d,Brownie,Dessert,Other,Dessert with Spicy taste,490,18,Veg,Spicy,https://foodimages.com/food_122.jpg,18-09-2025
+83b9583b4e5bcd237fdd216d,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,299,5,Non-Veg,Mild,https://foodimages.com/food_123.jpg,16-12-2025
+63100b1b62c79dcd5e7af704,Spring Rolls,Starter,Chinese,Starter with Medium taste,411,5,Veg,Medium,https://foodimages.com/food_124.jpg,10-12-2025
+63100b1b62c79dcd5e7af704,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,326,12,Veg,Spicy,https://foodimages.com/food_125.jpg,17-10-2025
+63100b1b62c79dcd5e7af704,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,413,18,Veg,Mild,https://foodimages.com/food_126.jpg,02-07-2025
+63100b1b62c79dcd5e7af704,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,457,0,Non-Veg,Spicy,https://foodimages.com/food_127.jpg,20-11-2025
+b86342d14e7969d64b69d277,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,294,0,Veg,Medium,https://foodimages.com/food_128.jpg,23-10-2025
+b86342d14e7969d64b69d277,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,148,18,Veg,Spicy,https://foodimages.com/food_129.jpg,28-08-2025
+b86342d14e7969d64b69d277,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,298,18,Veg,Spicy,https://foodimages.com/food_130.jpg,22-11-2025
+b86342d14e7969d64b69d277,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,160,5,Non-Veg,Medium,https://foodimages.com/food_131.jpg,22-10-2025
+10a615c8847df2de8b6b9bd0,Brownie,Dessert,Other,Dessert with Mild taste,311,5,Veg,Mild,https://foodimages.com/food_132.jpg,20-09-2025
+10a615c8847df2de8b6b9bd0,Spring Rolls,Starter,Chinese,Starter with Mild taste,463,18,Veg,Mild,https://foodimages.com/food_133.jpg,07-10-2025
+10a615c8847df2de8b6b9bd0,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,356,12,Non-Veg,Spicy,https://foodimages.com/food_134.jpg,28-10-2025
+10a615c8847df2de8b6b9bd0,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,423,5,Veg,Spicy,https://foodimages.com/food_135.jpg,12-11-2025
+437b2b597d3360403136bcf1,Spring Rolls,Starter,Chinese,Starter with Spicy taste,344,5,Veg,Spicy,https://foodimages.com/food_136.jpg,03-09-2025
+437b2b597d3360403136bcf1,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,233,12,Veg,Spicy,https://foodimages.com/food_137.jpg,08-11-2025
+437b2b597d3360403136bcf1,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,397,12,Non-Veg,Mild,https://foodimages.com/food_138.jpg,06-11-2025
+437b2b597d3360403136bcf1,Brownie,Dessert,Other,Dessert with Medium taste,474,5,Veg,Medium,https://foodimages.com/food_139.jpg,18-07-2025
+974265cec05a70f65b72a363,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,136,12,Jain,Medium,https://foodimages.com/food_140.jpg,09-12-2025
+974265cec05a70f65b72a363,Spring Rolls,Starter,Chinese,Starter with Medium taste,205,12,Veg,Medium,https://foodimages.com/food_141.jpg,03-11-2025
+974265cec05a70f65b72a363,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,436,18,Veg,Spicy,https://foodimages.com/food_142.jpg,15-09-2025
+974265cec05a70f65b72a363,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,464,0,Non-Veg,Spicy,https://foodimages.com/food_143.jpg,01-07-2025
+ec29496b141e392f14adafc9,Brownie,Dessert,Other,Dessert with Medium taste,300,5,Veg,Medium,https://foodimages.com/food_144.jpg,28-07-2025
+ec29496b141e392f14adafc9,Spring Rolls,Starter,Chinese,Starter with Mild taste,456,12,Veg,Mild,https://foodimages.com/food_145.jpg,19-09-2025
+ec29496b141e392f14adafc9,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,470,18,Veg,Medium,https://foodimages.com/food_146.jpg,07-12-2025
+ec29496b141e392f14adafc9,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,264,0,Jain,Mild,https://foodimages.com/food_147.jpg,22-11-2025
+8dc5b028861e69d890a4cd7f,Spring Rolls,Starter,Chinese,Starter with Spicy taste,434,18,Veg,Spicy,https://foodimages.com/food_148.jpg,07-11-2025
+8dc5b028861e69d890a4cd7f,Brownie,Dessert,Other,Dessert with Medium taste,344,18,Veg,Medium,https://foodimages.com/food_149.jpg,15-09-2025
+8dc5b028861e69d890a4cd7f,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,173,18,Veg,Medium,https://foodimages.com/food_150.jpg,24-08-2025
+8dc5b028861e69d890a4cd7f,Cold Coffee,Beverage,Other,Beverage with Spicy taste,423,5,Veg,Spicy,https://foodimages.com/food_151.jpg,10-08-2025
+8c536cedca428c4d4720f0f9,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,187,18,Veg,Mild,https://foodimages.com/food_152.jpg,18-08-2025
+8c536cedca428c4d4720f0f9,Lemon Iced Tea,Dessert,Other,Dessert with Medium taste,226,12,Vegan,Medium,https://foodimages.com/food_153.jpg,18-11-2025
+8c536cedca428c4d4720f0f9,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,453,12,Veg,Medium,https://foodimages.com/food_154.jpg,23-07-2025
+8c536cedca428c4d4720f0f9,Cold Coffee,Beverage,Other,Beverage with Mild taste,196,0,Veg,Mild,https://foodimages.com/food_155.jpg,27-11-2025
+e3741af0da4197e4e33fc917,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,146,0,Non-Veg,Medium,https://foodimages.com/food_156.jpg,23-11-2025
+e3741af0da4197e4e33fc917,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,463,5,Veg,Medium,https://foodimages.com/food_157.jpg,12-12-2025
+e3741af0da4197e4e33fc917,Cold Coffee,Beverage,Other,Beverage with Spicy taste,274,5,Veg,Spicy,https://foodimages.com/food_158.jpg,07-09-2025
+e3741af0da4197e4e33fc917,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,191,5,Veg,Mild,https://foodimages.com/food_159.jpg,21-12-2025
+59a022336a33d23f8e65d3ae,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,299,18,Non-Veg,Medium,https://foodimages.com/food_160.jpg,20-09-2025
+59a022336a33d23f8e65d3ae,Lemon Iced Tea,Starter,Other,Starter with Medium taste,166,18,Vegan,Medium,https://foodimages.com/food_161.jpg,18-08-2025
+59a022336a33d23f8e65d3ae,Cold Coffee,Beverage,Other,Beverage with Spicy taste,361,5,Veg,Spicy,https://foodimages.com/food_162.jpg,24-07-2025
+59a022336a33d23f8e65d3ae,Spring Rolls,Starter,Chinese,Starter with Medium taste,478,0,Veg,Medium,https://foodimages.com/food_163.jpg,01-08-2025
+01e35258803c84d198b2024c,Cold Coffee,Beverage,Other,Beverage with Spicy taste,396,18,Veg,Spicy,https://foodimages.com/food_164.jpg,19-09-2025
+01e35258803c84d198b2024c,Brownie,Dessert,Other,Dessert with Medium taste,490,18,Veg,Medium,https://foodimages.com/food_165.jpg,12-07-2025
+01e35258803c84d198b2024c,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,432,18,Non-Veg,Spicy,https://foodimages.com/food_166.jpg,30-08-2025
+01e35258803c84d198b2024c,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,224,5,Non-Veg,Mild,https://foodimages.com/food_167.jpg,06-07-2025
+3b2d863d0af8ea27c96b081d,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,214,18,Non-Veg,Mild,https://foodimages.com/food_168.jpg,18-09-2025
+3b2d863d0af8ea27c96b081d,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,338,5,Veg,Medium,https://foodimages.com/food_169.jpg,14-10-2025
+3b2d863d0af8ea27c96b081d,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,289,0,Veg,Medium,https://foodimages.com/food_170.jpg,05-09-2025
+3b2d863d0af8ea27c96b081d,Cold Coffee,Beverage,Other,Beverage with Spicy taste,485,0,Jain,Spicy,https://foodimages.com/food_171.jpg,21-10-2025
+b337c2bb13c5d42cef6057b9,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,402,5,Jain,Spicy,https://foodimages.com/food_172.jpg,11-07-2025
+b337c2bb13c5d42cef6057b9,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,247,5,Veg,Mild,https://foodimages.com/food_173.jpg,04-09-2025
+b337c2bb13c5d42cef6057b9,Brownie,Dessert,Other,Dessert with Medium taste,319,18,Veg,Medium,https://foodimages.com/food_174.jpg,17-09-2025
+b337c2bb13c5d42cef6057b9,Cold Coffee,Beverage,Other,Beverage with Spicy taste,451,5,Veg,Spicy,https://foodimages.com/food_175.jpg,16-12-2025
+c7e50d2af2315b1526780d18,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,154,0,Veg,Mild,https://foodimages.com/food_176.jpg,20-12-2025
+c7e50d2af2315b1526780d18,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,473,0,Veg,Mild,https://foodimages.com/food_177.jpg,28-07-2025
+c7e50d2af2315b1526780d18,Lemon Iced Tea,Starter,Other,Starter with Spicy taste,263,18,Vegan,Spicy,https://foodimages.com/food_178.jpg,02-10-2025
+c7e50d2af2315b1526780d18,Cold Coffee,Beverage,Other,Beverage with Medium taste,411,5,Veg,Medium,https://foodimages.com/food_179.jpg,30-11-2025
+9cda256c553aa351359c53ae,Brownie,Dessert,Other,Dessert with Mild taste,185,5,Veg,Mild,https://foodimages.com/food_180.jpg,07-07-2025
+9cda256c553aa351359c53ae,Cold Coffee,Beverage,Other,Beverage with Spicy taste,338,5,Veg,Spicy,https://foodimages.com/food_181.jpg,05-09-2025
+9cda256c553aa351359c53ae,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,175,18,Non-Veg,Mild,https://foodimages.com/food_182.jpg,13-10-2025
+9cda256c553aa351359c53ae,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,264,0,Veg,Medium,https://foodimages.com/food_183.jpg,05-08-2025
+b380035cb2db5a89478415ab,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,332,12,Jain,Spicy,https://foodimages.com/food_184.jpg,23-10-2025
+b380035cb2db5a89478415ab,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,213,0,Veg,Medium,https://foodimages.com/food_185.jpg,06-11-2025
+b380035cb2db5a89478415ab,Cold Coffee,Beverage,Other,Beverage with Medium taste,225,18,Veg,Medium,https://foodimages.com/food_186.jpg,16-12-2025
+b380035cb2db5a89478415ab,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,203,12,Jain,Mild,https://foodimages.com/food_187.jpg,12-07-2025
+c46dea6327735d006a12d303,Spring Rolls,Starter,Chinese,Starter with Medium taste,255,0,Veg,Medium,https://foodimages.com/food_188.jpg,08-07-2025
+c46dea6327735d006a12d303,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,265,12,Veg,Mild,https://foodimages.com/food_189.jpg,14-12-2025
+c46dea6327735d006a12d303,Cold Coffee,Beverage,Other,Beverage with Spicy taste,368,18,Veg,Spicy,https://foodimages.com/food_190.jpg,21-11-2025
+c46dea6327735d006a12d303,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,137,5,Jain,Spicy,https://foodimages.com/food_191.jpg,04-08-2025
+af5e01ae2bb62f49fad32763,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,244,0,Jain,Mild,https://foodimages.com/food_192.jpg,03-12-2025
+af5e01ae2bb62f49fad32763,Brownie,Dessert,Other,Dessert with Mild taste,121,18,Veg,Mild,https://foodimages.com/food_193.jpg,13-08-2025
+af5e01ae2bb62f49fad32763,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,451,12,Jain,Mild,https://foodimages.com/food_194.jpg,31-08-2025
+af5e01ae2bb62f49fad32763,Cold Coffee,Beverage,Other,Beverage with Medium taste,319,18,Veg,Medium,https://foodimages.com/food_195.jpg,21-11-2025
+d8ec57b8a34f837e0e0800b0,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,257,5,Non-Veg,Spicy,https://foodimages.com/food_196.jpg,23-10-2025
+d8ec57b8a34f837e0e0800b0,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,322,18,Veg,Spicy,https://foodimages.com/food_197.jpg,19-11-2025
+d8ec57b8a34f837e0e0800b0,Brownie,Dessert,Other,Dessert with Medium taste,401,18,Veg,Medium,https://foodimages.com/food_198.jpg,11-08-2025
+d8ec57b8a34f837e0e0800b0,Spring Rolls,Starter,Chinese,Starter with Mild taste,422,0,Veg,Mild,https://foodimages.com/food_199.jpg,20-10-2025
+64a131de855abc0112703492,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,149,5,Veg,Spicy,https://foodimages.com/food_200.jpg,30-11-2025
+64a131de855abc0112703492,Cold Coffee,Beverage,Other,Beverage with Medium taste,175,18,Veg,Medium,https://foodimages.com/food_201.jpg,21-10-2025
+64a131de855abc0112703492,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,238,5,Non-Veg,Mild,https://foodimages.com/food_202.jpg,15-07-2025
+64a131de855abc0112703492,Brownie,Dessert,Other,Dessert with Spicy taste,251,12,Veg,Spicy,https://foodimages.com/food_203.jpg,23-07-2025
+1c6a3be8e2df1eea47f3196b,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,350,12,Non-Veg,Mild,https://foodimages.com/food_204.jpg,09-09-2025
+1c6a3be8e2df1eea47f3196b,Spring Rolls,Starter,Chinese,Starter with Medium taste,271,18,Veg,Medium,https://foodimages.com/food_205.jpg,19-09-2025
+1c6a3be8e2df1eea47f3196b,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,140,18,Non-Veg,Spicy,https://foodimages.com/food_206.jpg,11-12-2025
+1c6a3be8e2df1eea47f3196b,Brownie,Dessert,Other,Dessert with Mild taste,187,18,Jain,Mild,https://foodimages.com/food_207.jpg,26-08-2025
+8a1eacabb3267b01e59dd435,Spring Rolls,Starter,Chinese,Starter with Mild taste,245,12,Veg,Mild,https://foodimages.com/food_208.jpg,13-11-2025
+8a1eacabb3267b01e59dd435,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,162,12,Veg,Mild,https://foodimages.com/food_209.jpg,09-08-2025
+8a1eacabb3267b01e59dd435,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,301,12,Veg,Medium,https://foodimages.com/food_210.jpg,07-11-2025
+8a1eacabb3267b01e59dd435,Brownie,Dessert,Other,Dessert with Mild taste,219,5,Jain,Mild,https://foodimages.com/food_211.jpg,07-10-2025
+e917d54a808850324528f8f2,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,498,0,Veg,Spicy,https://foodimages.com/food_212.jpg,18-09-2025
+e917d54a808850324528f8f2,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,468,0,Non-Veg,Spicy,https://foodimages.com/food_213.jpg,11-12-2025
+e917d54a808850324528f8f2,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,359,0,Veg,Mild,https://foodimages.com/food_214.jpg,31-12-2025
+e917d54a808850324528f8f2,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,319,12,Veg,Medium,https://foodimages.com/food_215.jpg,15-07-2025
+17c27e5dc15c4bd20c346bf2,Lemon Iced Tea,Beverage,Other,Beverage with Spicy taste,235,18,Jain,Spicy,https://foodimages.com/food_216.jpg,28-12-2025
+17c27e5dc15c4bd20c346bf2,Brownie,Dessert,Other,Dessert with Spicy taste,234,5,Veg,Spicy,https://foodimages.com/food_217.jpg,23-07-2025
+17c27e5dc15c4bd20c346bf2,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,261,0,Veg,Spicy,https://foodimages.com/food_218.jpg,19-12-2025
+17c27e5dc15c4bd20c346bf2,Spring Rolls,Starter,Chinese,Starter with Mild taste,238,5,Veg,Mild,https://foodimages.com/food_219.jpg,11-08-2025
+f7628efe121eae1afcbda88b,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,212,18,Non-Veg,Spicy,https://foodimages.com/food_220.jpg,01-10-2025
+f7628efe121eae1afcbda88b,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,128,18,Jain,Mild,https://foodimages.com/food_221.jpg,30-10-2025
+f7628efe121eae1afcbda88b,Lemon Iced Tea,Beverage,Other,Beverage with Mild taste,192,12,Vegan,Mild,https://foodimages.com/food_222.jpg,29-07-2025
+f7628efe121eae1afcbda88b,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,145,5,Veg,Mild,https://foodimages.com/food_223.jpg,10-10-2025
+55f7e0c299caa90e8a1d7cee,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,358,12,Jain,Mild,https://foodimages.com/food_224.jpg,19-12-2025
+55f7e0c299caa90e8a1d7cee,Spring Rolls,Starter,Chinese,Starter with Mild taste,481,0,Veg,Mild,https://foodimages.com/food_225.jpg,25-12-2025
+55f7e0c299caa90e8a1d7cee,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,264,18,Veg,Spicy,https://foodimages.com/food_226.jpg,29-08-2025
+55f7e0c299caa90e8a1d7cee,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,187,18,Jain,Mild,https://foodimages.com/food_227.jpg,06-08-2025
+62025b5a5cdbf2ab8ffedeb6,Lemon Iced Tea,Dessert,Other,Dessert with Mild taste,307,18,Vegan,Mild,https://foodimages.com/food_228.jpg,25-10-2025
+62025b5a5cdbf2ab8ffedeb6,Brownie,Dessert,Other,Dessert with Mild taste,485,5,Veg,Mild,https://foodimages.com/food_229.jpg,24-11-2025
+62025b5a5cdbf2ab8ffedeb6,Spring Rolls,Starter,Chinese,Starter with Mild taste,250,5,Veg,Mild,https://foodimages.com/food_230.jpg,12-12-2025
+62025b5a5cdbf2ab8ffedeb6,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,340,0,Veg,Mild,https://foodimages.com/food_231.jpg,13-10-2025
+88131fe17a483c208551c3d7,Brownie,Dessert,Other,Dessert with Mild taste,400,0,Veg,Mild,https://foodimages.com/food_232.jpg,10-07-2025
+88131fe17a483c208551c3d7,Lemon Iced Tea,Main Course,Other,Main Course with Spicy taste,396,18,Jain,Spicy,https://foodimages.com/food_233.jpg,02-11-2025
+88131fe17a483c208551c3d7,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,259,18,Veg,Mild,https://foodimages.com/food_234.jpg,19-12-2025
+88131fe17a483c208551c3d7,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,173,18,Veg,Mild,https://foodimages.com/food_235.jpg,02-10-2025
+d11d48185fc03b8e388eb5ac,Cold Coffee,Beverage,Other,Beverage with Spicy taste,120,5,Veg,Spicy,https://foodimages.com/food_236.jpg,20-09-2025
+d11d48185fc03b8e388eb5ac,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,247,5,Veg,Spicy,https://foodimages.com/food_237.jpg,17-09-2025
+d11d48185fc03b8e388eb5ac,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,120,5,Non-Veg,Medium,https://foodimages.com/food_238.jpg,02-12-2025
+d11d48185fc03b8e388eb5ac,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,292,0,Veg,Spicy,https://foodimages.com/food_239.jpg,17-12-2025
+81eb813a1a7af37f95072401,Lemon Iced Tea,Main Course,Other,Main Course with Spicy taste,385,18,Jain,Spicy,https://foodimages.com/food_240.jpg,27-11-2025
+81eb813a1a7af37f95072401,Spring Rolls,Starter,Chinese,Starter with Mild taste,415,12,Veg,Mild,https://foodimages.com/food_241.jpg,26-12-2025
+81eb813a1a7af37f95072401,Brownie,Dessert,Other,Dessert with Medium taste,375,5,Veg,Medium,https://foodimages.com/food_242.jpg,10-11-2025
+81eb813a1a7af37f95072401,Cold Coffee,Beverage,Other,Beverage with Mild taste,293,18,Veg,Mild,https://foodimages.com/food_243.jpg,19-08-2025
+3aac1416a66d8196a7a26b50,Brownie,Dessert,Other,Dessert with Medium taste,164,12,Jain,Medium,https://foodimages.com/food_244.jpg,06-08-2025
+3aac1416a66d8196a7a26b50,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,462,0,Non-Veg,Mild,https://foodimages.com/food_245.jpg,19-08-2025
+3aac1416a66d8196a7a26b50,Spring Rolls,Starter,Chinese,Starter with Spicy taste,260,0,Veg,Spicy,https://foodimages.com/food_246.jpg,28-12-2025
+3aac1416a66d8196a7a26b50,Cold Coffee,Beverage,Other,Beverage with Spicy taste,146,5,Veg,Spicy,https://foodimages.com/food_247.jpg,02-07-2025
+02f6926c7e4919bcc730f84f,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,352,0,Non-Veg,Medium,https://foodimages.com/food_248.jpg,01-11-2025
+02f6926c7e4919bcc730f84f,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,328,18,Veg,Mild,https://foodimages.com/food_249.jpg,17-08-2025
+02f6926c7e4919bcc730f84f,Brownie,Dessert,Other,Dessert with Mild taste,169,18,Veg,Mild,https://foodimages.com/food_250.jpg,25-10-2025
+02f6926c7e4919bcc730f84f,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,180,0,Non-Veg,Spicy,https://foodimages.com/food_251.jpg,23-09-2025
+a3a1a4920f3e8c0a8e033699,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,362,12,Veg,Spicy,https://foodimages.com/food_252.jpg,04-08-2025
+a3a1a4920f3e8c0a8e033699,Cold Coffee,Beverage,Other,Beverage with Medium taste,388,5,Veg,Medium,https://foodimages.com/food_253.jpg,30-12-2025
+a3a1a4920f3e8c0a8e033699,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,259,12,Veg,Spicy,https://foodimages.com/food_254.jpg,14-11-2025
+a3a1a4920f3e8c0a8e033699,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,276,0,Veg,Medium,https://foodimages.com/food_255.jpg,08-07-2025
+67427d9c495eb5ac4ca3107b,Cold Coffee,Beverage,Other,Beverage with Medium taste,204,5,Veg,Medium,https://foodimages.com/food_256.jpg,23-10-2025
+67427d9c495eb5ac4ca3107b,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,203,5,Jain,Medium,https://foodimages.com/food_257.jpg,21-08-2025
+67427d9c495eb5ac4ca3107b,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,395,0,Veg,Medium,https://foodimages.com/food_258.jpg,03-10-2025
+67427d9c495eb5ac4ca3107b,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,150,5,Non-Veg,Spicy,https://foodimages.com/food_259.jpg,04-07-2025
+6f08ac563431215bd9a4fc49,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,127,18,Veg,Medium,https://foodimages.com/food_260.jpg,28-09-2025
+6f08ac563431215bd9a4fc49,Lemon Iced Tea,Dessert,Other,Dessert with Spicy taste,399,0,Vegan,Spicy,https://foodimages.com/food_261.jpg,03-11-2025
+6f08ac563431215bd9a4fc49,Cold Coffee,Beverage,Other,Beverage with Medium taste,322,12,Veg,Medium,https://foodimages.com/food_262.jpg,02-10-2025
+6f08ac563431215bd9a4fc49,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,152,0,Veg,Spicy,https://foodimages.com/food_263.jpg,10-09-2025
+926bd03ccf865cdb391b7b8f,Spring Rolls,Starter,Chinese,Starter with Medium taste,417,0,Veg,Medium,https://foodimages.com/food_264.jpg,09-08-2025
+926bd03ccf865cdb391b7b8f,Lemon Iced Tea,Main Course,Other,Main Course with Spicy taste,262,18,Vegan,Spicy,https://foodimages.com/food_265.jpg,04-09-2025
+926bd03ccf865cdb391b7b8f,Cold Coffee,Beverage,Other,Beverage with Mild taste,469,18,Veg,Mild,https://foodimages.com/food_266.jpg,04-10-2025
+926bd03ccf865cdb391b7b8f,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,156,0,Non-Veg,Medium,https://foodimages.com/food_267.jpg,23-07-2025
+1e2a20c2fa17d2e464673f36,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,266,0,Non-Veg,Medium,https://foodimages.com/food_268.jpg,20-07-2025
+1e2a20c2fa17d2e464673f36,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,347,12,Veg,Mild,https://foodimages.com/food_269.jpg,31-10-2025
+1e2a20c2fa17d2e464673f36,Spring Rolls,Starter,Chinese,Starter with Mild taste,153,5,Jain,Mild,https://foodimages.com/food_270.jpg,13-10-2025
+1e2a20c2fa17d2e464673f36,Cold Coffee,Beverage,Other,Beverage with Medium taste,356,0,Veg,Medium,https://foodimages.com/food_271.jpg,05-07-2025
+ad7528193a31700100e2e8fa,Spring Rolls,Starter,Chinese,Starter with Spicy taste,331,0,Veg,Spicy,https://foodimages.com/food_272.jpg,10-11-2025
+ad7528193a31700100e2e8fa,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,428,0,Veg,Medium,https://foodimages.com/food_273.jpg,18-12-2025
+ad7528193a31700100e2e8fa,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,259,5,Veg,Spicy,https://foodimages.com/food_274.jpg,24-09-2025
+ad7528193a31700100e2e8fa,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,309,5,Non-Veg,Mild,https://foodimages.com/food_275.jpg,27-12-2025
+11b5d4c5383a3bdbafdb6ef3,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,215,0,Veg,Spicy,https://foodimages.com/food_276.jpg,29-10-2025
+11b5d4c5383a3bdbafdb6ef3,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,313,5,Non-Veg,Medium,https://foodimages.com/food_277.jpg,18-12-2025
+11b5d4c5383a3bdbafdb6ef3,Spring Rolls,Starter,Chinese,Starter with Mild taste,480,5,Veg,Mild,https://foodimages.com/food_278.jpg,13-10-2025
+11b5d4c5383a3bdbafdb6ef3,Brownie,Dessert,Other,Dessert with Mild taste,423,0,Veg,Mild,https://foodimages.com/food_279.jpg,22-11-2025
+5a7ecbb36717885c0ed77cca,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,415,0,Veg,Medium,https://foodimages.com/food_280.jpg,16-10-2025
+5a7ecbb36717885c0ed77cca,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,271,12,Non-Veg,Medium,https://foodimages.com/food_281.jpg,23-12-2025
+5a7ecbb36717885c0ed77cca,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,342,0,Non-Veg,Mild,https://foodimages.com/food_282.jpg,09-08-2025
+5a7ecbb36717885c0ed77cca,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,315,5,Veg,Spicy,https://foodimages.com/food_283.jpg,12-12-2025
+c0fbe734d35c05929d6fd4c0,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,207,5,Veg,Spicy,https://foodimages.com/food_284.jpg,05-10-2025
+c0fbe734d35c05929d6fd4c0,Spring Rolls,Starter,Chinese,Starter with Spicy taste,418,5,Veg,Spicy,https://foodimages.com/food_285.jpg,25-11-2025
+c0fbe734d35c05929d6fd4c0,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,136,0,Veg,Medium,https://foodimages.com/food_286.jpg,25-12-2025
+c0fbe734d35c05929d6fd4c0,Lemon Iced Tea,Dessert,Other,Dessert with Mild taste,330,12,Vegan,Mild,https://foodimages.com/food_287.jpg,13-07-2025
+712fa0e74f777d61c95824f8,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,351,12,Non-Veg,Spicy,https://foodimages.com/food_288.jpg,27-11-2025
+712fa0e74f777d61c95824f8,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,477,5,Jain,Mild,https://foodimages.com/food_289.jpg,12-09-2025
+712fa0e74f777d61c95824f8,Brownie,Dessert,Other,Dessert with Spicy taste,302,12,Veg,Spicy,https://foodimages.com/food_290.jpg,13-12-2025
+712fa0e74f777d61c95824f8,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,281,12,Veg,Mild,https://foodimages.com/food_291.jpg,03-11-2025
+5bfafa1139760086d7175961,Brownie,Dessert,Other,Dessert with Medium taste,486,18,Veg,Medium,https://foodimages.com/food_292.jpg,22-08-2025
+5bfafa1139760086d7175961,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,189,18,Veg,Medium,https://foodimages.com/food_293.jpg,22-09-2025
+5bfafa1139760086d7175961,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,179,5,Non-Veg,Medium,https://foodimages.com/food_294.jpg,06-12-2025
+5bfafa1139760086d7175961,Cold Coffee,Beverage,Other,Beverage with Spicy taste,298,18,Veg,Spicy,https://foodimages.com/food_295.jpg,21-07-2025
+2e0a6110f9cc81514fd41446,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,196,12,Veg,Medium,https://foodimages.com/food_296.jpg,28-07-2025
+2e0a6110f9cc81514fd41446,Lemon Iced Tea,Dessert,Other,Dessert with Medium taste,154,18,Jain,Medium,https://foodimages.com/food_297.jpg,07-10-2025
+2e0a6110f9cc81514fd41446,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,135,12,Veg,Medium,https://foodimages.com/food_298.jpg,18-08-2025
+2e0a6110f9cc81514fd41446,Cold Coffee,Beverage,Other,Beverage with Mild taste,413,12,Veg,Mild,https://foodimages.com/food_299.jpg,22-11-2025
+74d20e7d4b2ca7964e4e393b,Spring Rolls,Starter,Chinese,Starter with Mild taste,290,18,Veg,Mild,https://foodimages.com/food_300.jpg,04-12-2025
+74d20e7d4b2ca7964e4e393b,Cold Coffee,Beverage,Other,Beverage with Mild taste,151,12,Veg,Mild,https://foodimages.com/food_301.jpg,12-10-2025
+74d20e7d4b2ca7964e4e393b,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,382,18,Veg,Mild,https://foodimages.com/food_302.jpg,19-09-2025
+74d20e7d4b2ca7964e4e393b,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,334,18,Non-Veg,Mild,https://foodimages.com/food_303.jpg,23-12-2025
+ff26351f6c90038fb75c5b12,Cold Coffee,Beverage,Other,Beverage with Mild taste,165,18,Veg,Mild,https://foodimages.com/food_304.jpg,23-08-2025
+ff26351f6c90038fb75c5b12,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,308,5,Veg,Mild,https://foodimages.com/food_305.jpg,15-10-2025
+ff26351f6c90038fb75c5b12,Lemon Iced Tea,Starter,Other,Starter with Medium taste,393,5,Vegan,Medium,https://foodimages.com/food_306.jpg,03-11-2025
+ff26351f6c90038fb75c5b12,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,190,12,Veg,Medium,https://foodimages.com/food_307.jpg,30-09-2025
+1d29e8c957665ac8b2e86db9,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,415,5,Veg,Spicy,https://foodimages.com/food_308.jpg,21-08-2025
+1d29e8c957665ac8b2e86db9,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,207,12,Veg,Medium,https://foodimages.com/food_309.jpg,07-12-2025
+1d29e8c957665ac8b2e86db9,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,453,5,Non-Veg,Mild,https://foodimages.com/food_310.jpg,11-10-2025
+1d29e8c957665ac8b2e86db9,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,380,0,Veg,Mild,https://foodimages.com/food_311.jpg,01-08-2025
+036f29c0fe6908f0b55a045b,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,301,12,Veg,Spicy,https://foodimages.com/food_312.jpg,29-09-2025
+036f29c0fe6908f0b55a045b,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,461,12,Non-Veg,Medium,https://foodimages.com/food_313.jpg,16-07-2025
+036f29c0fe6908f0b55a045b,Lemon Iced Tea,Main Course,Other,Main Course with Medium taste,141,12,Vegan,Medium,https://foodimages.com/food_314.jpg,05-07-2025
+036f29c0fe6908f0b55a045b,Brownie,Dessert,Other,Dessert with Spicy taste,193,0,Veg,Spicy,https://foodimages.com/food_315.jpg,17-09-2025
+5bc9e707016d4e0ddbd2578d,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,209,12,Veg,Mild,https://foodimages.com/food_316.jpg,26-11-2025
+5bc9e707016d4e0ddbd2578d,Cold Coffee,Beverage,Other,Beverage with Mild taste,454,18,Veg,Mild,https://foodimages.com/food_317.jpg,06-09-2025
+5bc9e707016d4e0ddbd2578d,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,285,18,Veg,Mild,https://foodimages.com/food_318.jpg,28-07-2025
+5bc9e707016d4e0ddbd2578d,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,353,18,Veg,Mild,https://foodimages.com/food_319.jpg,11-12-2025
+bec2b3858cc3ab63aea490ff,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,494,12,Veg,Spicy,https://foodimages.com/food_320.jpg,24-11-2025
+bec2b3858cc3ab63aea490ff,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,248,12,Veg,Medium,https://foodimages.com/food_321.jpg,14-09-2025
+bec2b3858cc3ab63aea490ff,Spring Rolls,Starter,Chinese,Starter with Mild taste,453,12,Veg,Mild,https://foodimages.com/food_322.jpg,13-12-2025
+bec2b3858cc3ab63aea490ff,Lemon Iced Tea,Dessert,Other,Dessert with Medium taste,411,0,Vegan,Medium,https://foodimages.com/food_323.jpg,18-07-2025
+7caafb5c82c56fc5cbadfd71,Spring Rolls,Starter,Chinese,Starter with Medium taste,214,12,Veg,Medium,https://foodimages.com/food_324.jpg,30-07-2025
+7caafb5c82c56fc5cbadfd71,Brownie,Dessert,Other,Dessert with Mild taste,147,18,Veg,Mild,https://foodimages.com/food_325.jpg,14-08-2025
+7caafb5c82c56fc5cbadfd71,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,473,0,Veg,Mild,https://foodimages.com/food_326.jpg,12-07-2025
+7caafb5c82c56fc5cbadfd71,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,154,18,Jain,Mild,https://foodimages.com/food_327.jpg,18-11-2025
+bfcf286f5f82c6314271cade,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,350,0,Non-Veg,Medium,https://foodimages.com/food_328.jpg,23-09-2025
+bfcf286f5f82c6314271cade,Brownie,Dessert,Other,Dessert with Spicy taste,437,0,Veg,Spicy,https://foodimages.com/food_329.jpg,23-07-2025
+bfcf286f5f82c6314271cade,Cold Coffee,Beverage,Other,Beverage with Mild taste,462,12,Veg,Mild,https://foodimages.com/food_330.jpg,01-11-2025
+bfcf286f5f82c6314271cade,Spring Rolls,Starter,Chinese,Starter with Medium taste,483,5,Veg,Medium,https://foodimages.com/food_331.jpg,27-09-2025
+3231ec2e03dddcc03a370ea9,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,244,5,Veg,Medium,https://foodimages.com/food_332.jpg,28-09-2025
+3231ec2e03dddcc03a370ea9,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,198,12,Non-Veg,Mild,https://foodimages.com/food_333.jpg,04-07-2025
+3231ec2e03dddcc03a370ea9,Brownie,Dessert,Other,Dessert with Spicy taste,180,18,Veg,Spicy,https://foodimages.com/food_334.jpg,13-10-2025
+3231ec2e03dddcc03a370ea9,Spring Rolls,Starter,Chinese,Starter with Mild taste,336,0,Veg,Mild,https://foodimages.com/food_335.jpg,30-08-2025
+5e01cd3d0b3349958cb0132a,Cold Coffee,Beverage,Other,Beverage with Mild taste,401,12,Veg,Mild,https://foodimages.com/food_336.jpg,30-07-2025
+5e01cd3d0b3349958cb0132a,Spring Rolls,Starter,Chinese,Starter with Spicy taste,282,18,Veg,Spicy,https://foodimages.com/food_337.jpg,26-10-2025
+5e01cd3d0b3349958cb0132a,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,176,12,Jain,Mild,https://foodimages.com/food_338.jpg,04-09-2025
+5e01cd3d0b3349958cb0132a,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,310,5,Non-Veg,Mild,https://foodimages.com/food_339.jpg,14-11-2025
+9a21c2074f6103517905c84a,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,251,12,Veg,Spicy,https://foodimages.com/food_340.jpg,21-11-2025
+9a21c2074f6103517905c84a,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,161,0,Non-Veg,Medium,https://foodimages.com/food_341.jpg,20-12-2025
+9a21c2074f6103517905c84a,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,292,0,Veg,Medium,https://foodimages.com/food_342.jpg,31-08-2025
+9a21c2074f6103517905c84a,Cold Coffee,Beverage,Other,Beverage with Medium taste,286,18,Veg,Medium,https://foodimages.com/food_343.jpg,04-09-2025
+b189a304e1fc9e7483c83e3b,Spring Rolls,Starter,Chinese,Starter with Medium taste,369,5,Veg,Medium,https://foodimages.com/food_344.jpg,09-08-2025
+b189a304e1fc9e7483c83e3b,Lemon Iced Tea,Main Course,Other,Main Course with Medium taste,312,12,Jain,Medium,https://foodimages.com/food_345.jpg,05-11-2025
+b189a304e1fc9e7483c83e3b,Brownie,Dessert,Other,Dessert with Mild taste,397,5,Veg,Mild,https://foodimages.com/food_346.jpg,25-09-2025
+b189a304e1fc9e7483c83e3b,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,357,12,Non-Veg,Spicy,https://foodimages.com/food_347.jpg,23-07-2025
+4b9b80e570b4ed498cc5bfce,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,349,18,Veg,Medium,https://foodimages.com/food_348.jpg,04-09-2025
+4b9b80e570b4ed498cc5bfce,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,284,5,Non-Veg,Spicy,https://foodimages.com/food_349.jpg,28-11-2025
+4b9b80e570b4ed498cc5bfce,Brownie,Dessert,Other,Dessert with Medium taste,362,5,Veg,Medium,https://foodimages.com/food_350.jpg,05-10-2025
+4b9b80e570b4ed498cc5bfce,Spring Rolls,Starter,Chinese,Starter with Mild taste,209,18,Veg,Mild,https://foodimages.com/food_351.jpg,06-09-2025
+3a0a1eb86d251fbbcb166dbd,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,298,18,Veg,Medium,https://foodimages.com/food_352.jpg,29-12-2025
+3a0a1eb86d251fbbcb166dbd,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,177,0,Veg,Medium,https://foodimages.com/food_353.jpg,10-12-2025
+3a0a1eb86d251fbbcb166dbd,Spring Rolls,Starter,Chinese,Starter with Spicy taste,382,12,Veg,Spicy,https://foodimages.com/food_354.jpg,08-12-2025
+3a0a1eb86d251fbbcb166dbd,Cold Coffee,Beverage,Other,Beverage with Spicy taste,255,5,Veg,Spicy,https://foodimages.com/food_355.jpg,28-12-2025
+5e440554516869a379f5d70b,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,357,12,Non-Veg,Mild,https://foodimages.com/food_356.jpg,20-08-2025
+5e440554516869a379f5d70b,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,426,0,Jain,Spicy,https://foodimages.com/food_357.jpg,20-07-2025
+5e440554516869a379f5d70b,Brownie,Dessert,Other,Dessert with Spicy taste,362,5,Veg,Spicy,https://foodimages.com/food_358.jpg,02-09-2025
+5e440554516869a379f5d70b,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,270,0,Veg,Spicy,https://foodimages.com/food_359.jpg,28-10-2025
+9552a22261b3a2fdaa679df2,Spring Rolls,Starter,Chinese,Starter with Mild taste,465,12,Veg,Mild,https://foodimages.com/food_360.jpg,27-10-2025
+9552a22261b3a2fdaa679df2,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,483,0,Non-Veg,Mild,https://foodimages.com/food_361.jpg,06-11-2025
+9552a22261b3a2fdaa679df2,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,366,12,Veg,Mild,https://foodimages.com/food_362.jpg,24-09-2025
+9552a22261b3a2fdaa679df2,Cold Coffee,Beverage,Other,Beverage with Spicy taste,338,18,Veg,Spicy,https://foodimages.com/food_363.jpg,28-11-2025
+ef8f16ca8990f148b8bb12c2,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,128,0,Veg,Spicy,https://foodimages.com/food_364.jpg,18-09-2025
+ef8f16ca8990f148b8bb12c2,Lemon Iced Tea,Main Course,Other,Main Course with Mild taste,413,18,Vegan,Mild,https://foodimages.com/food_365.jpg,15-11-2025
+ef8f16ca8990f148b8bb12c2,Spring Rolls,Starter,Chinese,Starter with Spicy taste,486,12,Veg,Spicy,https://foodimages.com/food_366.jpg,29-08-2025
+ef8f16ca8990f148b8bb12c2,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,132,12,Veg,Spicy,https://foodimages.com/food_367.jpg,12-12-2025
+6da8f249c3354c9948c81897,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,382,12,Veg,Medium,https://foodimages.com/food_368.jpg,20-11-2025
+6da8f249c3354c9948c81897,Lemon Iced Tea,Beverage,Other,Beverage with Mild taste,344,18,Vegan,Mild,https://foodimages.com/food_369.jpg,31-10-2025
+6da8f249c3354c9948c81897,Cold Coffee,Beverage,Other,Beverage with Mild taste,350,18,Veg,Mild,https://foodimages.com/food_370.jpg,18-09-2025
+6da8f249c3354c9948c81897,Brownie,Dessert,Other,Dessert with Spicy taste,297,18,Jain,Spicy,https://foodimages.com/food_371.jpg,27-09-2025
+c2bc60056697c240a7841990,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,366,18,Veg,Spicy,https://foodimages.com/food_372.jpg,03-12-2025
+c2bc60056697c240a7841990,Cold Coffee,Beverage,Other,Beverage with Medium taste,186,5,Veg,Medium,https://foodimages.com/food_373.jpg,10-08-2025
+c2bc60056697c240a7841990,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,416,0,Veg,Mild,https://foodimages.com/food_374.jpg,25-08-2025
+c2bc60056697c240a7841990,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,276,12,Non-Veg,Mild,https://foodimages.com/food_375.jpg,14-12-2025
+bbefbf5de1cacbae2eb6bcf8,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,284,18,Veg,Spicy,https://foodimages.com/food_376.jpg,03-08-2025
+bbefbf5de1cacbae2eb6bcf8,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,303,0,Veg,Mild,https://foodimages.com/food_377.jpg,30-12-2025
+bbefbf5de1cacbae2eb6bcf8,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,327,12,Non-Veg,Spicy,https://foodimages.com/food_378.jpg,19-12-2025
+bbefbf5de1cacbae2eb6bcf8,Lemon Iced Tea,Main Course,Other,Main Course with Medium taste,135,12,Vegan,Medium,https://foodimages.com/food_379.jpg,18-08-2025
+1d2cb29e8acb7642f9d79fda,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,419,5,Veg,Spicy,https://foodimages.com/food_380.jpg,24-08-2025
+1d2cb29e8acb7642f9d79fda,Lemon Iced Tea,Dessert,Other,Dessert with Medium taste,425,0,Jain,Medium,https://foodimages.com/food_381.jpg,25-11-2025
+1d2cb29e8acb7642f9d79fda,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,360,5,Non-Veg,Spicy,https://foodimages.com/food_382.jpg,10-08-2025
+1d2cb29e8acb7642f9d79fda,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,349,18,Non-Veg,Medium,https://foodimages.com/food_383.jpg,29-08-2025
+807a8bc8526e52e1bb98af9f,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,137,12,Veg,Medium,https://foodimages.com/food_384.jpg,06-11-2025
+807a8bc8526e52e1bb98af9f,Spring Rolls,Starter,Chinese,Starter with Mild taste,266,5,Veg,Mild,https://foodimages.com/food_385.jpg,17-12-2025
+807a8bc8526e52e1bb98af9f,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,363,18,Veg,Spicy,https://foodimages.com/food_386.jpg,23-09-2025
+807a8bc8526e52e1bb98af9f,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,170,18,Veg,Mild,https://foodimages.com/food_387.jpg,26-11-2025
+e4edc0b5f832e2e1d4e2e00b,Spring Rolls,Starter,Chinese,Starter with Mild taste,378,12,Veg,Mild,https://foodimages.com/food_388.jpg,07-12-2025
+e4edc0b5f832e2e1d4e2e00b,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,357,0,Veg,Spicy,https://foodimages.com/food_389.jpg,21-09-2025
+e4edc0b5f832e2e1d4e2e00b,Cold Coffee,Beverage,Other,Beverage with Mild taste,365,0,Veg,Mild,https://foodimages.com/food_390.jpg,31-08-2025
+e4edc0b5f832e2e1d4e2e00b,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,464,5,Veg,Mild,https://foodimages.com/food_391.jpg,25-07-2025
+685728a343224465dd183c0a,Cold Coffee,Beverage,Other,Beverage with Mild taste,429,5,Veg,Mild,https://foodimages.com/food_392.jpg,25-10-2025
+685728a343224465dd183c0a,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,168,0,Veg,Spicy,https://foodimages.com/food_393.jpg,03-07-2025
+685728a343224465dd183c0a,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,403,0,Non-Veg,Mild,https://foodimages.com/food_394.jpg,06-09-2025
+685728a343224465dd183c0a,Spring Rolls,Starter,Chinese,Starter with Mild taste,157,12,Veg,Mild,https://foodimages.com/food_395.jpg,15-07-2025
+4792a1715b8558f744b28d0d,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,403,18,Veg,Mild,https://foodimages.com/food_396.jpg,20-09-2025
+4792a1715b8558f744b28d0d,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,151,5,Non-Veg,Spicy,https://foodimages.com/food_397.jpg,11-11-2025
+4792a1715b8558f744b28d0d,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,362,18,Veg,Medium,https://foodimages.com/food_398.jpg,24-07-2025
+4792a1715b8558f744b28d0d,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,160,12,Veg,Medium,https://foodimages.com/food_399.jpg,15-12-2025
+33a1e9b143fcc3cf61007402,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,411,18,Veg,Medium,https://foodimages.com/food_400.jpg,27-12-2025
+33a1e9b143fcc3cf61007402,Lemon Iced Tea,Starter,Other,Starter with Medium taste,222,5,Vegan,Medium,https://foodimages.com/food_401.jpg,22-07-2025
+33a1e9b143fcc3cf61007402,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,411,18,Non-Veg,Mild,https://foodimages.com/food_402.jpg,01-08-2025
+33a1e9b143fcc3cf61007402,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,226,5,Veg,Spicy,https://foodimages.com/food_403.jpg,27-11-2025
+8bfe3560832d1acb9364eb37,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,365,0,Jain,Mild,https://foodimages.com/food_404.jpg,11-11-2025
+8bfe3560832d1acb9364eb37,Brownie,Dessert,Other,Dessert with Spicy taste,206,0,Veg,Spicy,https://foodimages.com/food_405.jpg,21-11-2025
+8bfe3560832d1acb9364eb37,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,185,12,Veg,Mild,https://foodimages.com/food_406.jpg,26-09-2025
+8bfe3560832d1acb9364eb37,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,257,18,Jain,Medium,https://foodimages.com/food_407.jpg,25-10-2025
+3402770fc48bfcc4d14653e1,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,445,5,Veg,Medium,https://foodimages.com/food_408.jpg,24-12-2025
+3402770fc48bfcc4d14653e1,Spring Rolls,Starter,Chinese,Starter with Spicy taste,319,12,Jain,Spicy,https://foodimages.com/food_409.jpg,26-08-2025
+3402770fc48bfcc4d14653e1,Cold Coffee,Beverage,Other,Beverage with Mild taste,454,5,Veg,Mild,https://foodimages.com/food_410.jpg,22-08-2025
+3402770fc48bfcc4d14653e1,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,212,18,Veg,Medium,https://foodimages.com/food_411.jpg,14-11-2025
+a6d94a02e52d91d4863644cb,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,467,12,Veg,Spicy,https://foodimages.com/food_412.jpg,18-07-2025
+a6d94a02e52d91d4863644cb,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,397,5,Non-Veg,Mild,https://foodimages.com/food_413.jpg,19-10-2025
+a6d94a02e52d91d4863644cb,Spring Rolls,Starter,Chinese,Starter with Spicy taste,139,5,Veg,Spicy,https://foodimages.com/food_414.jpg,12-07-2025
+a6d94a02e52d91d4863644cb,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,408,0,Veg,Mild,https://foodimages.com/food_415.jpg,05-10-2025
+8f4ab6c7629ad86a091bbb0a,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,209,12,Veg,Mild,https://foodimages.com/food_416.jpg,18-09-2025
+8f4ab6c7629ad86a091bbb0a,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,169,18,Veg,Mild,https://foodimages.com/food_417.jpg,10-10-2025
+8f4ab6c7629ad86a091bbb0a,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,129,12,Veg,Spicy,https://foodimages.com/food_418.jpg,20-09-2025
+8f4ab6c7629ad86a091bbb0a,Cold Coffee,Beverage,Other,Beverage with Spicy taste,198,5,Jain,Spicy,https://foodimages.com/food_419.jpg,22-09-2025
+29a9df122f5e1d11b46b05fd,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,156,5,Veg,Mild,https://foodimages.com/food_420.jpg,07-07-2025
+29a9df122f5e1d11b46b05fd,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,178,12,Jain,Medium,https://foodimages.com/food_421.jpg,13-11-2025
+29a9df122f5e1d11b46b05fd,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,207,18,Jain,Mild,https://foodimages.com/food_422.jpg,19-07-2025
+29a9df122f5e1d11b46b05fd,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,223,18,Veg,Spicy,https://foodimages.com/food_423.jpg,22-08-2025
+9f91066f272fb03278ea726a,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,438,5,Non-Veg,Mild,https://foodimages.com/food_424.jpg,22-09-2025
+9f91066f272fb03278ea726a,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,396,18,Non-Veg,Spicy,https://foodimages.com/food_425.jpg,23-07-2025
+9f91066f272fb03278ea726a,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,223,0,Veg,Mild,https://foodimages.com/food_426.jpg,19-09-2025
+9f91066f272fb03278ea726a,Spring Rolls,Starter,Chinese,Starter with Mild taste,373,12,Veg,Mild,https://foodimages.com/food_427.jpg,03-09-2025
+a553549131315f8822c7e876,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,349,0,Jain,Medium,https://foodimages.com/food_428.jpg,19-09-2025
+a553549131315f8822c7e876,Lemon Iced Tea,Main Course,Other,Main Course with Medium taste,454,12,Vegan,Medium,https://foodimages.com/food_429.jpg,22-08-2025
+a553549131315f8822c7e876,Cold Coffee,Beverage,Other,Beverage with Spicy taste,156,5,Veg,Spicy,https://foodimages.com/food_430.jpg,17-07-2025
+a553549131315f8822c7e876,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,420,12,Veg,Mild,https://foodimages.com/food_431.jpg,15-09-2025
+262269ae7c90ab8e7287eb9b,Cold Coffee,Beverage,Other,Beverage with Spicy taste,261,5,Jain,Spicy,https://foodimages.com/food_432.jpg,17-10-2025
+262269ae7c90ab8e7287eb9b,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,162,5,Non-Veg,Mild,https://foodimages.com/food_433.jpg,16-07-2025
+262269ae7c90ab8e7287eb9b,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,235,12,Non-Veg,Mild,https://foodimages.com/food_434.jpg,13-09-2025
+262269ae7c90ab8e7287eb9b,Spring Rolls,Starter,Chinese,Starter with Mild taste,460,5,Veg,Mild,https://foodimages.com/food_435.jpg,22-11-2025
+47362c0f5296a50d9bb4f2d4,Brownie,Dessert,Other,Dessert with Medium taste,203,18,Veg,Medium,https://foodimages.com/food_436.jpg,19-11-2025
+47362c0f5296a50d9bb4f2d4,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,378,18,Veg,Spicy,https://foodimages.com/food_437.jpg,30-09-2025
+47362c0f5296a50d9bb4f2d4,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,479,0,Jain,Mild,https://foodimages.com/food_438.jpg,22-10-2025
+47362c0f5296a50d9bb4f2d4,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,206,0,Veg,Mild,https://foodimages.com/food_439.jpg,12-09-2025
+25ccbe9d82dc7a977a49f91b,Spring Rolls,Starter,Chinese,Starter with Spicy taste,486,18,Veg,Spicy,https://foodimages.com/food_440.jpg,17-12-2025
+25ccbe9d82dc7a977a49f91b,Brownie,Dessert,Other,Dessert with Spicy taste,462,12,Veg,Spicy,https://foodimages.com/food_441.jpg,20-08-2025
+25ccbe9d82dc7a977a49f91b,Lemon Iced Tea,Dessert,Other,Dessert with Mild taste,466,0,Vegan,Mild,https://foodimages.com/food_442.jpg,03-08-2025
+25ccbe9d82dc7a977a49f91b,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,410,12,Jain,Medium,https://foodimages.com/food_443.jpg,05-08-2025
+81b95806d605ed09cc17a8f1,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,215,18,Jain,Medium,https://foodimages.com/food_444.jpg,29-11-2025
+81b95806d605ed09cc17a8f1,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,374,5,Veg,Mild,https://foodimages.com/food_445.jpg,04-09-2025
+81b95806d605ed09cc17a8f1,Cold Coffee,Beverage,Other,Beverage with Medium taste,461,0,Jain,Medium,https://foodimages.com/food_446.jpg,07-07-2025
+81b95806d605ed09cc17a8f1,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,255,5,Veg,Spicy,https://foodimages.com/food_447.jpg,16-09-2025
+5e0f124815e4e03d1be480b7,Lemon Iced Tea,Beverage,Other,Beverage with Medium taste,367,5,Vegan,Medium,https://foodimages.com/food_448.jpg,25-12-2025
+5e0f124815e4e03d1be480b7,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,491,5,Veg,Spicy,https://foodimages.com/food_449.jpg,02-09-2025
+5e0f124815e4e03d1be480b7,Brownie,Dessert,Other,Dessert with Spicy taste,211,5,Veg,Spicy,https://foodimages.com/food_450.jpg,27-09-2025
+5e0f124815e4e03d1be480b7,Cold Coffee,Beverage,Other,Beverage with Spicy taste,366,18,Veg,Spicy,https://foodimages.com/food_451.jpg,17-12-2025
+ceda54111efea693311aafec,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,377,18,Veg,Spicy,https://foodimages.com/food_452.jpg,11-09-2025
+ceda54111efea693311aafec,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,306,5,Non-Veg,Medium,https://foodimages.com/food_453.jpg,13-12-2025
+ceda54111efea693311aafec,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,243,0,Veg,Spicy,https://foodimages.com/food_454.jpg,18-07-2025
+ceda54111efea693311aafec,Spring Rolls,Starter,Chinese,Starter with Mild taste,379,18,Veg,Mild,https://foodimages.com/food_455.jpg,25-08-2025
+b54d458e36c32749c9fdf3e1,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,288,0,Veg,Spicy,https://foodimages.com/food_456.jpg,01-12-2025
+b54d458e36c32749c9fdf3e1,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,484,18,Veg,Mild,https://foodimages.com/food_457.jpg,12-07-2025
+b54d458e36c32749c9fdf3e1,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,230,18,Veg,Spicy,https://foodimages.com/food_458.jpg,29-09-2025
+b54d458e36c32749c9fdf3e1,Cold Coffee,Beverage,Other,Beverage with Spicy taste,409,0,Veg,Spicy,https://foodimages.com/food_459.jpg,13-09-2025
+c2aafc7e95a34a4276af9149,Cold Coffee,Beverage,Other,Beverage with Medium taste,206,0,Veg,Medium,https://foodimages.com/food_460.jpg,08-11-2025
+c2aafc7e95a34a4276af9149,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,132,5,Veg,Spicy,https://foodimages.com/food_461.jpg,14-08-2025
+c2aafc7e95a34a4276af9149,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,382,12,Veg,Spicy,https://foodimages.com/food_462.jpg,14-12-2025
+c2aafc7e95a34a4276af9149,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,407,0,Non-Veg,Medium,https://foodimages.com/food_463.jpg,16-10-2025
+43927d9d244e8d68269de1b8,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,142,5,Veg,Medium,https://foodimages.com/food_464.jpg,12-11-2025
+43927d9d244e8d68269de1b8,Spring Rolls,Starter,Chinese,Starter with Mild taste,319,12,Jain,Mild,https://foodimages.com/food_465.jpg,24-08-2025
+43927d9d244e8d68269de1b8,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,361,12,Non-Veg,Medium,https://foodimages.com/food_466.jpg,27-10-2025
+43927d9d244e8d68269de1b8,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,358,18,Veg,Mild,https://foodimages.com/food_467.jpg,23-07-2025
+f3725bcdcecab98eca2ffae3,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,422,0,Veg,Spicy,https://foodimages.com/food_468.jpg,01-08-2025
+f3725bcdcecab98eca2ffae3,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,284,12,Non-Veg,Mild,https://foodimages.com/food_469.jpg,17-11-2025
+f3725bcdcecab98eca2ffae3,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,345,18,Veg,Medium,https://foodimages.com/food_470.jpg,13-09-2025
+f3725bcdcecab98eca2ffae3,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,295,5,Veg,Spicy,https://foodimages.com/food_471.jpg,22-07-2025
+69b11c2c12269e073632f281,Spring Rolls,Starter,Chinese,Starter with Mild taste,148,5,Veg,Mild,https://foodimages.com/food_472.jpg,07-09-2025
+69b11c2c12269e073632f281,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,284,5,Non-Veg,Mild,https://foodimages.com/food_473.jpg,02-08-2025
+69b11c2c12269e073632f281,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,142,18,Veg,Mild,https://foodimages.com/food_474.jpg,02-12-2025
+69b11c2c12269e073632f281,Brownie,Dessert,Other,Dessert with Spicy taste,413,5,Veg,Spicy,https://foodimages.com/food_475.jpg,01-09-2025
+104c6901a99d38f9eef1955c,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,163,12,Non-Veg,Mild,https://foodimages.com/food_476.jpg,18-12-2025
+104c6901a99d38f9eef1955c,Cold Coffee,Beverage,Other,Beverage with Mild taste,380,0,Veg,Mild,https://foodimages.com/food_477.jpg,13-11-2025
+104c6901a99d38f9eef1955c,Spring Rolls,Starter,Chinese,Starter with Medium taste,299,18,Veg,Medium,https://foodimages.com/food_478.jpg,11-12-2025
+104c6901a99d38f9eef1955c,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,415,18,Veg,Mild,https://foodimages.com/food_479.jpg,17-08-2025
+a399db85224d667a1aef2316,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,258,5,Veg,Spicy,https://foodimages.com/food_480.jpg,14-12-2025
+a399db85224d667a1aef2316,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,453,5,Non-Veg,Medium,https://foodimages.com/food_481.jpg,31-10-2025
+a399db85224d667a1aef2316,Cold Coffee,Beverage,Other,Beverage with Spicy taste,367,12,Veg,Spicy,https://foodimages.com/food_482.jpg,12-10-2025
+a399db85224d667a1aef2316,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,360,12,Non-Veg,Medium,https://foodimages.com/food_483.jpg,16-11-2025
+1ab9b9849a249d7702dc8edd,Lemon Iced Tea,Main Course,Other,Main Course with Medium taste,225,18,Vegan,Medium,https://foodimages.com/food_484.jpg,10-07-2025
+1ab9b9849a249d7702dc8edd,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,292,18,Veg,Mild,https://foodimages.com/food_485.jpg,16-11-2025
+1ab9b9849a249d7702dc8edd,Spring Rolls,Starter,Chinese,Starter with Spicy taste,168,5,Veg,Spicy,https://foodimages.com/food_486.jpg,28-09-2025
+1ab9b9849a249d7702dc8edd,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,242,12,Non-Veg,Mild,https://foodimages.com/food_487.jpg,14-10-2025
+22f137532f0ed00778e33089,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,154,0,Non-Veg,Medium,https://foodimages.com/food_488.jpg,31-07-2025
+22f137532f0ed00778e33089,Brownie,Dessert,Other,Dessert with Mild taste,225,12,Veg,Mild,https://foodimages.com/food_489.jpg,21-09-2025
+22f137532f0ed00778e33089,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,447,12,Veg,Medium,https://foodimages.com/food_490.jpg,22-08-2025
+22f137532f0ed00778e33089,Spring Rolls,Starter,Chinese,Starter with Medium taste,315,0,Veg,Medium,https://foodimages.com/food_491.jpg,19-07-2025
+84dfa76220ce80214b85dac3,Brownie,Dessert,Other,Dessert with Spicy taste,228,12,Veg,Spicy,https://foodimages.com/food_492.jpg,16-09-2025
+84dfa76220ce80214b85dac3,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,244,18,Veg,Spicy,https://foodimages.com/food_493.jpg,24-09-2025
+84dfa76220ce80214b85dac3,Lemon Iced Tea,Starter,Other,Starter with Spicy taste,446,5,Vegan,Spicy,https://foodimages.com/food_494.jpg,18-09-2025
+84dfa76220ce80214b85dac3,Spring Rolls,Starter,Chinese,Starter with Spicy taste,414,18,Veg,Spicy,https://foodimages.com/food_495.jpg,27-07-2025
+9c694b1023496eaa44b54c96,Lemon Iced Tea,Main Course,Other,Main Course with Mild taste,466,5,Vegan,Mild,https://foodimages.com/food_496.jpg,19-12-2025
+9c694b1023496eaa44b54c96,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,156,0,Veg,Spicy,https://foodimages.com/food_497.jpg,07-10-2025
+9c694b1023496eaa44b54c96,Brownie,Dessert,Other,Dessert with Spicy taste,307,5,Jain,Spicy,https://foodimages.com/food_498.jpg,20-09-2025
+9c694b1023496eaa44b54c96,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,456,18,Veg,Spicy,https://foodimages.com/food_499.jpg,23-07-2025
+6dda9164ff69a66a43b9a7a5,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,142,18,Veg,Medium,https://foodimages.com/food_500.jpg,12-09-2025
+6dda9164ff69a66a43b9a7a5,Spring Rolls,Starter,Chinese,Starter with Medium taste,380,5,Veg,Medium,https://foodimages.com/food_501.jpg,16-07-2025
+6dda9164ff69a66a43b9a7a5,Brownie,Dessert,Other,Dessert with Spicy taste,313,5,Veg,Spicy,https://foodimages.com/food_502.jpg,05-12-2025
+6dda9164ff69a66a43b9a7a5,Cold Coffee,Beverage,Other,Beverage with Medium taste,485,5,Veg,Medium,https://foodimages.com/food_503.jpg,11-09-2025
+f2ec26f6d498582ccf79512b,Cold Coffee,Beverage,Other,Beverage with Medium taste,271,0,Veg,Medium,https://foodimages.com/food_504.jpg,26-10-2025
+f2ec26f6d498582ccf79512b,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,137,12,Veg,Mild,https://foodimages.com/food_505.jpg,20-09-2025
+f2ec26f6d498582ccf79512b,Spring Rolls,Starter,Chinese,Starter with Medium taste,146,5,Veg,Medium,https://foodimages.com/food_506.jpg,01-07-2025
+f2ec26f6d498582ccf79512b,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,143,0,Non-Veg,Mild,https://foodimages.com/food_507.jpg,10-09-2025
+64bc4e02a1b58989f9e4d030,Lemon Iced Tea,Dessert,Other,Dessert with Medium taste,148,12,Jain,Medium,https://foodimages.com/food_508.jpg,25-08-2025
+64bc4e02a1b58989f9e4d030,Spring Rolls,Starter,Chinese,Starter with Spicy taste,258,5,Veg,Spicy,https://foodimages.com/food_509.jpg,17-12-2025
+64bc4e02a1b58989f9e4d030,Brownie,Dessert,Other,Dessert with Medium taste,265,0,Veg,Medium,https://foodimages.com/food_510.jpg,05-07-2025
+64bc4e02a1b58989f9e4d030,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,242,18,Non-Veg,Medium,https://foodimages.com/food_511.jpg,01-10-2025
+aa777dd4114f0d82b585205a,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,247,18,Non-Veg,Mild,https://foodimages.com/food_512.jpg,12-07-2025
+aa777dd4114f0d82b585205a,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,487,5,Veg,Spicy,https://foodimages.com/food_513.jpg,24-09-2025
+aa777dd4114f0d82b585205a,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,236,12,Veg,Mild,https://foodimages.com/food_514.jpg,06-10-2025
+aa777dd4114f0d82b585205a,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,251,12,Veg,Spicy,https://foodimages.com/food_515.jpg,25-09-2025
+de269ba2131ef15badd45d3d,Brownie,Dessert,Other,Dessert with Spicy taste,408,18,Veg,Spicy,https://foodimages.com/food_516.jpg,24-11-2025
+de269ba2131ef15badd45d3d,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,325,0,Veg,Mild,https://foodimages.com/food_517.jpg,22-12-2025
+de269ba2131ef15badd45d3d,Spring Rolls,Starter,Chinese,Starter with Medium taste,355,18,Veg,Medium,https://foodimages.com/food_518.jpg,16-07-2025
+de269ba2131ef15badd45d3d,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,161,18,Jain,Spicy,https://foodimages.com/food_519.jpg,16-09-2025
+ec2df68b2d396dcd9843e8c4,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,279,0,Veg,Medium,https://foodimages.com/food_520.jpg,01-11-2025
+ec2df68b2d396dcd9843e8c4,Brownie,Dessert,Other,Dessert with Mild taste,371,5,Veg,Mild,https://foodimages.com/food_521.jpg,03-10-2025
+ec2df68b2d396dcd9843e8c4,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,298,12,Non-Veg,Mild,https://foodimages.com/food_522.jpg,03-07-2025
+ec2df68b2d396dcd9843e8c4,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,244,5,Veg,Mild,https://foodimages.com/food_523.jpg,22-08-2025
+1f800d2e0c9d17234b124885,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,379,12,Non-Veg,Mild,https://foodimages.com/food_524.jpg,15-12-2025
+1f800d2e0c9d17234b124885,Brownie,Dessert,Other,Dessert with Spicy taste,395,12,Veg,Spicy,https://foodimages.com/food_525.jpg,17-11-2025
+1f800d2e0c9d17234b124885,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,332,5,Veg,Mild,https://foodimages.com/food_526.jpg,29-09-2025
+1f800d2e0c9d17234b124885,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,443,12,Veg,Medium,https://foodimages.com/food_527.jpg,11-10-2025
+6b96a6638c26b4ca6df2479d,Spring Rolls,Starter,Chinese,Starter with Medium taste,309,12,Veg,Medium,https://foodimages.com/food_528.jpg,11-12-2025
+6b96a6638c26b4ca6df2479d,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,177,18,Veg,Spicy,https://foodimages.com/food_529.jpg,27-07-2025
+6b96a6638c26b4ca6df2479d,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,322,5,Non-Veg,Mild,https://foodimages.com/food_530.jpg,31-08-2025
+6b96a6638c26b4ca6df2479d,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,199,0,Veg,Spicy,https://foodimages.com/food_531.jpg,29-10-2025
+0d7b10b4b53e9b7d4552b918,Lemon Iced Tea,Main Course,Other,Main Course with Spicy taste,347,5,Vegan,Spicy,https://foodimages.com/food_532.jpg,13-11-2025
+0d7b10b4b53e9b7d4552b918,Brownie,Dessert,Other,Dessert with Spicy taste,214,5,Veg,Spicy,https://foodimages.com/food_533.jpg,22-07-2025
+0d7b10b4b53e9b7d4552b918,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,123,12,Veg,Mild,https://foodimages.com/food_534.jpg,16-09-2025
+0d7b10b4b53e9b7d4552b918,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,284,18,Non-Veg,Medium,https://foodimages.com/food_535.jpg,01-10-2025
+c717b50832658a686ddcc0d2,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,419,5,Veg,Medium,https://foodimages.com/food_536.jpg,21-08-2025
+c717b50832658a686ddcc0d2,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,161,12,Non-Veg,Spicy,https://foodimages.com/food_537.jpg,01-12-2025
+c717b50832658a686ddcc0d2,Cold Coffee,Beverage,Other,Beverage with Spicy taste,404,18,Veg,Spicy,https://foodimages.com/food_538.jpg,30-08-2025
+c717b50832658a686ddcc0d2,Brownie,Dessert,Other,Dessert with Medium taste,348,0,Veg,Medium,https://foodimages.com/food_539.jpg,20-09-2025
+1c1fdff59e5f5b97f4c8e223,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,362,18,Veg,Medium,https://foodimages.com/food_540.jpg,03-08-2025
+1c1fdff59e5f5b97f4c8e223,Spring Rolls,Starter,Chinese,Starter with Mild taste,331,18,Veg,Mild,https://foodimages.com/food_541.jpg,19-10-2025
+1c1fdff59e5f5b97f4c8e223,Lemon Iced Tea,Main Course,Other,Main Course with Spicy taste,419,18,Vegan,Spicy,https://foodimages.com/food_542.jpg,14-09-2025
+1c1fdff59e5f5b97f4c8e223,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,174,18,Veg,Mild,https://foodimages.com/food_543.jpg,18-10-2025
+2d3a7408bc95f311cefe7b4e,Cold Coffee,Beverage,Other,Beverage with Medium taste,455,0,Jain,Medium,https://foodimages.com/food_544.jpg,07-11-2025
+2d3a7408bc95f311cefe7b4e,Spring Rolls,Starter,Chinese,Starter with Medium taste,488,0,Veg,Medium,https://foodimages.com/food_545.jpg,18-08-2025
+2d3a7408bc95f311cefe7b4e,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,292,12,Veg,Medium,https://foodimages.com/food_546.jpg,07-11-2025
+2d3a7408bc95f311cefe7b4e,Brownie,Dessert,Other,Dessert with Medium taste,396,5,Veg,Medium,https://foodimages.com/food_547.jpg,07-11-2025
+9695b9403b521b50ec44d489,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,453,5,Non-Veg,Mild,https://foodimages.com/food_548.jpg,06-07-2025
+9695b9403b521b50ec44d489,Cold Coffee,Beverage,Other,Beverage with Medium taste,348,18,Veg,Medium,https://foodimages.com/food_549.jpg,17-08-2025
+9695b9403b521b50ec44d489,Spring Rolls,Starter,Chinese,Starter with Spicy taste,149,18,Veg,Spicy,https://foodimages.com/food_550.jpg,12-11-2025
+9695b9403b521b50ec44d489,Brownie,Dessert,Other,Dessert with Medium taste,142,12,Veg,Medium,https://foodimages.com/food_551.jpg,29-08-2025
+1b672d488bddf849704fb9ec,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,124,18,Veg,Spicy,https://foodimages.com/food_552.jpg,09-09-2025
+1b672d488bddf849704fb9ec,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,182,5,Non-Veg,Medium,https://foodimages.com/food_553.jpg,20-12-2025
+1b672d488bddf849704fb9ec,Spring Rolls,Starter,Chinese,Starter with Mild taste,340,12,Veg,Mild,https://foodimages.com/food_554.jpg,12-09-2025
+1b672d488bddf849704fb9ec,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,434,5,Jain,Spicy,https://foodimages.com/food_555.jpg,26-08-2025
+c82a01d0df189ac35d6b2129,Brownie,Dessert,Other,Dessert with Mild taste,201,5,Veg,Mild,https://foodimages.com/food_556.jpg,16-09-2025
+c82a01d0df189ac35d6b2129,Lemon Iced Tea,Beverage,Other,Beverage with Medium taste,361,18,Vegan,Medium,https://foodimages.com/food_557.jpg,08-07-2025
+c82a01d0df189ac35d6b2129,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,372,12,Non-Veg,Mild,https://foodimages.com/food_558.jpg,25-08-2025
+c82a01d0df189ac35d6b2129,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,171,18,Veg,Medium,https://foodimages.com/food_559.jpg,04-08-2025
+176a8f15de8ee7d926e77f7d,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,440,18,Non-Veg,Mild,https://foodimages.com/food_560.jpg,01-10-2025
+176a8f15de8ee7d926e77f7d,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,158,0,Veg,Mild,https://foodimages.com/food_561.jpg,22-10-2025
+176a8f15de8ee7d926e77f7d,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,378,12,Non-Veg,Spicy,https://foodimages.com/food_562.jpg,31-07-2025
+176a8f15de8ee7d926e77f7d,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,446,18,Veg,Medium,https://foodimages.com/food_563.jpg,10-07-2025
+ae4c329cb480bf09bc547334,Brownie,Dessert,Other,Dessert with Mild taste,390,12,Veg,Mild,https://foodimages.com/food_564.jpg,08-07-2025
+ae4c329cb480bf09bc547334,Spring Rolls,Starter,Chinese,Starter with Medium taste,191,5,Veg,Medium,https://foodimages.com/food_565.jpg,24-11-2025
+ae4c329cb480bf09bc547334,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,189,18,Veg,Spicy,https://foodimages.com/food_566.jpg,17-12-2025
+ae4c329cb480bf09bc547334,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,339,5,Veg,Mild,https://foodimages.com/food_567.jpg,19-11-2025
+41c24c26c3c07acfac39c5cb,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,123,12,Non-Veg,Medium,https://foodimages.com/food_568.jpg,01-12-2025
+41c24c26c3c07acfac39c5cb,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,469,5,Jain,Mild,https://foodimages.com/food_569.jpg,26-10-2025
+41c24c26c3c07acfac39c5cb,Brownie,Dessert,Other,Dessert with Mild taste,409,5,Veg,Mild,https://foodimages.com/food_570.jpg,21-12-2025
+41c24c26c3c07acfac39c5cb,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,499,5,Veg,Mild,https://foodimages.com/food_571.jpg,20-08-2025
+adfac1cbaa029a6689dc3fa7,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,411,5,Veg,Mild,https://foodimages.com/food_572.jpg,01-12-2025
+adfac1cbaa029a6689dc3fa7,Cold Coffee,Beverage,Other,Beverage with Spicy taste,474,12,Veg,Spicy,https://foodimages.com/food_573.jpg,01-10-2025
+adfac1cbaa029a6689dc3fa7,Lemon Iced Tea,Main Course,Other,Main Course with Spicy taste,350,0,Jain,Spicy,https://foodimages.com/food_574.jpg,23-12-2025
+adfac1cbaa029a6689dc3fa7,Spring Rolls,Starter,Chinese,Starter with Medium taste,199,12,Jain,Medium,https://foodimages.com/food_575.jpg,06-12-2025
+38f23e9a009b471ffc0d174d,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,185,5,Veg,Medium,https://foodimages.com/food_576.jpg,12-09-2025
+38f23e9a009b471ffc0d174d,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,255,12,Veg,Mild,https://foodimages.com/food_577.jpg,26-09-2025
+38f23e9a009b471ffc0d174d,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,310,0,Non-Veg,Mild,https://foodimages.com/food_578.jpg,14-11-2025
+38f23e9a009b471ffc0d174d,Cold Coffee,Beverage,Other,Beverage with Mild taste,466,12,Veg,Mild,https://foodimages.com/food_579.jpg,08-10-2025
+3d0d10ab9a0e003c3d8b4465,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,455,0,Veg,Spicy,https://foodimages.com/food_580.jpg,25-12-2025
+3d0d10ab9a0e003c3d8b4465,Lemon Iced Tea,Starter,Other,Starter with Mild taste,178,5,Vegan,Mild,https://foodimages.com/food_581.jpg,16-12-2025
+3d0d10ab9a0e003c3d8b4465,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,385,5,Non-Veg,Medium,https://foodimages.com/food_582.jpg,11-12-2025
+3d0d10ab9a0e003c3d8b4465,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,126,0,Veg,Mild,https://foodimages.com/food_583.jpg,06-09-2025
+daa2d0af04ed97e39b86d5e4,Brownie,Dessert,Other,Dessert with Spicy taste,487,12,Veg,Spicy,https://foodimages.com/food_584.jpg,09-12-2025
+daa2d0af04ed97e39b86d5e4,Spring Rolls,Starter,Chinese,Starter with Mild taste,321,0,Veg,Mild,https://foodimages.com/food_585.jpg,01-10-2025
+daa2d0af04ed97e39b86d5e4,Cold Coffee,Beverage,Other,Beverage with Spicy taste,451,0,Veg,Spicy,https://foodimages.com/food_586.jpg,24-09-2025
+daa2d0af04ed97e39b86d5e4,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,356,5,Veg,Spicy,https://foodimages.com/food_587.jpg,15-12-2025
+c3903b08934c3dc063268710,Lemon Iced Tea,Main Course,Other,Main Course with Spicy taste,387,5,Vegan,Spicy,https://foodimages.com/food_588.jpg,29-07-2025
+c3903b08934c3dc063268710,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,198,18,Veg,Spicy,https://foodimages.com/food_589.jpg,02-11-2025
+c3903b08934c3dc063268710,Brownie,Dessert,Other,Dessert with Medium taste,165,0,Veg,Medium,https://foodimages.com/food_590.jpg,03-09-2025
+c3903b08934c3dc063268710,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,362,5,Non-Veg,Spicy,https://foodimages.com/food_591.jpg,17-10-2025
+8d847378d56280e9a67b3f66,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,407,0,Veg,Medium,https://foodimages.com/food_592.jpg,23-07-2025
+8d847378d56280e9a67b3f66,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,279,5,Veg,Medium,https://foodimages.com/food_593.jpg,23-08-2025
+8d847378d56280e9a67b3f66,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,234,12,Non-Veg,Mild,https://foodimages.com/food_594.jpg,04-11-2025
+8d847378d56280e9a67b3f66,Cold Coffee,Beverage,Other,Beverage with Mild taste,233,12,Veg,Mild,https://foodimages.com/food_595.jpg,01-12-2025
+81a74002b4c42433edc4b108,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,245,0,Veg,Spicy,https://foodimages.com/food_596.jpg,03-12-2025
+81a74002b4c42433edc4b108,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,209,5,Non-Veg,Mild,https://foodimages.com/food_597.jpg,01-10-2025
+81a74002b4c42433edc4b108,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,180,12,Veg,Spicy,https://foodimages.com/food_598.jpg,22-11-2025
+81a74002b4c42433edc4b108,Spring Rolls,Starter,Chinese,Starter with Mild taste,436,12,Veg,Mild,https://foodimages.com/food_599.jpg,25-12-2025
+9ac55625c9e698a2de65c7f6,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,221,18,Non-Veg,Spicy,https://foodimages.com/food_600.jpg,09-09-2025
+9ac55625c9e698a2de65c7f6,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,233,12,Non-Veg,Mild,https://foodimages.com/food_601.jpg,28-11-2025
+9ac55625c9e698a2de65c7f6,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,293,5,Veg,Mild,https://foodimages.com/food_602.jpg,22-09-2025
+9ac55625c9e698a2de65c7f6,Lemon Iced Tea,Beverage,Other,Beverage with Medium taste,211,12,Vegan,Medium,https://foodimages.com/food_603.jpg,10-08-2025
+61e960dafe162881b505c01c,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,302,12,Jain,Mild,https://foodimages.com/food_604.jpg,11-07-2025
+61e960dafe162881b505c01c,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,324,0,Non-Veg,Mild,https://foodimages.com/food_605.jpg,24-12-2025
+61e960dafe162881b505c01c,Cold Coffee,Beverage,Other,Beverage with Spicy taste,482,0,Veg,Spicy,https://foodimages.com/food_606.jpg,09-10-2025
+61e960dafe162881b505c01c,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,314,5,Veg,Medium,https://foodimages.com/food_607.jpg,26-07-2025
+92dc03916ff1b982967311a3,Spring Rolls,Starter,Chinese,Starter with Spicy taste,424,18,Veg,Spicy,https://foodimages.com/food_608.jpg,28-07-2025
+92dc03916ff1b982967311a3,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,144,5,Veg,Mild,https://foodimages.com/food_609.jpg,28-12-2025
+92dc03916ff1b982967311a3,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,353,12,Veg,Spicy,https://foodimages.com/food_610.jpg,10-09-2025
+92dc03916ff1b982967311a3,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,135,18,Non-Veg,Medium,https://foodimages.com/food_611.jpg,29-12-2025
+2397ad05fb5256aa9bf6ac4e,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,260,0,Veg,Spicy,https://foodimages.com/food_612.jpg,30-10-2025
+2397ad05fb5256aa9bf6ac4e,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,227,12,Non-Veg,Mild,https://foodimages.com/food_613.jpg,25-08-2025
+2397ad05fb5256aa9bf6ac4e,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,419,18,Jain,Spicy,https://foodimages.com/food_614.jpg,05-08-2025
+2397ad05fb5256aa9bf6ac4e,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,458,5,Veg,Mild,https://foodimages.com/food_615.jpg,28-09-2025
+73f979d54994665dbfcd8dd6,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,422,5,Non-Veg,Medium,https://foodimages.com/food_616.jpg,06-10-2025
+73f979d54994665dbfcd8dd6,Spring Rolls,Starter,Chinese,Starter with Medium taste,499,0,Veg,Medium,https://foodimages.com/food_617.jpg,30-10-2025
+73f979d54994665dbfcd8dd6,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,199,0,Veg,Spicy,https://foodimages.com/food_618.jpg,08-12-2025
+73f979d54994665dbfcd8dd6,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,195,5,Veg,Medium,https://foodimages.com/food_619.jpg,11-08-2025
+d9d5cfc94bf422a53871c1c8,Cold Coffee,Beverage,Other,Beverage with Spicy taste,395,0,Veg,Spicy,https://foodimages.com/food_620.jpg,26-07-2025
+d9d5cfc94bf422a53871c1c8,Lemon Iced Tea,Dessert,Other,Dessert with Mild taste,387,12,Vegan,Mild,https://foodimages.com/food_621.jpg,06-12-2025
+d9d5cfc94bf422a53871c1c8,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,231,18,Veg,Spicy,https://foodimages.com/food_622.jpg,27-11-2025
+d9d5cfc94bf422a53871c1c8,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,435,5,Veg,Mild,https://foodimages.com/food_623.jpg,09-11-2025
+cdb05ad314aa359e2e2e7762,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,194,18,Veg,Medium,https://foodimages.com/food_624.jpg,28-09-2025
+cdb05ad314aa359e2e2e7762,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,333,18,Veg,Mild,https://foodimages.com/food_625.jpg,29-11-2025
+cdb05ad314aa359e2e2e7762,Brownie,Dessert,Other,Dessert with Mild taste,485,18,Veg,Mild,https://foodimages.com/food_626.jpg,04-12-2025
+cdb05ad314aa359e2e2e7762,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,153,0,Veg,Mild,https://foodimages.com/food_627.jpg,11-08-2025
+0e9a7086e3ccabed96fa84e9,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,260,5,Veg,Mild,https://foodimages.com/food_628.jpg,07-10-2025
+0e9a7086e3ccabed96fa84e9,Brownie,Dessert,Other,Dessert with Mild taste,285,5,Veg,Mild,https://foodimages.com/food_629.jpg,05-09-2025
+0e9a7086e3ccabed96fa84e9,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,350,18,Veg,Spicy,https://foodimages.com/food_630.jpg,10-08-2025
+0e9a7086e3ccabed96fa84e9,Lemon Iced Tea,Main Course,Other,Main Course with Mild taste,411,18,Vegan,Mild,https://foodimages.com/food_631.jpg,21-08-2025
+c632c977f8a8c2578413e94b,Cold Coffee,Beverage,Other,Beverage with Mild taste,147,5,Veg,Mild,https://foodimages.com/food_632.jpg,18-11-2025
+c632c977f8a8c2578413e94b,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,414,18,Veg,Mild,https://foodimages.com/food_633.jpg,18-09-2025
+c632c977f8a8c2578413e94b,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,452,18,Non-Veg,Mild,https://foodimages.com/food_634.jpg,15-11-2025
+c632c977f8a8c2578413e94b,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,479,18,Veg,Mild,https://foodimages.com/food_635.jpg,30-08-2025
+838be835f790d4fbf64dc3ee,Spring Rolls,Starter,Chinese,Starter with Mild taste,210,0,Veg,Mild,https://foodimages.com/food_636.jpg,17-12-2025
+838be835f790d4fbf64dc3ee,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,234,0,Veg,Medium,https://foodimages.com/food_637.jpg,31-08-2025
+838be835f790d4fbf64dc3ee,Cold Coffee,Beverage,Other,Beverage with Spicy taste,278,0,Veg,Spicy,https://foodimages.com/food_638.jpg,05-12-2025
+838be835f790d4fbf64dc3ee,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,377,18,Veg,Mild,https://foodimages.com/food_639.jpg,03-08-2025
+0d0a1a69d8cc519fcda9f96f,Brownie,Dessert,Other,Dessert with Spicy taste,492,12,Veg,Spicy,https://foodimages.com/food_640.jpg,02-10-2025
+0d0a1a69d8cc519fcda9f96f,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,457,5,Veg,Medium,https://foodimages.com/food_641.jpg,21-10-2025
+0d0a1a69d8cc519fcda9f96f,Cold Coffee,Beverage,Other,Beverage with Medium taste,209,0,Jain,Medium,https://foodimages.com/food_642.jpg,04-09-2025
+0d0a1a69d8cc519fcda9f96f,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,364,5,Non-Veg,Mild,https://foodimages.com/food_643.jpg,09-07-2025
+36f33b470dddb91455bd5702,Lemon Iced Tea,Main Course,Other,Main Course with Spicy taste,417,0,Vegan,Spicy,https://foodimages.com/food_644.jpg,08-10-2025
+36f33b470dddb91455bd5702,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,150,12,Non-Veg,Mild,https://foodimages.com/food_645.jpg,29-10-2025
+36f33b470dddb91455bd5702,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,436,18,Veg,Medium,https://foodimages.com/food_646.jpg,30-12-2025
+36f33b470dddb91455bd5702,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,477,12,Veg,Medium,https://foodimages.com/food_647.jpg,28-11-2025
+591636489edec2dfaa9e6e7d,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,431,18,Veg,Spicy,https://foodimages.com/food_648.jpg,12-09-2025
+591636489edec2dfaa9e6e7d,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,347,12,Veg,Mild,https://foodimages.com/food_649.jpg,24-07-2025
+591636489edec2dfaa9e6e7d,Brownie,Dessert,Other,Dessert with Spicy taste,458,18,Veg,Spicy,https://foodimages.com/food_650.jpg,25-11-2025
+591636489edec2dfaa9e6e7d,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,247,0,Non-Veg,Spicy,https://foodimages.com/food_651.jpg,09-11-2025
+e3675fd9dfe2ce8fac1cf85d,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,389,18,Veg,Medium,https://foodimages.com/food_652.jpg,23-12-2025
+e3675fd9dfe2ce8fac1cf85d,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,389,0,Veg,Spicy,https://foodimages.com/food_653.jpg,01-11-2025
+e3675fd9dfe2ce8fac1cf85d,Cold Coffee,Beverage,Other,Beverage with Medium taste,328,5,Veg,Medium,https://foodimages.com/food_654.jpg,02-12-2025
+e3675fd9dfe2ce8fac1cf85d,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,297,12,Jain,Mild,https://foodimages.com/food_655.jpg,14-12-2025
+b99190dad0037393f4c26433,Brownie,Dessert,Other,Dessert with Spicy taste,425,0,Veg,Spicy,https://foodimages.com/food_656.jpg,20-12-2025
+b99190dad0037393f4c26433,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,310,0,Veg,Spicy,https://foodimages.com/food_657.jpg,05-08-2025
+b99190dad0037393f4c26433,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,476,0,Jain,Mild,https://foodimages.com/food_658.jpg,21-08-2025
+b99190dad0037393f4c26433,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,187,0,Veg,Spicy,https://foodimages.com/food_659.jpg,18-12-2025
+aa5c2ab243d572f98926447c,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,446,12,Veg,Mild,https://foodimages.com/food_660.jpg,01-08-2025
+aa5c2ab243d572f98926447c,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,386,18,Veg,Medium,https://foodimages.com/food_661.jpg,04-12-2025
+aa5c2ab243d572f98926447c,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,389,18,Non-Veg,Medium,https://foodimages.com/food_662.jpg,26-10-2025
+aa5c2ab243d572f98926447c,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,481,18,Veg,Spicy,https://foodimages.com/food_663.jpg,18-07-2025
+f712c5cdaffe5aad32d88964,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,479,12,Non-Veg,Medium,https://foodimages.com/food_664.jpg,11-09-2025
+f712c5cdaffe5aad32d88964,Spring Rolls,Starter,Chinese,Starter with Medium taste,247,12,Veg,Medium,https://foodimages.com/food_665.jpg,08-07-2025
+f712c5cdaffe5aad32d88964,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,383,5,Veg,Mild,https://foodimages.com/food_666.jpg,24-11-2025
+f712c5cdaffe5aad32d88964,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,340,18,Veg,Medium,https://foodimages.com/food_667.jpg,18-10-2025
+b62c506cd5fa41669e4904b1,Spring Rolls,Starter,Chinese,Starter with Medium taste,361,0,Jain,Medium,https://foodimages.com/food_668.jpg,15-09-2025
+b62c506cd5fa41669e4904b1,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,363,0,Non-Veg,Medium,https://foodimages.com/food_669.jpg,06-07-2025
+b62c506cd5fa41669e4904b1,Brownie,Dessert,Other,Dessert with Mild taste,138,18,Veg,Mild,https://foodimages.com/food_670.jpg,09-09-2025
+b62c506cd5fa41669e4904b1,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,274,5,Veg,Spicy,https://foodimages.com/food_671.jpg,05-11-2025
+2b4b37e384c90ce548c29962,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,348,12,Jain,Mild,https://foodimages.com/food_672.jpg,13-09-2025
+2b4b37e384c90ce548c29962,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,487,0,Veg,Spicy,https://foodimages.com/food_673.jpg,03-10-2025
+2b4b37e384c90ce548c29962,Spring Rolls,Starter,Chinese,Starter with Spicy taste,177,12,Veg,Spicy,https://foodimages.com/food_674.jpg,20-11-2025
+2b4b37e384c90ce548c29962,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,400,18,Veg,Medium,https://foodimages.com/food_675.jpg,21-07-2025
+fe8c04d5b745ff7a71c326dc,Spring Rolls,Starter,Chinese,Starter with Medium taste,164,12,Veg,Medium,https://foodimages.com/food_676.jpg,09-11-2025
+fe8c04d5b745ff7a71c326dc,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,221,0,Non-Veg,Mild,https://foodimages.com/food_677.jpg,23-08-2025
+fe8c04d5b745ff7a71c326dc,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,167,5,Jain,Mild,https://foodimages.com/food_678.jpg,13-11-2025
+fe8c04d5b745ff7a71c326dc,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,169,18,Jain,Mild,https://foodimages.com/food_679.jpg,17-12-2025
+3135530e5daee2c740584c68,Lemon Iced Tea,Beverage,Other,Beverage with Medium taste,200,18,Vegan,Medium,https://foodimages.com/food_680.jpg,12-07-2025
+3135530e5daee2c740584c68,Spring Rolls,Starter,Chinese,Starter with Spicy taste,419,0,Jain,Spicy,https://foodimages.com/food_681.jpg,02-09-2025
+3135530e5daee2c740584c68,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,178,12,Jain,Mild,https://foodimages.com/food_682.jpg,17-10-2025
+3135530e5daee2c740584c68,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,280,12,Veg,Spicy,https://foodimages.com/food_683.jpg,04-11-2025
+c0ebbe1c68f63492efde027f,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,222,12,Veg,Medium,https://foodimages.com/food_684.jpg,30-07-2025
+c0ebbe1c68f63492efde027f,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,453,0,Veg,Medium,https://foodimages.com/food_685.jpg,03-07-2025
+c0ebbe1c68f63492efde027f,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,393,5,Veg,Medium,https://foodimages.com/food_686.jpg,03-09-2025
+c0ebbe1c68f63492efde027f,Brownie,Dessert,Other,Dessert with Medium taste,302,18,Veg,Medium,https://foodimages.com/food_687.jpg,21-07-2025
+640551b0be60f882b3749eb0,Lemon Iced Tea,Beverage,Other,Beverage with Spicy taste,235,12,Vegan,Spicy,https://foodimages.com/food_688.jpg,04-09-2025
+640551b0be60f882b3749eb0,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,481,18,Jain,Spicy,https://foodimages.com/food_689.jpg,22-09-2025
+640551b0be60f882b3749eb0,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,386,12,Veg,Mild,https://foodimages.com/food_690.jpg,01-08-2025
+640551b0be60f882b3749eb0,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,283,12,Non-Veg,Spicy,https://foodimages.com/food_691.jpg,20-09-2025
+eb13e862b22a3fbca6835ea7,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,262,12,Veg,Spicy,https://foodimages.com/food_692.jpg,17-07-2025
+eb13e862b22a3fbca6835ea7,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,437,5,Non-Veg,Spicy,https://foodimages.com/food_693.jpg,19-10-2025
+eb13e862b22a3fbca6835ea7,Brownie,Dessert,Other,Dessert with Mild taste,423,12,Veg,Mild,https://foodimages.com/food_694.jpg,07-10-2025
+eb13e862b22a3fbca6835ea7,Spring Rolls,Starter,Chinese,Starter with Spicy taste,213,12,Veg,Spicy,https://foodimages.com/food_695.jpg,25-09-2025
+26d36e602a70685abfd49f8d,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,369,0,Veg,Spicy,https://foodimages.com/food_696.jpg,05-08-2025
+26d36e602a70685abfd49f8d,Brownie,Dessert,Other,Dessert with Spicy taste,462,5,Veg,Spicy,https://foodimages.com/food_697.jpg,19-10-2025
+26d36e602a70685abfd49f8d,Spring Rolls,Starter,Chinese,Starter with Medium taste,425,5,Veg,Medium,https://foodimages.com/food_698.jpg,08-10-2025
+26d36e602a70685abfd49f8d,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,435,0,Non-Veg,Spicy,https://foodimages.com/food_699.jpg,14-08-2025
+48ea699032a229dd5138abbe,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,359,12,Veg,Mild,https://foodimages.com/food_700.jpg,15-07-2025
+48ea699032a229dd5138abbe,Spring Rolls,Starter,Chinese,Starter with Mild taste,178,18,Veg,Mild,https://foodimages.com/food_701.jpg,14-07-2025
+48ea699032a229dd5138abbe,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,134,12,Non-Veg,Mild,https://foodimages.com/food_702.jpg,05-12-2025
+48ea699032a229dd5138abbe,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,404,5,Non-Veg,Mild,https://foodimages.com/food_703.jpg,15-12-2025
+f8867232df4ab02b97231d11,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,322,5,Non-Veg,Medium,https://foodimages.com/food_704.jpg,11-08-2025
+f8867232df4ab02b97231d11,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,356,0,Veg,Mild,https://foodimages.com/food_705.jpg,20-11-2025
+f8867232df4ab02b97231d11,Lemon Iced Tea,Beverage,Other,Beverage with Medium taste,415,12,Vegan,Medium,https://foodimages.com/food_706.jpg,13-09-2025
+f8867232df4ab02b97231d11,Cold Coffee,Beverage,Other,Beverage with Medium taste,406,0,Veg,Medium,https://foodimages.com/food_707.jpg,05-12-2025
+3ffe9f7ab8d523d4690867ff,Brownie,Dessert,Other,Dessert with Medium taste,192,12,Veg,Medium,https://foodimages.com/food_708.jpg,05-09-2025
+3ffe9f7ab8d523d4690867ff,Spring Rolls,Starter,Chinese,Starter with Mild taste,333,5,Veg,Mild,https://foodimages.com/food_709.jpg,19-12-2025
+3ffe9f7ab8d523d4690867ff,Cold Coffee,Beverage,Other,Beverage with Mild taste,130,12,Veg,Mild,https://foodimages.com/food_710.jpg,11-09-2025
+3ffe9f7ab8d523d4690867ff,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,456,5,Non-Veg,Medium,https://foodimages.com/food_711.jpg,07-10-2025
+f1def177833251735bcbaeae,Spring Rolls,Starter,Chinese,Starter with Medium taste,344,18,Veg,Medium,https://foodimages.com/food_712.jpg,05-09-2025
+f1def177833251735bcbaeae,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,437,12,Veg,Mild,https://foodimages.com/food_713.jpg,09-10-2025
+f1def177833251735bcbaeae,Lemon Iced Tea,Main Course,Other,Main Course with Spicy taste,322,12,Vegan,Spicy,https://foodimages.com/food_714.jpg,24-08-2025
+f1def177833251735bcbaeae,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,350,18,Non-Veg,Spicy,https://foodimages.com/food_715.jpg,16-08-2025
+f4ef8832b686d1cff014c06a,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,170,5,Veg,Spicy,https://foodimages.com/food_716.jpg,17-10-2025
+f4ef8832b686d1cff014c06a,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,176,18,Veg,Mild,https://foodimages.com/food_717.jpg,11-10-2025
+f4ef8832b686d1cff014c06a,Lemon Iced Tea,Starter,Other,Starter with Mild taste,251,0,Vegan,Mild,https://foodimages.com/food_718.jpg,05-08-2025
+f4ef8832b686d1cff014c06a,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,399,0,Veg,Medium,https://foodimages.com/food_719.jpg,03-11-2025
+eae601b99f39d4450b61de10,Brownie,Dessert,Other,Dessert with Mild taste,416,5,Veg,Mild,https://foodimages.com/food_720.jpg,18-09-2025
+eae601b99f39d4450b61de10,Lemon Iced Tea,Beverage,Other,Beverage with Mild taste,424,5,Vegan,Mild,https://foodimages.com/food_721.jpg,20-08-2025
+eae601b99f39d4450b61de10,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,344,18,Non-Veg,Mild,https://foodimages.com/food_722.jpg,21-07-2025
+eae601b99f39d4450b61de10,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,293,0,Veg,Medium,https://foodimages.com/food_723.jpg,20-09-2025
+4c91810faa89c09786e52a17,Brownie,Dessert,Other,Dessert with Medium taste,411,5,Veg,Medium,https://foodimages.com/food_724.jpg,28-10-2025
+4c91810faa89c09786e52a17,Cold Coffee,Beverage,Other,Beverage with Spicy taste,385,12,Veg,Spicy,https://foodimages.com/food_725.jpg,24-11-2025
+4c91810faa89c09786e52a17,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,366,12,Non-Veg,Spicy,https://foodimages.com/food_726.jpg,24-09-2025
+4c91810faa89c09786e52a17,Lemon Iced Tea,Dessert,Other,Dessert with Mild taste,197,12,Vegan,Mild,https://foodimages.com/food_727.jpg,05-12-2025
+0f264595e021834cbc18cdd6,Cold Coffee,Beverage,Other,Beverage with Mild taste,254,12,Veg,Mild,https://foodimages.com/food_728.jpg,03-11-2025
+0f264595e021834cbc18cdd6,Brownie,Dessert,Other,Dessert with Medium taste,259,18,Veg,Medium,https://foodimages.com/food_729.jpg,07-12-2025
+0f264595e021834cbc18cdd6,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,461,12,Veg,Spicy,https://foodimages.com/food_730.jpg,13-12-2025
+0f264595e021834cbc18cdd6,Lemon Iced Tea,Main Course,Other,Main Course with Spicy taste,372,0,Vegan,Spicy,https://foodimages.com/food_731.jpg,31-12-2025
+8164d2e389f3f4cd3eff3fcd,Spring Rolls,Starter,Chinese,Starter with Spicy taste,295,18,Jain,Spicy,https://foodimages.com/food_732.jpg,14-09-2025
+8164d2e389f3f4cd3eff3fcd,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,179,18,Jain,Mild,https://foodimages.com/food_733.jpg,24-11-2025
+8164d2e389f3f4cd3eff3fcd,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,471,18,Non-Veg,Mild,https://foodimages.com/food_734.jpg,06-09-2025
+8164d2e389f3f4cd3eff3fcd,Brownie,Dessert,Other,Dessert with Mild taste,373,0,Veg,Mild,https://foodimages.com/food_735.jpg,19-11-2025
+e93ededc9dfdc777c8c0cbc9,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,127,0,Veg,Medium,https://foodimages.com/food_736.jpg,11-08-2025
+e93ededc9dfdc777c8c0cbc9,Lemon Iced Tea,Dessert,Other,Dessert with Spicy taste,226,18,Jain,Spicy,https://foodimages.com/food_737.jpg,07-10-2025
+e93ededc9dfdc777c8c0cbc9,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,290,12,Non-Veg,Medium,https://foodimages.com/food_738.jpg,15-09-2025
+e93ededc9dfdc777c8c0cbc9,Brownie,Dessert,Other,Dessert with Spicy taste,177,18,Veg,Spicy,https://foodimages.com/food_739.jpg,13-10-2025
+aeca3cf8488a62be6fce2a9a,Spring Rolls,Starter,Chinese,Starter with Mild taste,456,5,Veg,Mild,https://foodimages.com/food_740.jpg,21-10-2025
+aeca3cf8488a62be6fce2a9a,Lemon Iced Tea,Dessert,Other,Dessert with Medium taste,461,0,Vegan,Medium,https://foodimages.com/food_741.jpg,24-12-2025
+aeca3cf8488a62be6fce2a9a,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,409,12,Veg,Medium,https://foodimages.com/food_742.jpg,29-10-2025
+aeca3cf8488a62be6fce2a9a,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,203,0,Veg,Mild,https://foodimages.com/food_743.jpg,09-10-2025
+a1b6a92bc9be80d5c477a319,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,236,0,Non-Veg,Spicy,https://foodimages.com/food_744.jpg,02-10-2025
+a1b6a92bc9be80d5c477a319,Cold Coffee,Beverage,Other,Beverage with Spicy taste,319,18,Veg,Spicy,https://foodimages.com/food_745.jpg,30-07-2025
+a1b6a92bc9be80d5c477a319,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,141,0,Veg,Spicy,https://foodimages.com/food_746.jpg,27-10-2025
+a1b6a92bc9be80d5c477a319,Lemon Iced Tea,Starter,Other,Starter with Spicy taste,338,18,Vegan,Spicy,https://foodimages.com/food_747.jpg,21-08-2025
+237a6f73235bcaa919f72299,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,345,5,Veg,Mild,https://foodimages.com/food_748.jpg,27-08-2025
+237a6f73235bcaa919f72299,Lemon Iced Tea,Dessert,Other,Dessert with Mild taste,390,18,Vegan,Mild,https://foodimages.com/food_749.jpg,31-12-2025
+237a6f73235bcaa919f72299,Cold Coffee,Beverage,Other,Beverage with Mild taste,221,18,Veg,Mild,https://foodimages.com/food_750.jpg,02-07-2025
+237a6f73235bcaa919f72299,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,264,0,Veg,Mild,https://foodimages.com/food_751.jpg,28-10-2025
+120cc18f1e6a8b463e03a0ac,Cold Coffee,Beverage,Other,Beverage with Medium taste,266,18,Jain,Medium,https://foodimages.com/food_752.jpg,10-08-2025
+120cc18f1e6a8b463e03a0ac,Brownie,Dessert,Other,Dessert with Medium taste,380,5,Veg,Medium,https://foodimages.com/food_753.jpg,17-11-2025
+120cc18f1e6a8b463e03a0ac,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,398,5,Veg,Medium,https://foodimages.com/food_754.jpg,22-08-2025
+120cc18f1e6a8b463e03a0ac,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,458,18,Veg,Mild,https://foodimages.com/food_755.jpg,27-10-2025
+4afa9de07b173fa61569c08d,Lemon Iced Tea,Beverage,Other,Beverage with Spicy taste,133,0,Vegan,Spicy,https://foodimages.com/food_756.jpg,03-09-2025
+4afa9de07b173fa61569c08d,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,385,18,Veg,Medium,https://foodimages.com/food_757.jpg,26-12-2025
+4afa9de07b173fa61569c08d,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,406,5,Non-Veg,Medium,https://foodimages.com/food_758.jpg,07-11-2025
+4afa9de07b173fa61569c08d,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,260,18,Veg,Mild,https://foodimages.com/food_759.jpg,04-09-2025
+c55d71d17619c2c972570342,Brownie,Dessert,Other,Dessert with Spicy taste,412,0,Veg,Spicy,https://foodimages.com/food_760.jpg,15-10-2025
+c55d71d17619c2c972570342,Lemon Iced Tea,Beverage,Other,Beverage with Spicy taste,150,5,Vegan,Spicy,https://foodimages.com/food_761.jpg,22-10-2025
+c55d71d17619c2c972570342,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,290,5,Non-Veg,Spicy,https://foodimages.com/food_762.jpg,24-07-2025
+c55d71d17619c2c972570342,Spring Rolls,Starter,Chinese,Starter with Mild taste,474,0,Veg,Mild,https://foodimages.com/food_763.jpg,01-12-2025
+d20c9b1141156c5de6eb2a89,Spring Rolls,Starter,Chinese,Starter with Spicy taste,324,5,Veg,Spicy,https://foodimages.com/food_764.jpg,25-07-2025
+d20c9b1141156c5de6eb2a89,Lemon Iced Tea,Main Course,Other,Main Course with Medium taste,410,0,Vegan,Medium,https://foodimages.com/food_765.jpg,06-07-2025
+d20c9b1141156c5de6eb2a89,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,230,18,Non-Veg,Medium,https://foodimages.com/food_766.jpg,24-08-2025
+d20c9b1141156c5de6eb2a89,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,187,18,Veg,Medium,https://foodimages.com/food_767.jpg,23-09-2025
+46e654e1655b8e7e47eda79d,Cold Coffee,Beverage,Other,Beverage with Mild taste,302,12,Veg,Mild,https://foodimages.com/food_768.jpg,15-11-2025
+46e654e1655b8e7e47eda79d,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,492,0,Veg,Spicy,https://foodimages.com/food_769.jpg,16-10-2025
+46e654e1655b8e7e47eda79d,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,315,12,Veg,Mild,https://foodimages.com/food_770.jpg,28-10-2025
+46e654e1655b8e7e47eda79d,Brownie,Dessert,Other,Dessert with Spicy taste,245,0,Veg,Spicy,https://foodimages.com/food_771.jpg,11-11-2025
+2d6d0815005aa82e0ebb2341,Spring Rolls,Starter,Chinese,Starter with Mild taste,294,0,Veg,Mild,https://foodimages.com/food_772.jpg,17-09-2025
+2d6d0815005aa82e0ebb2341,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,381,5,Veg,Medium,https://foodimages.com/food_773.jpg,25-10-2025
+2d6d0815005aa82e0ebb2341,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,494,18,Veg,Mild,https://foodimages.com/food_774.jpg,17-10-2025
+2d6d0815005aa82e0ebb2341,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,405,5,Veg,Mild,https://foodimages.com/food_775.jpg,05-10-2025
+a25b71b999cbbdb435320617,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,274,0,Non-Veg,Mild,https://foodimages.com/food_776.jpg,19-11-2025
+a25b71b999cbbdb435320617,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,188,12,Jain,Medium,https://foodimages.com/food_777.jpg,06-12-2025
+a25b71b999cbbdb435320617,Brownie,Dessert,Other,Dessert with Mild taste,227,12,Veg,Mild,https://foodimages.com/food_778.jpg,26-09-2025
+a25b71b999cbbdb435320617,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,154,12,Veg,Mild,https://foodimages.com/food_779.jpg,01-11-2025
+b402252652f48a9dc0e63231,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,478,18,Veg,Medium,https://foodimages.com/food_780.jpg,29-09-2025
+b402252652f48a9dc0e63231,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,163,5,Jain,Spicy,https://foodimages.com/food_781.jpg,03-11-2025
+b402252652f48a9dc0e63231,Lemon Iced Tea,Starter,Other,Starter with Mild taste,262,12,Vegan,Mild,https://foodimages.com/food_782.jpg,21-12-2025
+b402252652f48a9dc0e63231,Cold Coffee,Beverage,Other,Beverage with Medium taste,330,5,Veg,Medium,https://foodimages.com/food_783.jpg,10-12-2025
+06c48fb685720fe6d1ed9dd7,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,404,0,Jain,Mild,https://foodimages.com/food_784.jpg,03-09-2025
+06c48fb685720fe6d1ed9dd7,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,125,5,Veg,Medium,https://foodimages.com/food_785.jpg,16-09-2025
+06c48fb685720fe6d1ed9dd7,Spring Rolls,Starter,Chinese,Starter with Spicy taste,337,12,Veg,Spicy,https://foodimages.com/food_786.jpg,21-11-2025
+06c48fb685720fe6d1ed9dd7,Lemon Iced Tea,Starter,Other,Starter with Spicy taste,146,5,Vegan,Spicy,https://foodimages.com/food_787.jpg,20-11-2025
+0f910c84ad47575d5cc85596,Cold Coffee,Beverage,Other,Beverage with Mild taste,346,5,Veg,Mild,https://foodimages.com/food_788.jpg,30-07-2025
+0f910c84ad47575d5cc85596,Spring Rolls,Starter,Chinese,Starter with Medium taste,403,18,Veg,Medium,https://foodimages.com/food_789.jpg,03-12-2025
+0f910c84ad47575d5cc85596,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,175,5,Non-Veg,Spicy,https://foodimages.com/food_790.jpg,09-08-2025
+0f910c84ad47575d5cc85596,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,487,12,Veg,Spicy,https://foodimages.com/food_791.jpg,10-09-2025
+4a1aa72176b131e107b967a9,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,429,18,Non-Veg,Medium,https://foodimages.com/food_792.jpg,26-12-2025
+4a1aa72176b131e107b967a9,Spring Rolls,Starter,Chinese,Starter with Mild taste,455,12,Veg,Mild,https://foodimages.com/food_793.jpg,01-08-2025
+4a1aa72176b131e107b967a9,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,224,18,Veg,Spicy,https://foodimages.com/food_794.jpg,09-09-2025
+4a1aa72176b131e107b967a9,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,137,12,Veg,Spicy,https://foodimages.com/food_795.jpg,08-08-2025
+694b294151e42abcc2588f20,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,324,18,Veg,Spicy,https://foodimages.com/food_796.jpg,17-12-2025
+694b294151e42abcc2588f20,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,162,18,Jain,Mild,https://foodimages.com/food_797.jpg,02-09-2025
+694b294151e42abcc2588f20,Lemon Iced Tea,Dessert,Other,Dessert with Spicy taste,208,12,Vegan,Spicy,https://foodimages.com/food_798.jpg,14-11-2025
+694b294151e42abcc2588f20,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,193,18,Veg,Medium,https://foodimages.com/food_799.jpg,05-12-2025
+0bf6dfdc07356ad69089bce7,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,276,5,Veg,Mild,https://foodimages.com/food_800.jpg,17-08-2025
+0bf6dfdc07356ad69089bce7,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,385,12,Non-Veg,Spicy,https://foodimages.com/food_801.jpg,05-10-2025
+0bf6dfdc07356ad69089bce7,Cold Coffee,Beverage,Other,Beverage with Medium taste,253,0,Veg,Medium,https://foodimages.com/food_802.jpg,25-10-2025
+0bf6dfdc07356ad69089bce7,Brownie,Dessert,Other,Dessert with Medium taste,208,5,Veg,Medium,https://foodimages.com/food_803.jpg,17-11-2025
+bf77de21a4814f7051d7acfc,Brownie,Dessert,Other,Dessert with Mild taste,355,18,Veg,Mild,https://foodimages.com/food_804.jpg,21-12-2025
+bf77de21a4814f7051d7acfc,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,251,12,Non-Veg,Medium,https://foodimages.com/food_805.jpg,15-10-2025
+bf77de21a4814f7051d7acfc,Cold Coffee,Beverage,Other,Beverage with Mild taste,348,0,Veg,Mild,https://foodimages.com/food_806.jpg,24-12-2025
+bf77de21a4814f7051d7acfc,Spring Rolls,Starter,Chinese,Starter with Mild taste,153,5,Veg,Mild,https://foodimages.com/food_807.jpg,15-10-2025
+ece67909c6be41da368222a5,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,202,5,Non-Veg,Mild,https://foodimages.com/food_808.jpg,20-07-2025
+ece67909c6be41da368222a5,Lemon Iced Tea,Starter,Other,Starter with Medium taste,251,0,Jain,Medium,https://foodimages.com/food_809.jpg,20-10-2025
+ece67909c6be41da368222a5,Cold Coffee,Beverage,Other,Beverage with Mild taste,473,5,Veg,Mild,https://foodimages.com/food_810.jpg,10-12-2025
+ece67909c6be41da368222a5,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,323,12,Veg,Mild,https://foodimages.com/food_811.jpg,22-09-2025
+ea826e2f8a3039dac5f5e358,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,406,18,Non-Veg,Medium,https://foodimages.com/food_812.jpg,19-12-2025
+ea826e2f8a3039dac5f5e358,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,455,12,Non-Veg,Mild,https://foodimages.com/food_813.jpg,21-10-2025
+ea826e2f8a3039dac5f5e358,Lemon Iced Tea,Dessert,Other,Dessert with Spicy taste,435,5,Vegan,Spicy,https://foodimages.com/food_814.jpg,30-11-2025
+ea826e2f8a3039dac5f5e358,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,377,0,Veg,Medium,https://foodimages.com/food_815.jpg,10-08-2025
+bc195145f9e0ff0714ac325e,Spring Rolls,Starter,Chinese,Starter with Medium taste,411,18,Veg,Medium,https://foodimages.com/food_816.jpg,20-07-2025
+bc195145f9e0ff0714ac325e,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,244,18,Jain,Medium,https://foodimages.com/food_817.jpg,07-09-2025
+bc195145f9e0ff0714ac325e,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,270,12,Veg,Spicy,https://foodimages.com/food_818.jpg,03-07-2025
+bc195145f9e0ff0714ac325e,Brownie,Dessert,Other,Dessert with Mild taste,478,0,Veg,Mild,https://foodimages.com/food_819.jpg,04-09-2025
+da9f9113040ce2628412aa27,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,366,5,Veg,Medium,https://foodimages.com/food_820.jpg,23-07-2025
+da9f9113040ce2628412aa27,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,294,18,Non-Veg,Medium,https://foodimages.com/food_821.jpg,14-12-2025
+da9f9113040ce2628412aa27,Cold Coffee,Beverage,Other,Beverage with Medium taste,491,0,Veg,Medium,https://foodimages.com/food_822.jpg,08-08-2025
+da9f9113040ce2628412aa27,Spring Rolls,Starter,Chinese,Starter with Spicy taste,476,18,Veg,Spicy,https://foodimages.com/food_823.jpg,13-09-2025
+57a5d7f637252c67f03bd3fe,Lemon Iced Tea,Dessert,Other,Dessert with Spicy taste,421,18,Vegan,Spicy,https://foodimages.com/food_824.jpg,18-11-2025
+57a5d7f637252c67f03bd3fe,Spring Rolls,Starter,Chinese,Starter with Spicy taste,199,12,Jain,Spicy,https://foodimages.com/food_825.jpg,22-12-2025
+57a5d7f637252c67f03bd3fe,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,226,0,Veg,Mild,https://foodimages.com/food_826.jpg,14-08-2025
+57a5d7f637252c67f03bd3fe,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,419,5,Non-Veg,Mild,https://foodimages.com/food_827.jpg,22-12-2025
+49f5e78f9a18cfe75b29d086,Brownie,Dessert,Other,Dessert with Spicy taste,424,5,Veg,Spicy,https://foodimages.com/food_828.jpg,12-12-2025
+49f5e78f9a18cfe75b29d086,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,463,0,Non-Veg,Mild,https://foodimages.com/food_829.jpg,08-07-2025
+49f5e78f9a18cfe75b29d086,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,177,18,Veg,Spicy,https://foodimages.com/food_830.jpg,31-10-2025
+49f5e78f9a18cfe75b29d086,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,210,5,Non-Veg,Mild,https://foodimages.com/food_831.jpg,27-11-2025
+22352e1f7507bb1359c25afc,Brownie,Dessert,Other,Dessert with Mild taste,254,0,Veg,Mild,https://foodimages.com/food_832.jpg,21-07-2025
+22352e1f7507bb1359c25afc,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,469,5,Veg,Spicy,https://foodimages.com/food_833.jpg,05-07-2025
+22352e1f7507bb1359c25afc,Cold Coffee,Beverage,Other,Beverage with Medium taste,288,0,Veg,Medium,https://foodimages.com/food_834.jpg,04-10-2025
+22352e1f7507bb1359c25afc,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,453,12,Veg,Medium,https://foodimages.com/food_835.jpg,13-08-2025
+a8c47faa663a80153d5277ed,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,241,12,Non-Veg,Mild,https://foodimages.com/food_836.jpg,18-07-2025
+a8c47faa663a80153d5277ed,Lemon Iced Tea,Starter,Other,Starter with Mild taste,355,12,Vegan,Mild,https://foodimages.com/food_837.jpg,09-09-2025
+a8c47faa663a80153d5277ed,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,195,18,Non-Veg,Mild,https://foodimages.com/food_838.jpg,16-08-2025
+a8c47faa663a80153d5277ed,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,428,12,Veg,Mild,https://foodimages.com/food_839.jpg,22-08-2025
+772c360c06b9639bae37d1d5,Brownie,Dessert,Other,Dessert with Mild taste,142,5,Jain,Mild,https://foodimages.com/food_840.jpg,06-09-2025
+772c360c06b9639bae37d1d5,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,452,18,Veg,Mild,https://foodimages.com/food_841.jpg,11-12-2025
+772c360c06b9639bae37d1d5,Cold Coffee,Beverage,Other,Beverage with Spicy taste,192,12,Veg,Spicy,https://foodimages.com/food_842.jpg,30-07-2025
+772c360c06b9639bae37d1d5,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,207,0,Non-Veg,Medium,https://foodimages.com/food_843.jpg,15-09-2025
+73b429ca7af3842f25055836,Spring Rolls,Starter,Chinese,Starter with Medium taste,222,5,Jain,Medium,https://foodimages.com/food_844.jpg,03-12-2025
+73b429ca7af3842f25055836,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,213,5,Veg,Spicy,https://foodimages.com/food_845.jpg,30-07-2025
+73b429ca7af3842f25055836,Cold Coffee,Beverage,Other,Beverage with Spicy taste,435,12,Veg,Spicy,https://foodimages.com/food_846.jpg,24-09-2025
+73b429ca7af3842f25055836,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,385,0,Non-Veg,Medium,https://foodimages.com/food_847.jpg,14-11-2025
+4b14fd370ad56aa247d59f3a,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,372,18,Veg,Medium,https://foodimages.com/food_848.jpg,05-12-2025
+4b14fd370ad56aa247d59f3a,Lemon Iced Tea,Main Course,Other,Main Course with Mild taste,477,12,Vegan,Mild,https://foodimages.com/food_849.jpg,09-10-2025
+4b14fd370ad56aa247d59f3a,Cold Coffee,Beverage,Other,Beverage with Medium taste,177,5,Veg,Medium,https://foodimages.com/food_850.jpg,24-11-2025
+4b14fd370ad56aa247d59f3a,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,128,18,Non-Veg,Mild,https://foodimages.com/food_851.jpg,05-08-2025
+c35db94e822b586be76f3a99,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,132,12,Veg,Mild,https://foodimages.com/food_852.jpg,21-08-2025
+c35db94e822b586be76f3a99,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,250,12,Non-Veg,Medium,https://foodimages.com/food_853.jpg,11-09-2025
+c35db94e822b586be76f3a99,Cold Coffee,Beverage,Other,Beverage with Mild taste,341,12,Veg,Mild,https://foodimages.com/food_854.jpg,20-12-2025
+c35db94e822b586be76f3a99,Brownie,Dessert,Other,Dessert with Mild taste,448,5,Veg,Mild,https://foodimages.com/food_855.jpg,17-07-2025
+3223649428056abe8da2540d,Brownie,Dessert,Other,Dessert with Spicy taste,491,5,Veg,Spicy,https://foodimages.com/food_856.jpg,05-12-2025
+3223649428056abe8da2540d,Cold Coffee,Beverage,Other,Beverage with Medium taste,272,0,Veg,Medium,https://foodimages.com/food_857.jpg,17-12-2025
+3223649428056abe8da2540d,Spring Rolls,Starter,Chinese,Starter with Spicy taste,486,0,Veg,Spicy,https://foodimages.com/food_858.jpg,04-07-2025
+3223649428056abe8da2540d,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,190,18,Veg,Mild,https://foodimages.com/food_859.jpg,03-07-2025
+1609a3113a379acc5d592258,Cold Coffee,Beverage,Other,Beverage with Mild taste,464,12,Veg,Mild,https://foodimages.com/food_860.jpg,24-10-2025
+1609a3113a379acc5d592258,Lemon Iced Tea,Dessert,Other,Dessert with Spicy taste,139,0,Jain,Spicy,https://foodimages.com/food_861.jpg,15-08-2025
+1609a3113a379acc5d592258,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,200,18,Non-Veg,Spicy,https://foodimages.com/food_862.jpg,09-07-2025
+1609a3113a379acc5d592258,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,347,12,Jain,Spicy,https://foodimages.com/food_863.jpg,26-10-2025
+761ed5f523b5360f688119a3,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,465,0,Veg,Mild,https://foodimages.com/food_864.jpg,16-09-2025
+761ed5f523b5360f688119a3,Brownie,Dessert,Other,Dessert with Medium taste,138,12,Veg,Medium,https://foodimages.com/food_865.jpg,11-07-2025
+761ed5f523b5360f688119a3,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,284,18,Non-Veg,Mild,https://foodimages.com/food_866.jpg,01-10-2025
+761ed5f523b5360f688119a3,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,487,0,Veg,Spicy,https://foodimages.com/food_867.jpg,01-08-2025
+f6e826e5da6e7a8fdf5b07f0,Cold Coffee,Beverage,Other,Beverage with Medium taste,226,5,Veg,Medium,https://foodimages.com/food_868.jpg,19-11-2025
+f6e826e5da6e7a8fdf5b07f0,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,496,5,Non-Veg,Spicy,https://foodimages.com/food_869.jpg,27-10-2025
+f6e826e5da6e7a8fdf5b07f0,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,467,0,Veg,Mild,https://foodimages.com/food_870.jpg,16-08-2025
+f6e826e5da6e7a8fdf5b07f0,Lemon Iced Tea,Beverage,Other,Beverage with Medium taste,333,5,Vegan,Medium,https://foodimages.com/food_871.jpg,06-12-2025
+9f5d97d43ad5833154333d86,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,358,0,Non-Veg,Medium,https://foodimages.com/food_872.jpg,04-08-2025
+9f5d97d43ad5833154333d86,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,266,5,Veg,Mild,https://foodimages.com/food_873.jpg,31-08-2025
+9f5d97d43ad5833154333d86,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,300,0,Veg,Spicy,https://foodimages.com/food_874.jpg,10-10-2025
+9f5d97d43ad5833154333d86,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,455,0,Jain,Spicy,https://foodimages.com/food_875.jpg,14-11-2025
+474df72bf3939804754415af,Brownie,Dessert,Other,Dessert with Spicy taste,317,5,Veg,Spicy,https://foodimages.com/food_876.jpg,06-08-2025
+474df72bf3939804754415af,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,406,18,Non-Veg,Mild,https://foodimages.com/food_877.jpg,12-11-2025
+474df72bf3939804754415af,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,172,12,Jain,Spicy,https://foodimages.com/food_878.jpg,04-12-2025
+474df72bf3939804754415af,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,488,5,Veg,Medium,https://foodimages.com/food_879.jpg,30-07-2025
+6f71bca613346d27b0cd7c40,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,359,5,Non-Veg,Spicy,https://foodimages.com/food_880.jpg,30-07-2025
+6f71bca613346d27b0cd7c40,Spring Rolls,Starter,Chinese,Starter with Spicy taste,409,18,Veg,Spicy,https://foodimages.com/food_881.jpg,10-08-2025
+6f71bca613346d27b0cd7c40,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,406,0,Non-Veg,Medium,https://foodimages.com/food_882.jpg,28-07-2025
+6f71bca613346d27b0cd7c40,Lemon Iced Tea,Beverage,Other,Beverage with Medium taste,307,5,Vegan,Medium,https://foodimages.com/food_883.jpg,12-11-2025
+38754e709707d5a47761e18b,Brownie,Dessert,Other,Dessert with Spicy taste,125,18,Veg,Spicy,https://foodimages.com/food_884.jpg,05-11-2025
+38754e709707d5a47761e18b,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,402,0,Veg,Medium,https://foodimages.com/food_885.jpg,15-12-2025
+38754e709707d5a47761e18b,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,382,18,Veg,Mild,https://foodimages.com/food_886.jpg,15-11-2025
+38754e709707d5a47761e18b,Cold Coffee,Beverage,Other,Beverage with Medium taste,168,18,Veg,Medium,https://foodimages.com/food_887.jpg,07-09-2025
+6eb0c746b7ab3f20b36c46c7,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,471,18,Veg,Mild,https://foodimages.com/food_888.jpg,12-12-2025
+6eb0c746b7ab3f20b36c46c7,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,319,0,Veg,Medium,https://foodimages.com/food_889.jpg,19-11-2025
+6eb0c746b7ab3f20b36c46c7,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,179,5,Non-Veg,Mild,https://foodimages.com/food_890.jpg,11-08-2025
+6eb0c746b7ab3f20b36c46c7,Cold Coffee,Beverage,Other,Beverage with Mild taste,152,12,Veg,Mild,https://foodimages.com/food_891.jpg,02-10-2025
+24355a8298a122f4821c50de,Spring Rolls,Starter,Chinese,Starter with Spicy taste,422,5,Veg,Spicy,https://foodimages.com/food_892.jpg,20-08-2025
+24355a8298a122f4821c50de,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,363,5,Non-Veg,Medium,https://foodimages.com/food_893.jpg,19-09-2025
+24355a8298a122f4821c50de,Cold Coffee,Beverage,Other,Beverage with Medium taste,291,5,Veg,Medium,https://foodimages.com/food_894.jpg,15-09-2025
+24355a8298a122f4821c50de,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,326,5,Veg,Medium,https://foodimages.com/food_895.jpg,17-07-2025
+5156a81c9f789437ed23f9f6,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,494,0,Veg,Mild,https://foodimages.com/food_896.jpg,24-08-2025
+5156a81c9f789437ed23f9f6,Spring Rolls,Starter,Chinese,Starter with Spicy taste,402,0,Veg,Spicy,https://foodimages.com/food_897.jpg,19-12-2025
+5156a81c9f789437ed23f9f6,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,141,12,Veg,Medium,https://foodimages.com/food_898.jpg,07-12-2025
+5156a81c9f789437ed23f9f6,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,166,0,Non-Veg,Spicy,https://foodimages.com/food_899.jpg,27-11-2025
+8979617255d74ab9954fa637,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,468,12,Veg,Spicy,https://foodimages.com/food_900.jpg,04-08-2025
+8979617255d74ab9954fa637,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,277,0,Veg,Mild,https://foodimages.com/food_901.jpg,18-08-2025
+8979617255d74ab9954fa637,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,377,5,Non-Veg,Medium,https://foodimages.com/food_902.jpg,07-10-2025
+8979617255d74ab9954fa637,Spring Rolls,Starter,Chinese,Starter with Spicy taste,262,12,Veg,Spicy,https://foodimages.com/food_903.jpg,07-07-2025
+d9405acbcf4df8806b72d113,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,166,5,Veg,Medium,https://foodimages.com/food_904.jpg,25-09-2025
+d9405acbcf4df8806b72d113,Cold Coffee,Beverage,Other,Beverage with Medium taste,146,5,Veg,Medium,https://foodimages.com/food_905.jpg,25-11-2025
+d9405acbcf4df8806b72d113,Lemon Iced Tea,Starter,Other,Starter with Medium taste,146,5,Vegan,Medium,https://foodimages.com/food_906.jpg,15-09-2025
+d9405acbcf4df8806b72d113,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,264,0,Veg,Spicy,https://foodimages.com/food_907.jpg,13-07-2025
+df8c6f1b4357ff8d253ecb94,Brownie,Dessert,Other,Dessert with Mild taste,194,12,Veg,Mild,https://foodimages.com/food_908.jpg,21-07-2025
+df8c6f1b4357ff8d253ecb94,Spring Rolls,Starter,Chinese,Starter with Mild taste,306,0,Veg,Mild,https://foodimages.com/food_909.jpg,27-08-2025
+df8c6f1b4357ff8d253ecb94,Cold Coffee,Beverage,Other,Beverage with Spicy taste,129,0,Veg,Spicy,https://foodimages.com/food_910.jpg,04-11-2025
+df8c6f1b4357ff8d253ecb94,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,240,18,Veg,Medium,https://foodimages.com/food_911.jpg,17-12-2025
+391e5ec2cf7f51b0bdb5a795,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,408,18,Veg,Medium,https://foodimages.com/food_912.jpg,02-11-2025
+391e5ec2cf7f51b0bdb5a795,Cold Coffee,Beverage,Other,Beverage with Mild taste,284,18,Veg,Mild,https://foodimages.com/food_913.jpg,14-07-2025
+391e5ec2cf7f51b0bdb5a795,Lemon Iced Tea,Starter,Other,Starter with Spicy taste,383,0,Vegan,Spicy,https://foodimages.com/food_914.jpg,16-12-2025
+391e5ec2cf7f51b0bdb5a795,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,280,5,Non-Veg,Spicy,https://foodimages.com/food_915.jpg,29-09-2025
+8c16d8056679d6e6b36dad4b,Brownie,Dessert,Other,Dessert with Mild taste,446,5,Veg,Mild,https://foodimages.com/food_916.jpg,24-11-2025
+8c16d8056679d6e6b36dad4b,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,416,18,Veg,Spicy,https://foodimages.com/food_917.jpg,04-07-2025
+8c16d8056679d6e6b36dad4b,Spring Rolls,Starter,Chinese,Starter with Spicy taste,237,12,Veg,Spicy,https://foodimages.com/food_918.jpg,06-12-2025
+8c16d8056679d6e6b36dad4b,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,430,0,Non-Veg,Mild,https://foodimages.com/food_919.jpg,01-11-2025
+1f74d0891106dd4b67e726fa,Spring Rolls,Starter,Chinese,Starter with Mild taste,382,18,Veg,Mild,https://foodimages.com/food_920.jpg,10-11-2025
+1f74d0891106dd4b67e726fa,Lemon Iced Tea,Dessert,Other,Dessert with Spicy taste,203,12,Vegan,Spicy,https://foodimages.com/food_921.jpg,04-07-2025
+1f74d0891106dd4b67e726fa,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,265,5,Non-Veg,Spicy,https://foodimages.com/food_922.jpg,10-08-2025
+1f74d0891106dd4b67e726fa,Brownie,Dessert,Other,Dessert with Mild taste,290,12,Veg,Mild,https://foodimages.com/food_923.jpg,18-10-2025
+8e21e53822dcc85c575583b9,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,453,5,Non-Veg,Mild,https://foodimages.com/food_924.jpg,31-08-2025
+8e21e53822dcc85c575583b9,Paneer Butter Masala,Main Course,Indian,Main Course with Medium taste,428,18,Veg,Medium,https://foodimages.com/food_925.jpg,15-09-2025
+8e21e53822dcc85c575583b9,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,133,12,Veg,Spicy,https://foodimages.com/food_926.jpg,09-10-2025
+8e21e53822dcc85c575583b9,Cold Coffee,Beverage,Other,Beverage with Spicy taste,268,18,Veg,Spicy,https://foodimages.com/food_927.jpg,05-10-2025
+1523caa58aed838bd4053411,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,488,12,Veg,Mild,https://foodimages.com/food_928.jpg,30-11-2025
+1523caa58aed838bd4053411,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,370,18,Veg,Mild,https://foodimages.com/food_929.jpg,05-12-2025
+1523caa58aed838bd4053411,Cold Coffee,Beverage,Other,Beverage with Medium taste,176,5,Veg,Medium,https://foodimages.com/food_930.jpg,14-11-2025
+1523caa58aed838bd4053411,Brownie,Dessert,Other,Dessert with Medium taste,466,0,Veg,Medium,https://foodimages.com/food_931.jpg,30-12-2025
+b3515e2ebdfb9368f3029508,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,421,18,Non-Veg,Mild,https://foodimages.com/food_932.jpg,04-07-2025
+b3515e2ebdfb9368f3029508,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,466,5,Veg,Spicy,https://foodimages.com/food_933.jpg,19-08-2025
+b3515e2ebdfb9368f3029508,Chicken Manchurian,Starter,Chinese,Starter with Medium taste,252,12,Non-Veg,Medium,https://foodimages.com/food_934.jpg,28-11-2025
+b3515e2ebdfb9368f3029508,Brownie,Dessert,Other,Dessert with Mild taste,289,18,Veg,Mild,https://foodimages.com/food_935.jpg,17-07-2025
+7da10b51c7d1766f6393343d,Lemon Iced Tea,Dessert,Other,Dessert with Mild taste,221,18,Vegan,Mild,https://foodimages.com/food_936.jpg,29-10-2025
+7da10b51c7d1766f6393343d,Cold Coffee,Beverage,Other,Beverage with Mild taste,225,12,Veg,Mild,https://foodimages.com/food_937.jpg,03-12-2025
+7da10b51c7d1766f6393343d,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,290,0,Veg,Spicy,https://foodimages.com/food_938.jpg,25-12-2025
+7da10b51c7d1766f6393343d,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,247,18,Non-Veg,Mild,https://foodimages.com/food_939.jpg,17-11-2025
+1a1a1e21f1610526563bca63,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,369,18,Veg,Mild,https://foodimages.com/food_940.jpg,22-08-2025
+1a1a1e21f1610526563bca63,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,151,5,Veg,Spicy,https://foodimages.com/food_941.jpg,04-11-2025
+1a1a1e21f1610526563bca63,Lemon Iced Tea,Beverage,Other,Beverage with Mild taste,335,18,Jain,Mild,https://foodimages.com/food_942.jpg,20-12-2025
+1a1a1e21f1610526563bca63,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,381,18,Non-Veg,Mild,https://foodimages.com/food_943.jpg,15-09-2025
+6f3b232cb5a40feff1846974,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,449,12,Veg,Medium,https://foodimages.com/food_944.jpg,16-07-2025
+6f3b232cb5a40feff1846974,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,363,0,Veg,Mild,https://foodimages.com/food_945.jpg,03-08-2025
+6f3b232cb5a40feff1846974,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,404,12,Veg,Spicy,https://foodimages.com/food_946.jpg,20-09-2025
+6f3b232cb5a40feff1846974,Margherita Pizza,Main Course,Italian,Main Course with Medium taste,409,5,Jain,Medium,https://foodimages.com/food_947.jpg,08-11-2025
+26d36e602a70685abfd49f8d,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,382,5,Veg,Mild,https://foodimages.com/food_948.jpg,26-10-2025
+3135530e5daee2c740584c68,Cold Coffee,Beverage,Other,Beverage with Spicy taste,456,18,Veg,Spicy,https://foodimages.com/food_949.jpg,26-10-2025
+a3a1a4920f3e8c0a8e033699,Lemon Iced Tea,Dessert,Other,Dessert with Mild taste,452,0,Vegan,Mild,https://foodimages.com/food_950.jpg,01-10-2025
+9cda256c553aa351359c53ae,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,433,5,Non-Veg,Medium,https://foodimages.com/food_951.jpg,03-08-2025
+9ac55625c9e698a2de65c7f6,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,204,12,Veg,Spicy,https://foodimages.com/food_952.jpg,10-10-2025
+6da8f249c3354c9948c81897,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,448,18,Jain,Medium,https://foodimages.com/food_953.jpg,13-11-2025
+8979617255d74ab9954fa637,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,164,12,Non-Veg,Spicy,https://foodimages.com/food_954.jpg,13-10-2025
+0bf6dfdc07356ad69089bce7,Spring Rolls,Starter,Chinese,Starter with Spicy taste,422,18,Veg,Spicy,https://foodimages.com/food_955.jpg,03-12-2025
+0f910c84ad47575d5cc85596,Lemon Iced Tea,Beverage,Other,Beverage with Mild taste,452,5,Vegan,Mild,https://foodimages.com/food_956.jpg,22-07-2025
+46e654e1655b8e7e47eda79d,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,319,5,Non-Veg,Spicy,https://foodimages.com/food_957.jpg,17-07-2025
+d9d5cfc94bf422a53871c1c8,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,320,18,Non-Veg,Spicy,https://foodimages.com/food_958.jpg,28-11-2025
+f6e826e5da6e7a8fdf5b07f0,Gulab Jamun,Dessert,Indian,Dessert with Mild taste,448,0,Veg,Mild,https://foodimages.com/food_959.jpg,18-09-2025
+1523caa58aed838bd4053411,Spring Rolls,Starter,Chinese,Starter with Spicy taste,287,12,Veg,Spicy,https://foodimages.com/food_960.jpg,15-10-2025
+a399db85224d667a1aef2316,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,359,5,Veg,Spicy,https://foodimages.com/food_961.jpg,20-08-2025
+fb30976004cf86c627ae6ca2,Spring Rolls,Starter,Chinese,Starter with Spicy taste,491,12,Veg,Spicy,https://foodimages.com/food_962.jpg,04-08-2025
+f712c5cdaffe5aad32d88964,Lemon Iced Tea,Dessert,Other,Dessert with Spicy taste,405,0,Vegan,Spicy,https://foodimages.com/food_963.jpg,01-07-2025
+1d29e8c957665ac8b2e86db9,Brownie,Dessert,Other,Dessert with Mild taste,309,5,Veg,Mild,https://foodimages.com/food_964.jpg,05-09-2025
+ebbe675b199ca423c86857b3,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,190,12,Veg,Mild,https://foodimages.com/food_965.jpg,20-12-2025
+9695b9403b521b50ec44d489,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,264,0,Non-Veg,Medium,https://foodimages.com/food_966.jpg,20-09-2025
+6f71bca613346d27b0cd7c40,Veg Hakka Noodles,Main Course,Chinese,Main Course with Spicy taste,478,12,Veg,Spicy,https://foodimages.com/food_967.jpg,05-11-2025
+c82a01d0df189ac35d6b2129,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,328,0,Veg,Mild,https://foodimages.com/food_968.jpg,13-10-2025
+712fa0e74f777d61c95824f8,Paneer Butter Masala,Main Course,Indian,Main Course with Spicy taste,479,5,Veg,Spicy,https://foodimages.com/food_969.jpg,17-10-2025
+4b14fd370ad56aa247d59f3a,Chicken Manchurian,Starter,Chinese,Starter with Mild taste,497,5,Non-Veg,Mild,https://foodimages.com/food_970.jpg,25-07-2025
+5156a81c9f789437ed23f9f6,Brownie,Dessert,Other,Dessert with Medium taste,327,18,Veg,Medium,https://foodimages.com/food_971.jpg,01-08-2025
+1c1fdff59e5f5b97f4c8e223,Chicken Manchurian,Starter,Chinese,Starter with Spicy taste,341,12,Non-Veg,Spicy,https://foodimages.com/food_972.jpg,20-11-2025
+3ffe9f7ab8d523d4690867ff,Veg Hakka Noodles,Main Course,Chinese,Main Course with Medium taste,406,5,Veg,Medium,https://foodimages.com/food_973.jpg,07-11-2025
+437b2b597d3360403136bcf1,Lemon Iced Tea,Main Course,Other,Main Course with Medium taste,282,0,Vegan,Medium,https://foodimages.com/food_974.jpg,18-08-2025
+92dc03916ff1b982967311a3,Lemon Iced Tea,Main Course,Other,Main Course with Medium taste,484,12,Vegan,Medium,https://foodimages.com/food_975.jpg,30-11-2025
+1d29e8c957665ac8b2e86db9,Chicken Biryani,Main Course,Indian,Main Course with Mild taste,191,5,Non-Veg,Mild,https://foodimages.com/food_976.jpg,18-08-2025
+1c1fdff59e5f5b97f4c8e223,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,359,12,Non-Veg,Spicy,https://foodimages.com/food_977.jpg,27-07-2025
+22352e1f7507bb1359c25afc,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,246,5,Veg,Mild,https://foodimages.com/food_978.jpg,04-08-2025
+694b294151e42abcc2588f20,Cold Coffee,Beverage,Other,Beverage with Mild taste,204,12,Veg,Mild,https://foodimages.com/food_979.jpg,11-09-2025
+c7e50d2af2315b1526780d18,Brownie,Dessert,Other,Dessert with Spicy taste,134,0,Veg,Spicy,https://foodimages.com/food_980.jpg,17-08-2025
+c632c977f8a8c2578413e94b,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,367,12,Veg,Spicy,https://foodimages.com/food_981.jpg,13-08-2025
+aa777dd4114f0d82b585205a,Lemon Iced Tea,Beverage,Other,Beverage with Spicy taste,431,18,Vegan,Spicy,https://foodimages.com/food_982.jpg,12-08-2025
+1f74d0891106dd4b67e726fa,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,402,5,Jain,Spicy,https://foodimages.com/food_983.jpg,23-09-2025
+6da8f249c3354c9948c81897,Margherita Pizza,Main Course,Italian,Main Course with Mild taste,121,18,Jain,Mild,https://foodimages.com/food_984.jpg,24-12-2025
+b54d458e36c32749c9fdf3e1,Spring Rolls,Starter,Chinese,Starter with Spicy taste,193,18,Jain,Spicy,https://foodimages.com/food_985.jpg,30-08-2025
+4b9b80e570b4ed498cc5bfce,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,183,18,Veg,Spicy,https://foodimages.com/food_986.jpg,18-07-2025
+64bc4e02a1b58989f9e4d030,Margherita Pizza,Main Course,Italian,Main Course with Spicy taste,380,5,Jain,Spicy,https://foodimages.com/food_987.jpg,17-08-2025
+8c16d8056679d6e6b36dad4b,Lemon Iced Tea,Main Course,Other,Main Course with Medium taste,466,18,Vegan,Medium,https://foodimages.com/food_988.jpg,13-07-2025
+b402252652f48a9dc0e63231,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,443,12,Non-Veg,Spicy,https://foodimages.com/food_989.jpg,05-10-2025
+3135530e5daee2c740584c68,Gulab Jamun,Dessert,Indian,Dessert with Spicy taste,358,18,Veg,Spicy,https://foodimages.com/food_990.jpg,12-09-2025
+9a21c2074f6103517905c84a,Lemon Iced Tea,Main Course,Other,Main Course with Mild taste,456,18,Vegan,Mild,https://foodimages.com/food_991.jpg,30-11-2025
+5bfafa1139760086d7175961,Gulab Jamun,Dessert,Indian,Dessert with Medium taste,460,12,Jain,Medium,https://foodimages.com/food_992.jpg,16-09-2025
+aa777dd4114f0d82b585205a,Cold Coffee,Beverage,Other,Beverage with Mild taste,398,12,Jain,Mild,https://foodimages.com/food_993.jpg,26-12-2025
+aeca3cf8488a62be6fce2a9a,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,472,12,Jain,Medium,https://foodimages.com/food_994.jpg,12-12-2025
+120cc18f1e6a8b463e03a0ac,Veg Hakka Noodles,Main Course,Chinese,Main Course with Mild taste,499,12,Veg,Mild,https://foodimages.com/food_995.jpg,03-09-2025
+b62c506cd5fa41669e4904b1,Paneer Butter Masala,Main Course,Indian,Main Course with Mild taste,320,0,Veg,Mild,https://foodimages.com/food_996.jpg,30-11-2025
+57a5d7f637252c67f03bd3fe,Chicken Biryani,Main Course,Indian,Main Course with Spicy taste,412,5,Jain,Spicy,https://foodimages.com/food_997.jpg,30-10-2025
+24355a8298a122f4821c50de,Brownie,Dessert,Other,Dessert with Spicy taste,405,0,Veg,Spicy,https://foodimages.com/food_998.jpg,12-07-2025
+59a022336a33d23f8e65d3ae,Chicken Biryani,Main Course,Indian,Main Course with Medium taste,340,5,Non-Veg,Medium,https://foodimages.com/food_999.jpg,20-11-2025

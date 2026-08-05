@@ -31,6 +31,10 @@ Dataset/ingr_map.pkl
 
 # Local Environment Credentials
 .env
+*.log
+file
+extracted_paper_full.txt
+parse_*.py
 
 # OS-specific
 .DS_Store

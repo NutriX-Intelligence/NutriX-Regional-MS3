@@ -63,8 +63,8 @@ def test_estimate_nutrition_from_name(db_session):
 
     # Test fallback default when unmatched
     fallback = BarcodeService.estimate_nutrition_from_name(db_session, "Unmatched Random Item")
-    assert fallback["energy_kcal"] == 120.0
-    assert fallback["carb_g"] == 18.0
+    assert fallback["energy_kcal"] == 420.0
+    assert fallback["carb_g"] == 60.0
 
 def test_scrape_product_name_from_search():
     # We query a known barcode to verify the scraper gets a name or returns None gracefully

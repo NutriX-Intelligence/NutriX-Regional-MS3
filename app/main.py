@@ -660,7 +660,8 @@ def generate_meal_plan(req: schemas.GenerateMealPlanRequest, db: Session = Depen
         db=db, 
         user_id=req.user_id, 
         tolerance=req.tolerance or 0.15,
-        preference=req.preference or "balanced"
+        preference=req.preference or "balanced",
+        meal_cuisines=req.meal_cuisines
     )
 
     if not plan:
@@ -732,6 +733,7 @@ def get_top_recipes(
         if not r.nutrition or not r.nutrition.energy_kcal:
             continue
         hs, hcat, _ = HealthScorer.score_from_per_serving(r.nutrition)
+        d_tag = RecommendationEngine.get_dietary_tag(r)
         scored.append({
             "recipe_code": r.recipe_code,
             "recipe_name": r.recipe_name,
@@ -739,6 +741,7 @@ def get_top_recipes(
             "cuisine": r.cuisine,
             "difficulty": r.difficulty,
             "cooking_time_minutes": r.cooking_time_minutes,
+            "dietary_tag": d_tag,
             "health_score": hs,
             "health_category": hcat,
             "calories": r.nutrition.energy_kcal,
@@ -777,6 +780,7 @@ def search_recipes(
             "recipe_name": r.recipe_name,
             "category": r.category,
             "cuisine": r.cuisine,
+            "dietary_tag": RecommendationEngine.get_dietary_tag(r),
         }
         for r in results
     ]
@@ -831,6 +835,7 @@ def get_recipe_detail(recipe_code: str, db: Session = Depends(get_db)):
         "cuisine": recipe.cuisine,
         "difficulty": recipe.difficulty,
         "cooking_time_minutes": recipe.cooking_time_minutes,
+        "dietary_tag": RecommendationEngine.get_dietary_tag(recipe),
         "instructions": recipe.instructions,
         "primarysource": recipe.primarysource,
         "ingredients": ingredients_list,
@@ -863,26 +868,69 @@ def recommend_recipes_by_ingredients(
             detail="Please provide at least one valid ingredient."
         )
 
-    # Fetch all recipes with their ingredients and nutrition
-    recipes = db.query(models.Recipe).options(
+    aliases = {
+        "bengali": ["bengal", "bengali", "machher", "kosha", "shorshe", "mishti", "sandesh", "pitha", "luchi", "cholar"],
+        "rajasthani": ["rajasthan", "rajasthani", "baati", "gatte", "laal maas", "sangri", "kachori", "ghevar", "baati"],
+        "gujarati": ["gujarat", "gujarati", "dhokla", "thepla", "khichdi", "khandvi", "undhiyu", "handvo", "farsan"],
+        "maharashtrian": ["maharashtra", "maharashtrian", "marathi", "misal", "pavitra", "poha", "modak", "puran poli", "vada pav", "pitla"],
+        "punjabi": ["punjab", "punjabi", "paneer butter", "tandoori", "chole", "bhature", "sarson", "makki", "dal makhani", "amritsari"],
+        "south indian": ["south indian", "dosa", "idli", "sambar", "rasam", "uttapam", "hyderabadi", "kerala", "chettinad", "bisi bele", "appam", "vada", "payasam"],
+        "north indian": ["north indian", "paneer", "dal makhani", "korma", "naan", "tikka", "kofta", "biryani", "paratha"],
+        "mughlai": ["mughlai", "biryani", "korma", "pasanda", "shahi", "nargisi", "nihari"],
+        "kashmiri": ["kashmiri", "rogan josh", "dum aloo", "yakhni", "kahwa"],
+        "chinese": ["chinese", "indo-chinese", "hakka", "manchurian", "chow mein", "schezwan", "noodle", "fried rice", "dim sum", "congee", "bao", "sichuan"],
+        "indo-chinese": ["chinese", "indo-chinese", "hakka", "manchurian", "chow mein", "schezwan", "noodle", "fried rice"],
+        "italian": ["italian", "pasta", "pizza", "risotto", "spaghetti", "bruschetta", "cornetto", "frittata", "arancini", "pesto", "lasagna"],
+        "japanese": ["japanese", "sushi", "ramen", "teriyaki", "tempura", "miso", "udon", "donburi", "matcha", "bento", "soba"],
+        "mexican": ["mexican", "taco", "burrito", "quesadilla", "enchilada", "fajita", "guacamole", "salsa", "nacho", "chili"],
+        "continental": ["continental", "steak", "roast", "soup", "salad", "bake", "grill", "stew"],
+        "asian": ["asian", "thai", "japanese", "korean", "vietnamese", "chinese"],
+    }
+
+    # High-Performance SQL Query with SQL-level Pre-filtering
+    from sqlalchemy import or_
+    query = db.query(models.Recipe).options(
         joinedload(models.Recipe.ingredients),
         joinedload(models.Recipe.nutrition),
-    ).all()
+    )
 
-    # Apply pre-filters
+    # 1. SQL Cuisine Pre-Filter
+    if req.cuisine:
+        c_lower = req.cuisine.lower()
+        sub_kws = aliases.get(c_lower, [c_lower])
+        c_conds = [models.Recipe.cuisine.ilike(f"%{kw}%") | models.Recipe.recipe_name.ilike(f"%{kw}%") for kw in sub_kws]
+        query = query.filter(or_(*c_conds))
+
+    # 2. SQL Max Cooking Time Filter
+    if req.max_cooking_time is not None:
+        query = query.filter(models.Recipe.cooking_time_minutes <= req.max_cooking_time)
+
+    # 3. SQL Candidate Pre-Filter for fast ingredient matching (when no cuisine constraint)
+    if not req.cuisine and user_ings:
+        ing_conds = []
+        for term in user_ings:
+            if len(term) >= 3:
+                ing_conds.append(models.RecipeIngredient.ingredient_name.ilike(f"%{term}%"))
+                ing_conds.append(models.RecipeIngredient.food_name.ilike(f"%{term}%"))
+                ing_conds.append(models.Recipe.recipe_name.ilike(f"%{term}%"))
+        if ing_conds:
+            query = query.join(models.Recipe.ingredients).filter(or_(*ing_conds)).distinct()
+
+    recipes = query.all()
+
+    # Apply remaining Python rule filters
     filtered_recipes = []
     for r in recipes:
         # Diet type filter
         if req.diet_type:
             dt = req.diet_type.lower()
-            if dt == "vegetarian" and not RecommendationEngine.is_vegetarian(r):
+            if "jain" in dt and not RecommendationEngine.is_jain(r):
                 continue
-            if dt == "vegan" and not RecommendationEngine.is_vegan(r):
+            elif "vegan" in dt and not RecommendationEngine.is_vegan(r):
                 continue
-
-        # Cuisine filter
-        if req.cuisine:
-            if not r.cuisine or req.cuisine.lower() not in r.cuisine.lower():
+            elif "eggetarian" in dt and not RecommendationEngine.is_eggetarian(r):
+                continue
+            elif "vegetarian" in dt and "non" not in dt and not RecommendationEngine.is_vegetarian(r):
                 continue
 
         # Max cooking time
@@ -955,6 +1003,7 @@ def recommend_recipes_by_ingredients(
                     goal_mult = 1.15
         final *= goal_mult
 
+        d_tag = RecommendationEngine.get_dietary_tag(r)
         # 4. Generate explanation
         explanation = ExplanationEngine.generate(
             recipe_name=r.recipe_name,
@@ -972,6 +1021,7 @@ def recommend_recipes_by_ingredients(
             goal=req.goal,
             cuisine=r.cuisine,
             difficulty=r.difficulty,
+            dietary_tag=d_tag,
         )
 
         scored_results.append({
@@ -981,6 +1031,7 @@ def recommend_recipes_by_ingredients(
             "cuisine": r.cuisine,
             "difficulty": r.difficulty,
             "cooking_time_minutes": r.cooking_time_minutes,
+            "dietary_tag": d_tag,
             "match_score": round(match_score, 2),
             "health_score": round(hs, 2),
             "health_category": hcat,

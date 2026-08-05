@@ -67,16 +67,18 @@ class OptimizationEngine:
         user_id: int, 
         tolerance: float = 0.15, 
         max_tolerance: float = 0.40,
-        preference: str = "balanced"
+        preference: str = "balanced",
+        meal_cuisines: Optional[Dict[str, str]] = None,
     ) -> Optional[Dict]:
-        """Generate a daily meal plan satisfying calorie and macronutrient targets using Google OR-Tools.
+        """Generate a daily meal plan satisfying calorie, macronutrient, and fibre targets using Google OR-Tools.
         
         Args:
             db: SQLAlchemy Session
             user_id: User database ID
             tolerance: initial nutrient tolerance (e.g. 0.15 = +/- 15%)
             max_tolerance: maximum tolerance if initial run is infeasible
-            preference: dietary preference for macro splits and targets
+            preference: dietary preference for macro splits and targets ('balanced', 'high_protein', 'low_carb', 'low_fat', 'high_fiber')
+            meal_cuisines: per-meal slot cuisine preference dict (e.g. {'Breakfast': 'South Indian', 'Lunch': 'Gujarati', 'Dinner': 'Chinese', 'Snack': 'Continental'})
             
         Returns:
             Dict containing selected recipes and totals, or None if completely infeasible
@@ -143,6 +145,40 @@ class OptimizationEngine:
             elif cat == "Snack":
                 categories["Snack"].append(db_rec)
 
+        # Apply per-meal slot cuisine preferences if specified
+        if meal_cuisines:
+            aliases = {
+                "bengali": ["bengal", "bengali", "machher", "kosha", "shorshe", "mishti", "sandesh", "pitha", "luchi", "cholar"],
+                "rajasthani": ["rajasthan", "rajasthani", "baati", "gatte", "laal maas", "sangri", "kachori", "ghevar", "baati"],
+                "gujarati": ["gujarat", "gujarati", "dhokla", "thepla", "khichdi", "khandvi", "undhiyu", "handvo", "farsan"],
+                "maharashtrian": ["maharashtra", "maharashtrian", "marathi", "misal", "pavitra", "poha", "modak", "puran poli", "vada pav", "pitla"],
+                "punjabi": ["punjab", "punjabi", "paneer butter", "tandoori", "chole", "bhature", "sarson", "makki", "dal makhani", "amritsari"],
+                "south indian": ["south indian", "dosa", "idli", "sambar", "rasam", "uttapam", "hyderabadi", "kerala", "chettinad", "bisi bele", "appam", "vada", "payasam"],
+                "north indian": ["north indian", "paneer", "dal makhani", "korma", "naan", "tikka", "kofta", "biryani", "paratha"],
+                "mughlai": ["mughlai", "biryani", "korma", "pasanda", "shahi", "nargisi", "nihari"],
+                "kashmiri": ["kashmiri", "rogan josh", "dum aloo", "yakhni", "kahwa"],
+                "chinese": ["chinese", "indo-chinese", "hakka", "manchurian", "chow mein", "schezwan", "noodle", "fried rice", "dim sum", "congee", "bao", "sichuan"],
+                "indo-chinese": ["chinese", "indo-chinese", "hakka", "manchurian", "chow mein", "schezwan", "noodle", "fried rice"],
+                "italian": ["italian", "pasta", "pizza", "risotto", "spaghetti", "bruschetta", "cornetto", "frittata", "arancini", "pesto", "lasagna"],
+                "japanese": ["japanese", "sushi", "ramen", "teriyaki", "tempura", "miso", "udon", "donburi", "matcha", "bento", "soba"],
+                "mexican": ["mexican", "taco", "burrito", "quesadilla", "enchilada", "fajita", "guacamole", "salsa", "nacho", "chili"],
+                "continental": ["continental", "steak", "roast", "soup", "salad", "bake", "grill", "stew"],
+                "asian": ["asian", "thai", "japanese", "korean", "vietnamese", "chinese"],
+            }
+            for slot_name, req_c in meal_cuisines.items():
+                if not req_c or str(req_c).lower().strip() in ("any", "all", "", "none"):
+                    continue
+                slot_c_lower = str(req_c).lower().strip()
+                sub_kws = aliases.get(slot_c_lower, [slot_c_lower])
+                filtered_slot = []
+                for r in categories.get(slot_name, []):
+                    rc = (getattr(r, "cuisine", "") or "").lower()
+                    rn = (getattr(r, "recipe_name", "") or "").lower()
+                    if any(kw in rc or kw in rn for kw in sub_kws):
+                        filtered_slot.append(r)
+                if filtered_slot:
+                    categories[slot_name] = filtered_slot
+
         # Validate that we have options in every category
         for cat_name, items in categories.items():
             if not items:
@@ -151,6 +187,7 @@ class OptimizationEngine:
 
         # Define targets based on calorie needs and preference splits
         target_cal = user.target_calories or 2000.0
+        target_fiber = 28.0
         
         pref = (preference or "balanced").lower().strip()
         if pref == "high_protein":
@@ -168,7 +205,13 @@ class OptimizationEngine:
             target_prot = (target_cal * 0.20) / 4.0
             target_carb = (target_cal * 0.60) / 4.0
             target_fat = (target_cal * 0.20) / 9.0
-        else: # "balanced" or "high_fiber"
+        elif pref in ("high_fiber", "high_fibre"):
+            # 20% Protein, 55% Carbs, 25% Fat, Fibre target 35g
+            target_prot = (target_cal * 0.20) / 4.0
+            target_carb = (target_cal * 0.55) / 4.0
+            target_fat = (target_cal * 0.25) / 9.0
+            target_fiber = 35.0
+        else: # "balanced"
             # Use user's profile targets if available, otherwise fall back to standard balanced splits
             target_prot = user.target_protein if user.target_protein and user.target_protein > 0 else (target_cal * 0.20) / 4.0
             target_carb = user.target_carbs if user.target_carbs and user.target_carbs > 0 else (target_cal * 0.50) / 4.0
@@ -185,6 +228,7 @@ class OptimizationEngine:
                 target_prot=target_prot,
                 target_carb=target_carb,
                 target_fat=target_fat,
+                target_fiber=target_fiber,
                 tolerance=current_tol,
                 preference=pref
             )
@@ -203,7 +247,8 @@ class OptimizationEngine:
         target_prot: float,
         target_carb: float,
         target_fat: float,
-        tolerance: float,
+        target_fiber: float = 28.0,
+        tolerance: float = 0.15,
         preference: str = "balanced"
     ) -> Optional[Dict]:
         """Internal MIP solver execution."""
@@ -263,17 +308,17 @@ class OptimizationEngine:
         solver.Add(total_fat <= target_fat * (1.0 + tolerance))
 
         # Enforce high-fiber constraint if requested
-        if preference == "high_fiber":
-            total_fiber = get_nutrient_sum("unit_serving_fibre_g")
-            # Require at least 25g of fiber daily, adjusted by tolerance
-            solver.Add(total_fiber >= 25.0 * (1.0 - tolerance))
+        total_fiber = get_nutrient_sum("unit_serving_fibre_g")
+        if preference in ("high_fiber", "high_fibre"):
+            solver.Add(total_fiber >= target_fiber * (1.0 - tolerance))
 
-        # 3. Objective: Maximize recommendation scores
+        # 3. Objective: Maximize recommendation scores + high-fiber bonus
         objective_terms = []
         for slot in slots:
             for r in categories[slot]:
                 score = scores.get(r.recipe_code, 0.0)
-                objective_terms.append(score * y[slot, r.recipe_code])
+                fib_bonus = (r.nutrition.unit_serving_fibre_g or 0.0) * 2.0 if preference in ("high_fiber", "high_fibre") else 0.0
+                objective_terms.append((score + fib_bonus) * y[slot, r.recipe_code])
         
         solver.Maximize(solver.Sum(objective_terms))
 
@@ -287,13 +332,15 @@ class OptimizationEngine:
                     "calories": 0.0,
                     "protein_g": 0.0,
                     "carbs_g": 0.0,
-                    "fat_g": 0.0
+                    "fat_g": 0.0,
+                    "fibre_g": 0.0,
                 },
                 "targets": {
                     "calories": round(target_cal, 2),
                     "protein_g": round(target_prot, 2),
                     "carbs_g": round(target_carb, 2),
-                    "fat_g": round(target_fat, 2)
+                    "fat_g": round(target_fat, 2),
+                    "fibre_g": round(target_fiber, 2),
                 },
                 "tolerance_used": tolerance
             }
@@ -301,6 +348,7 @@ class OptimizationEngine:
             for slot in slots:
                 for r in categories[slot]:
                     if y[slot, r.recipe_code].solution_value() > 0.5:
+                        f_val = r.nutrition.unit_serving_fibre_g if hasattr(r.nutrition, "unit_serving_fibre_g") and r.nutrition.unit_serving_fibre_g else getattr(r.nutrition, "fibre_g", 0.0) or 0.0
                         plan["meals"][slot] = {
                             "recipe_code": r.recipe_code,
                             "recipe_name": r.recipe_name,
@@ -309,19 +357,22 @@ class OptimizationEngine:
                             "calories": round(r.nutrition.unit_serving_energy_kcal, 2),
                             "protein_g": round(r.nutrition.unit_serving_protein_g, 2),
                             "carbs_g": round(r.nutrition.unit_serving_carb_g, 2),
-                            "fat_g": round(r.nutrition.unit_serving_fat_g, 2)
+                            "fat_g": round(r.nutrition.unit_serving_fat_g, 2),
+                            "fibre_g": round(f_val, 2),
                         }
                         
                         plan["totals"]["calories"] += r.nutrition.unit_serving_energy_kcal
                         plan["totals"]["protein_g"] += r.nutrition.unit_serving_protein_g
                         plan["totals"]["carbs_g"] += r.nutrition.unit_serving_carb_g
                         plan["totals"]["fat_g"] += r.nutrition.unit_serving_fat_g
+                        plan["totals"]["fibre_g"] += f_val
                         break
 
             plan["totals"]["calories"] = round(plan["totals"]["calories"], 2)
             plan["totals"]["protein_g"] = round(plan["totals"]["protein_g"], 2)
             plan["totals"]["carbs_g"] = round(plan["totals"]["carbs_g"], 2)
             plan["totals"]["fat_g"] = round(plan["totals"]["fat_g"], 2)
+            plan["totals"]["fibre_g"] = round(plan["totals"]["fibre_g"], 2)
 
             return plan
 

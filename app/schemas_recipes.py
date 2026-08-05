@@ -67,6 +67,7 @@ class RankedRecipeResponse(BaseModel):
     cuisine: Optional[str] = None
     difficulty: Optional[str] = None
     cooking_time_minutes: Optional[int] = None
+    dietary_tag: Optional[str] = "Vegetarian"
     match_score: float
     health_score: float
     health_category: str
@@ -93,7 +94,7 @@ class RecipeRecommendResponse(BaseModel):
 
 class RecipeFilterRequest(BaseModel):
     goal: Optional[str] = Field(None, description="Fitness goal for filtering")
-    diet_type: Optional[str] = Field(None, description="'vegetarian' or 'vegan'")
+    diet_type: Optional[str] = Field(None, description="'vegetarian', 'vegan', 'jain', 'eggetarian', 'non-vegetarian'")
     cuisine: Optional[str] = None
     min_protein: Optional[float] = Field(None, ge=0)
     max_calories: Optional[float] = Field(None, ge=0)
@@ -110,6 +111,7 @@ class RecipeDetailResponse(BaseModel):
     cuisine: Optional[str] = None
     difficulty: Optional[str] = None
     cooking_time_minutes: Optional[int] = None
+    dietary_tag: Optional[str] = "Vegetarian"
     instructions: Optional[str] = None
     primarysource: Optional[str] = None
     ingredients: List[Dict[str, Any]] = []
@@ -134,6 +136,7 @@ class RecipeSearchResult(BaseModel):
     recipe_name: str
     category: str
     cuisine: Optional[str] = None
+    dietary_tag: Optional[str] = "Vegetarian"
 
 
 # ---------------------------------------------------------------------------

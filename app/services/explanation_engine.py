@@ -34,6 +34,7 @@ class ExplanationEngine:
         goal: Optional[str] = None,
         cuisine: Optional[str] = None,
         difficulty: Optional[str] = None,
+        dietary_tag: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
         Generate a complete explanation for a recipe recommendation.
@@ -44,6 +45,20 @@ class ExplanationEngine:
         bullets: List[str] = []
         total_user = len(user_ingredients)
         matched_count = len(matched_ingredients)
+
+        # --- Dietary Classification ---
+        if dietary_tag:
+            dt = dietary_tag.lower()
+            if dt == "jain":
+                bullets.append("🌱 Jain (Vegetarian — No onion, garlic, or root vegetables)")
+            elif dt == "vegan":
+                bullets.append("🌱 Vegan (100% Plant-based — Dairy-free & Vegetarian)")
+            elif dt == "vegetarian":
+                bullets.append("🥛 Vegetarian (Lacto-Vegetarian — Dairy allowed, No meat/eggs)")
+            elif dt == "eggetarian":
+                bullets.append("🥚 Eggetarian (Allows eggs & dairy — No meat or fish)")
+            elif dt == "non-vegetarian":
+                bullets.append("🍖 Non-Vegetarian (Contains meat, poultry, or seafood)")
 
         # --- Ingredient match ---
         if matched_count == total_user:

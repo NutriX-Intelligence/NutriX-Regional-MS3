@@ -54,6 +54,7 @@ class RankedFoodItem(BaseModel):
     recipe_name: str
     category: str
     score: float
+    dietary_tag: Optional[str] = "Vegetarian"
     energy_kcal: float
     protein_g: float
     carb_g: float
@@ -63,7 +64,11 @@ class GenerateMealPlanRequest(BaseModel):
     user_id: int
     plan_date: Optional[date] = None # Defaults to today
     tolerance: Optional[float] = Field(0.15, ge=0.01, le=0.50)
-    preference: Optional[str] = "balanced"
+    preference: Optional[str] = "balanced"  # 'balanced', 'high_protein', 'low_carb', 'low_fat', 'high_fiber'
+    meal_cuisines: Optional[Dict[str, str]] = Field(
+        None,
+        description="Per-meal slot cuisine preference, e.g. {'Breakfast': 'South Indian', 'Lunch': 'Gujarati', 'Dinner': 'Chinese', 'Snack': 'Continental'}"
+    )
 
 class MealItem(BaseModel):
     recipe_code: str
@@ -74,6 +79,7 @@ class MealItem(BaseModel):
     protein_g: float
     carbs_g: float
     fat_g: float
+    fibre_g: Optional[float] = 0.0
 
 class MealPlanResponse(BaseModel):
     user_id: int
