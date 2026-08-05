@@ -29,12 +29,13 @@ Dataset/full_format_recipes.json
 Dataset/interactions_*.csv
 Dataset/ingr_map.pkl
 
-# Local Environment Credentials
+# Local Environment Credentials & Documents
 .env
 *.log
 file
 extracted_paper_full.txt
 parse_*.py
+Research Paper/
 
 # OS-specific
 .DS_Store
