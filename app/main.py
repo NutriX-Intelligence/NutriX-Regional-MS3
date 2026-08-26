@@ -907,16 +907,28 @@ def recommend_recipes_by_ingredients(
 
     # 3. SQL Candidate Pre-Filter for fast ingredient matching (when no cuisine constraint)
     if not req.cuisine and user_ings:
-        ing_conds = []
-        for term in user_ings:
-            if len(term) >= 3:
-                ing_conds.append(models.RecipeIngredient.ingredient_name.ilike(f"%{term}%"))
-                ing_conds.append(models.RecipeIngredient.food_name.ilike(f"%{term}%"))
-                ing_conds.append(models.Recipe.recipe_name.ilike(f"%{term}%"))
+        ing_conds = [
+            models.RecipeIngredient.ingredient_name.ilike(f"%{t}%") | models.RecipeIngredient.food_name.ilike(f"%{t}%")
+            for t in user_ings if len(t) >= 2
+        ]
+        name_conds = [
+            models.Recipe.recipe_name.ilike(f"%{t}%")
+            for t in user_ings if len(t) >= 2
+        ]
+        candidate_codes = set()
         if ing_conds:
-            query = query.join(models.Recipe.ingredients).filter(or_(*ing_conds)).distinct()
+            for row in db.query(models.RecipeIngredient.recipe_code).filter(or_(*ing_conds)).distinct().limit(250).all():
+                if row[0]:
+                    candidate_codes.add(row[0])
+        if name_conds:
+            for row in db.query(models.Recipe.recipe_code).filter(or_(*name_conds)).distinct().limit(100).all():
+                if row[0]:
+                    candidate_codes.add(row[0])
+        
+        if candidate_codes:
+            query = query.filter(models.Recipe.recipe_code.in_(list(candidate_codes)))
 
-    recipes = query.all()
+    recipes = query.limit(300).all()
 
     # Apply remaining Python rule filters
     filtered_recipes = []
@@ -960,15 +972,14 @@ def recommend_recipes_by_ingredients(
         filtered_recipes.append(r)
 
     # Score each recipe
-    scored_results = []
+    candidate_scores = []
     for r in filtered_recipes:
         # Get recipe ingredient names
         recipe_ing_names = []
-        for ing in r.ingredients:
+        for ing in (r.ingredients or []):
             name = ing.food_name or ing.ingredient_name or ""
-            name = clean_ingredient(name)
             if name:
-                recipe_ing_names.append(name)
+                recipe_ing_names.append(clean_ingredient(name))
         recipe_ing_names = list(set(recipe_ing_names))
 
         # 1. Ingredient match
@@ -1004,7 +1015,19 @@ def recommend_recipes_by_ingredients(
         final *= goal_mult
 
         d_tag = RecommendationEngine.get_dietary_tag(r)
-        # 4. Generate explanation
+
+        candidate_scores.append((
+            final, r, match_score, matched, missing, hs, hcat, hexp, d_tag
+        ))
+
+    # Sort by final score descending
+    candidate_scores.sort(key=lambda x: x[0], reverse=True)
+
+    # Take top_n candidates and generate explanations only for the winners
+    top_candidates = candidate_scores[:req.top_n]
+    top = []
+
+    for final, r, match_score, matched, missing, hs, hcat, hexp, d_tag in top_candidates:
         explanation = ExplanationEngine.generate(
             recipe_name=r.recipe_name,
             match_score=match_score,
@@ -1024,7 +1047,7 @@ def recommend_recipes_by_ingredients(
             dietary_tag=d_tag,
         )
 
-        scored_results.append({
+        top.append({
             "recipe_code": r.recipe_code,
             "recipe_name": r.recipe_name,
             "category": r.category,
@@ -1050,15 +1073,9 @@ def recommend_recipes_by_ingredients(
             "reason": explanation["summary"],
         })
 
-    # Sort by final_score descending
-    scored_results.sort(key=lambda x: x["final_score"], reverse=True)
-
-    # Return top_n
-    top = scored_results[:req.top_n]
-
     return {
         "query": req,
-        "total_results": len(scored_results),
+        "total_results": len(candidate_scores),
         "top_recipes": top,
     }
 
@@ -1298,7 +1315,7 @@ def track_weight(req: schemas.TrackWeightRequest, db: Session = Depends(get_db))
 
 @app.post("/api/classify", response_model=schemas.ClassifyResponse)
 def classify_food(req: schemas.ClassifyRequest, db: Session = Depends(get_db)):
-    """Classify ingredients list or an existing recipe against dietary rules (Vegetarian, Vegan, Jain, Eggetarian)."""
+    """Classify ingredients list or an existing recipe against dietary rules (Vegetarian, Vegan, Jain, Eggetarian, Keto, Paleo, etc.)."""
     if req.recipe_code:
         recipe = db.query(models.Recipe).filter(models.Recipe.recipe_code == req.recipe_code).first()
         if not recipe:
@@ -1317,6 +1334,22 @@ def classify_food(req: schemas.ClassifyRequest, db: Session = Depends(get_db)):
             detail="Must provide either recipe_code or ingredients list."
         )
     return classification
+
+
+@app.post("/api/classify/substitutions", response_model=schemas.SubstitutionResponse)
+def get_dietary_substitutions(req: schemas.SubstitutionRequest):
+    """Retrieve intelligent culinary authentic substitutions for non-compliant ingredients under a target diet."""
+    if not req.ingredients:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Please provide a non-empty list of ingredients."
+        )
+    subs = ClassificationEngine.get_substitutions(req.ingredients, req.target_diet)
+    return {
+        "target_diet": req.target_diet,
+        "substitutions": subs
+    }
+
 
 
 @app.get("/api/barcode/{barcode}")
@@ -1884,6 +1917,73 @@ def log_meal_directly(req: schemas.MealLogCreate, db: Session = Depends(get_db))
     db.commit()
     db.refresh(db_log)
     return db_log
+
+
+@app.get("/api/meal-logs/today/{user_id}")
+def get_today_meal_logs(user_id: int, log_date: Optional[str] = None, db: Session = Depends(get_db)):
+    """Fetch all meal logs for the given user for today (or specified date) with macro totals and targets comparison."""
+    from datetime import date
+    try:
+        target_date = date.fromisoformat(log_date) if log_date else date.today()
+    except Exception:
+        target_date = date.today()
+
+    logs = db.query(models.MealLog).filter(
+        models.MealLog.user_id == user_id,
+        models.MealLog.log_date == target_date
+    ).order_by(models.MealLog.id.asc()).all()
+    
+    total_cal = sum(float(l.calories or 0.0) for l in logs)
+    total_p = sum(float(l.protein or 0.0) for l in logs)
+    total_c = sum(float(l.carbs or 0.0) for l in logs)
+    total_f = sum(float(l.fat or 0.0) for l in logs)
+
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    target_cal = float(user.target_calories or 2000.0) if user else 2000.0
+    target_p = float(user.target_protein or 140.0) if user else 140.0
+    target_c = float(user.target_carbs or 220.0) if user else 220.0
+    target_f = float(user.target_fat or 60.0) if user else 60.0
+    
+    return {
+        "user_id": user_id,
+        "date": target_date.isoformat(),
+        "totals": {
+            "calories": round(total_cal, 1),
+            "protein": round(total_p, 1),
+            "carbs": round(total_c, 1),
+            "fat": round(total_f, 1)
+        },
+        "targets": {
+            "calories": round(target_cal, 1),
+            "protein": round(target_p, 1),
+            "carbs": round(target_c, 1),
+            "fat": round(target_f, 1)
+        },
+        "logs": [
+            {
+                "id": l.id,
+                "meal_type": l.meal_type,
+                "food_name": l.food_name,
+                "calories": round(float(l.calories or 0.0), 1),
+                "protein": round(float(l.protein or 0.0), 1),
+                "carbs": round(float(l.carbs or 0.0), 1),
+                "fat": round(float(l.fat or 0.0), 1)
+            }
+            for l in logs
+        ]
+    }
+
+
+@app.delete("/api/meal-logs/{log_id}")
+def delete_meal_log(log_id: int, db: Session = Depends(get_db)):
+    """Delete a specific meal log entry."""
+    db_log = db.query(models.MealLog).filter(models.MealLog.id == log_id).first()
+    if not db_log:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Meal log entry not found.")
+    db.delete(db_log)
+    db.commit()
+    return {"status": "success", "message": f"Deleted meal log {log_id}"}
+
 
 
 @app.post("/api/recipes/generate-instructions")

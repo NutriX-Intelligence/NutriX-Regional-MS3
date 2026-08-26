@@ -11,8 +11,7 @@ ENV/
 .ipynb_checkpoints/
 
 # Database files (database is built/seeded dynamically via scripts)
-output/*.db
-output/*.sqlite
+output/
 nutrix_server.log
 google_result.html
 ddg_result.html
@@ -36,6 +35,13 @@ file
 extracted_paper_full.txt
 parse_*.py
 Research Paper/
+ngrok_url.txt
+Chat.md
+REGIONAL_DATA_PROVENANCE_AUDIT.md
+WACV*
+*AUDIT*
+*audit*
+*.zip
 
 # OS-specific
 .DS_Store

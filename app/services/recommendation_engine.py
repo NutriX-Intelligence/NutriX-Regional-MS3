@@ -1,159 +1,118 @@
+import functools
+from typing import Optional, List, Dict, Any
 from sqlalchemy import or_
 from sqlalchemy.orm import Session, joinedload
 from app.models import Recipe, RecipeIngredient, RecipeNutrition, UserPreference, User, HomelyMeal
+from app.services.classification_engine import ClassificationEngine
 
 class RecommendationEngine:
-    MEAT_KEYWORDS = [
-        "chicken", "mutton", "fish", "beef", "pork", "seafood", "prawn", 
-        "crab", "meat", "shrimp", "lamb", "duck", "turkey", "bacon", "ham", "salami", "gelatin"
-    ]
-    
-    NON_VEG_KEYWORDS = MEAT_KEYWORDS + ["egg"]
-    
-    ANIMAL_KEYWORDS = NON_VEG_KEYWORDS + [
-        "milk", "cheese", "butter", "curd", "yogurt", "ghee", "cream", "paneer", "honey", "whey", "casein"
-    ]
-
-    JAIN_KEYWORDS = NON_VEG_KEYWORDS + [
-        "onion", "garlic", "shallot", "scallion", "leek", "potato", "radish", 
-        "carrot", "beetroot", "turnip", "ginger", "kanda", "lhsun", "lasun", "pyaz", "pyaaz", "aloo", "alu"
-    ]
+    _RECIPE_TAG_CACHE: Dict[str, Dict[str, Any]] = {}
+    _HOMELY_TAG_CACHE: Dict[int, Dict[str, Any]] = {}
 
     @classmethod
-    def is_vegan(cls, recipe: Recipe) -> bool:
-        """Check if a recipe is vegan by examining its ingredient names."""
-        for ing in recipe.ingredients:
-            ing_name = (ing.food_name or "").lower()
-            if any(kw in ing_name for kw in cls.ANIMAL_KEYWORDS):
-                return False
-        recipe_name = recipe.recipe_name.lower()
-        if any(kw in recipe_name for kw in cls.ANIMAL_KEYWORDS):
-            return False
-        return True
+    def get_recipe_classification(cls, recipe: Recipe) -> Dict[str, Any]:
+        """Compute and cache classification for a recipe."""
+        code = recipe.recipe_code or str(recipe.id)
+        if code in cls._RECIPE_TAG_CACHE:
+            return cls._RECIPE_TAG_CACHE[code]
 
-    @classmethod
-    def is_vegetarian(cls, recipe: Recipe) -> bool:
-        """Check if a recipe is vegetarian by examining its ingredient names."""
-        for ing in recipe.ingredients:
-            ing_name = (ing.food_name or "").lower()
-            if any(kw in ing_name for kw in cls.NON_VEG_KEYWORDS):
-                return False
-        recipe_name = recipe.recipe_name.lower()
-        if any(kw in recipe_name for kw in cls.NON_VEG_KEYWORDS):
-            return False
-        return True
-
-    @classmethod
-    def is_jain(cls, recipe: Recipe) -> bool:
-        """Check if a recipe is Jain compliant (no meat, eggs, onion, garlic, or root vegetables)."""
-        for ing in recipe.ingredients:
-            ing_name = (ing.food_name or "").lower()
-            if any(kw in ing_name for kw in cls.JAIN_KEYWORDS):
-                return False
-        recipe_name = recipe.recipe_name.lower()
-        if any(kw in recipe_name for kw in cls.JAIN_KEYWORDS):
-            return False
-        return True
-
-    @classmethod
-    def is_eggetarian(cls, recipe: Recipe) -> bool:
-        """Check if a recipe is eggetarian compliant (allows eggs/dairy, no meat/fish)."""
-        for ing in recipe.ingredients:
-            ing_name = (ing.food_name or "").lower()
-            if any(kw in ing_name for kw in cls.MEAT_KEYWORDS):
-                return False
-        recipe_name = recipe.recipe_name.lower()
-        if any(kw in recipe_name for kw in cls.MEAT_KEYWORDS):
-            return False
-        return True
-
-    @classmethod
-    def is_homely_meal_vegan(cls, meal: HomelyMeal) -> bool:
-        """Check if a homely meal is vegan by examining its ingredient names."""
-        for ing in meal.ingredients:
-            ing_name = (ing.ingredient_name or "").lower()
-            if any(kw in ing_name for kw in cls.ANIMAL_KEYWORDS):
-                return False
-        if any(kw in meal.name.lower() for kw in cls.ANIMAL_KEYWORDS):
-            return False
-        return True
-
-    @classmethod
-    def is_homely_meal_vegetarian(cls, meal: HomelyMeal) -> bool:
-        """Check if a homely meal is vegetarian by examining its ingredient names."""
-        for ing in meal.ingredients:
-            ing_name = (ing.ingredient_name or "").lower()
-            if any(kw in ing_name for kw in cls.NON_VEG_KEYWORDS):
-                return False
-        if any(kw in meal.name.lower() for kw in cls.NON_VEG_KEYWORDS):
-            return False
-        return True
-
-    @classmethod
-    def is_homely_meal_jain(cls, meal: HomelyMeal) -> bool:
-        """Check if a homely meal is Jain compliant."""
-        for ing in meal.ingredients:
-            ing_name = (ing.ingredient_name or "").lower()
-            if any(kw in ing_name for kw in cls.JAIN_KEYWORDS):
-                return False
-        if any(kw in meal.name.lower() for kw in cls.JAIN_KEYWORDS):
-            return False
-        return True
-
-    @classmethod
-    def is_homely_meal_eggetarian(cls, meal: HomelyMeal) -> bool:
-        """Check if a homely meal is eggetarian compliant."""
-        for ing in meal.ingredients:
-            ing_name = (ing.ingredient_name or "").lower()
-            if any(kw in ing_name for kw in cls.MEAT_KEYWORDS):
-                return False
-        if any(kw in meal.name.lower() for kw in cls.MEAT_KEYWORDS):
-            return False
-        return True
-
-    @classmethod
-    def get_dietary_tag(cls, recipe: Recipe) -> str:
-        """Determine the canonical dietary tag for a recipe, respecting explicit dataset tags."""
         ps = (recipe.primarysource or "").strip()
         rname = (recipe.recipe_name or "").lower()
 
-        # Explicit dataset tags & dish names
-        if ps == "Jain" or "jain" in rname:
-            return "Jain"
-        if ps == "Vegan" or "vegan" in rname:
-            return "Vegan"
-        if ps == "Vegetarian":
-            return "Vegetarian"
-        if ps == "Eggetarian":
-            return "Eggetarian"
-        if ps == "Non-Vegetarian":
-            return "Non-Vegetarian"
+        names = [recipe.recipe_name] if recipe.recipe_name else []
+        for ing in (recipe.ingredients or []):
+            if ing.food_name:
+                names.append(ing.food_name)
+            if ing.ingredient_name and ing.ingredient_name != ing.food_name:
+                names.append(ing.ingredient_name)
 
-        # Dynamic fallback based on ingredient rules
-        if cls.is_jain(recipe):
-            return "Jain"
-        elif cls.is_vegan(recipe):
-            return "Vegan"
-        elif cls.is_vegetarian(recipe):
-            return "Vegetarian"
-        elif cls.is_eggetarian(recipe):
-            return "Eggetarian"
-        else:
-            return "Non-Vegetarian"
+        c = ClassificationEngine.classify_ingredients(names)
+        d_tag = c["dietary_tag"]
+        if ps == "Jain" or "jain" in rname:
+            d_tag = "Jain"
+        elif ps == "Vegan" or "vegan" in rname:
+            d_tag = "Vegan"
+        elif ps == "Vegetarian":
+            d_tag = "Vegetarian"
+        elif ps == "Eggetarian":
+            d_tag = "Eggetarian"
+        elif ps == "Non-Vegetarian":
+            d_tag = "Non-Vegetarian"
+
+        res = {
+            "is_vegan": c["is_vegan"] or d_tag == "Vegan",
+            "is_vegetarian": c["is_vegetarian"] or d_tag in ("Vegetarian", "Vegan", "Jain"),
+            "is_jain": c["is_jain"] or d_tag == "Jain",
+            "is_eggetarian": c["is_eggetarian"] or d_tag in ("Eggetarian", "Vegetarian", "Vegan", "Jain"),
+            "dietary_tag": d_tag
+        }
+        if len(cls._RECIPE_TAG_CACHE) < 50000:
+            cls._RECIPE_TAG_CACHE[code] = res
+        return res
+
+    @classmethod
+    def is_vegan(cls, recipe: Recipe) -> bool:
+        return cls.get_recipe_classification(recipe)["is_vegan"]
+
+    @classmethod
+    def is_vegetarian(cls, recipe: Recipe) -> bool:
+        return cls.get_recipe_classification(recipe)["is_vegetarian"]
+
+    @classmethod
+    def is_jain(cls, recipe: Recipe) -> bool:
+        return cls.get_recipe_classification(recipe)["is_jain"]
+
+    @classmethod
+    def is_eggetarian(cls, recipe: Recipe) -> bool:
+        return cls.get_recipe_classification(recipe)["is_eggetarian"]
+
+    @classmethod
+    def get_dietary_tag(cls, recipe: Recipe) -> str:
+        return cls.get_recipe_classification(recipe)["dietary_tag"]
+
+    @classmethod
+    def get_homely_classification(cls, meal: HomelyMeal) -> Dict[str, Any]:
+        """Compute and cache classification for a homely meal."""
+        meal_id = meal.id or hash(meal.name)
+        if meal_id in cls._HOMELY_TAG_CACHE:
+            return cls._HOMELY_TAG_CACHE[meal_id]
+
+        names = [meal.name] if meal.name else []
+        for ing in (meal.ingredients or []):
+            if ing.ingredient_name:
+                names.append(ing.ingredient_name)
+
+        c = ClassificationEngine.classify_ingredients(names)
+        res = {
+            "is_vegan": c["is_vegan"],
+            "is_vegetarian": c["is_vegetarian"],
+            "is_jain": c["is_jain"],
+            "is_eggetarian": c["is_eggetarian"],
+            "dietary_tag": c["dietary_tag"]
+        }
+        if len(cls._HOMELY_TAG_CACHE) < 20000:
+            cls._HOMELY_TAG_CACHE[meal_id] = res
+        return res
+
+    @classmethod
+    def is_homely_meal_vegan(cls, meal: HomelyMeal) -> bool:
+        return cls.get_homely_classification(meal)["is_vegan"]
+
+    @classmethod
+    def is_homely_meal_vegetarian(cls, meal: HomelyMeal) -> bool:
+        return cls.get_homely_classification(meal)["is_vegetarian"]
+
+    @classmethod
+    def is_homely_meal_jain(cls, meal: HomelyMeal) -> bool:
+        return cls.get_homely_classification(meal)["is_jain"]
+
+    @classmethod
+    def is_homely_meal_eggetarian(cls, meal: HomelyMeal) -> bool:
+        return cls.get_homely_classification(meal)["is_eggetarian"]
 
     @classmethod
     def get_homely_meal_dietary_tag(cls, meal: HomelyMeal) -> str:
-        """Determine the strictest canonical dietary tag for a homely meal."""
-        if cls.is_homely_meal_jain(meal):
-            return "Jain"
-        elif cls.is_homely_meal_vegan(meal):
-            return "Vegan"
-        elif cls.is_homely_meal_vegetarian(meal):
-            return "Vegetarian"
-        elif cls.is_homely_meal_eggetarian(meal):
-            return "Eggetarian"
-        else:
-            return "Non-Vegetarian"
+        return cls.get_homely_classification(meal)["dietary_tag"]
 
     @classmethod
     def get_recipe_macros_pct(cls, nutrition: RecipeNutrition) -> tuple:
@@ -262,27 +221,61 @@ class RecommendationEngine:
                 boost += 25.0
             else:
                 for ing in meal.ingredients:
-                    if like_lower in ing.ingredient_name.lower():
+                    if like_lower in (ing.ingredient_name or "").lower():
                         boost += 15.0
                         break
 
         return round(macro_score + nds + boost, 2)
 
     @classmethod
+    @functools.lru_cache(maxsize=16384)
+    def infer_cuisine(cls, recipe_name: str, explicit_cuisine: Optional[str] = None) -> str:
+        """Infer cuisine category from dish name and ingredients."""
+        if explicit_cuisine and len(explicit_cuisine.strip()) > 1 and explicit_cuisine.strip() != "Generic":
+            return explicit_cuisine.strip()
+        
+        name = (recipe_name or "").lower()
+        if any(w in name for w in ["dosa", "idli", "sambar", "uttapam", "vada", "upma", "rasam", "curry leaf", "payasam", "appam", "pongal", "chettinad"]):
+            return "South Indian"
+        if any(w in name for w in ["dhokla", "thepla", "khandvi", "undhiyu", "handvo", "fafda", "dal dhokli"]):
+            return "Gujarati"
+        if any(w in name for w in ["poha", "misal", "pav", "vada pav", "sabudana", "puran poli", "kanda poha"]):
+            return "Maharashtrian"
+        if any(w in name for w in ["chole", "bhature", "kulcha", "paneer butter", "dal makhani", "sarson", "makki", "rajma"]):
+            return "Punjabi"
+        if any(w in name for w in ["dal baati", "gatte", "ker sangri", "laal maas"]):
+            return "Rajasthani"
+        if any(w in name for w in ["machher", "shorshe", "sandesh", "rosogolla", "bengali"]):
+            return "Bengali"
+        if any(w in name for w in ["pasta", "spaghetti", "pizza", "sandwich", "salad", "soup", "oats", "pancake", "burger", "wrap", "quiche"]):
+            return "Continental / Global"
+        if any(w in name for w in ["noodle", "noodles", "manchurian", "fried rice", "schezwan", "chow mein", "dim sum", "ramen"]):
+            return "Chinese / Pan-Asian"
+        if any(w in name for w in ["hummus", "falafel", "pita", "greek", "mediterranean"]):
+            return "Mediterranean"
+        if any(w in name for w in ["paneer", "tikka", "korma", "biryani", "roti", "paratha", "naan", "jeera", "palak", "aloo", "kofta", "khichdi", "dal"]):
+            return "North Indian"
+        return "Indian"
+
+    @classmethod
+    def recommend_foods(cls, db: Session, user_id: int, limit: int = 50) -> list:
+        # Alias for get_recommendations
+        return cls.get_recommendations(db, user_id, limit)
+
+    @classmethod
     def get_recommendations(cls, db: Session, user_id: int, limit: int = 50) -> list:
-        """Fetch and rank recipes & homely meals based on user preferences and nutritional target alignment."""
-        user = db.query(User).filter(User.id == user_id).first()
-        if not user:
+        # Load user and profile
+        user = db.query(User).options(joinedload(User.profile), joinedload(User.preferences)).filter(User.id == user_id).first()
+        if not user or not user.profile:
             return []
 
-        # Retrieve preferences
-        prefs = db.query(UserPreference).filter(UserPreference.user_id == user_id).all()
-        
+        # Extract Preferences
+        prefs = user.preferences
         allergies = []
         dislikes = []
         likes = []
-        diet_type = "Non-Vegetarian"
-
+        diet_type = user.profile.diet_type or "Non-Vegetarian"
+        
         for p in prefs:
             t = p.preference_type.lower()
             val = p.value.strip()
@@ -295,10 +288,16 @@ class RecommendationEngine:
             elif t == "diet_type":
                 diet_type = val
 
-        recipes = db.query(Recipe).options(
+        diet_lower = diet_type.lower()
+
+        query = db.query(Recipe).options(
             joinedload(Recipe.nutrition),
             joinedload(Recipe.ingredients)
-        ).all()
+        )
+        if "jain" in diet_lower or "vegan" in diet_lower or ("vegetarian" in diet_lower and "non" not in diet_lower):
+            query = query.filter(or_(Recipe.primarysource != "Non-Vegetarian", Recipe.primarysource.is_(None)))
+
+        recipes = query.limit(500).all()
         
         homely_meals = db.query(HomelyMeal).options(
             joinedload(HomelyMeal.nutrition),
@@ -347,11 +346,18 @@ class RecommendationEngine:
                 continue
 
             score = cls.calculate_score(recipe, user, likes)
+            cuisine = cls.infer_cuisine(recipe.recipe_name, recipe.cuisine)
+            health_sc = 80.0
+            if hasattr(recipe, "health_score") and recipe.health_score:
+                health_sc = float(recipe.health_score)
+
             ranked_recipes.append({
                 "recipe_code": recipe.recipe_code,
                 "recipe_name": recipe.recipe_name,
                 "category": recipe.category,
+                "cuisine": cuisine,
                 "score": score,
+                "health_score": health_sc,
                 "dietary_tag": cls.get_dietary_tag(recipe),
                 "energy_kcal": recipe.nutrition.energy_kcal if recipe.nutrition else 0.0,
                 "protein_g": recipe.nutrition.protein_g if recipe.nutrition else 0.0,
@@ -391,11 +397,14 @@ class RecommendationEngine:
                 continue
 
             score = cls.calculate_homely_score(meal, user, likes)
+            cuisine = cls.infer_cuisine(meal.name, "Homely Indian")
             ranked_recipes.append({
                 "recipe_code": f"HOMELY_{meal.id}",
                 "recipe_name": meal.name,
                 "category": "Lunch/Dinner",
+                "cuisine": cuisine,
                 "score": score,
+                "health_score": 85.0,
                 "dietary_tag": cls.get_homely_meal_dietary_tag(meal),
                 "energy_kcal": meal.nutrition.energy_kcal if meal.nutrition else 0.0,
                 "protein_g": meal.nutrition.protein_g if meal.nutrition else 0.0,

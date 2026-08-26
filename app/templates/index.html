@@ -804,10 +804,9 @@
             <button class="tab-btn" onclick="switchTab('recommendations')">🍽️ Recommendations</button>
             <button class="tab-btn" onclick="switchTab('optimizer')">⚡ Meal Optimizer</button>
             <button class="tab-btn" onclick="switchTab('scanners')">📷 Scanners & Analytics</button>
-            <button class="tab-btn" onclick="switchTab('tracking')">📊 Tracking</button>
+            <button class="tab-btn" onclick="switchTab('tracking')">⚖️ Weight Tracking</button>
             <button class="tab-btn" onclick="switchTab('homely')">🏡 Homely Meals</button>
             <button class="tab-btn" onclick="switchTab('coach')">💬 AI Coach</button>
-            <button class="tab-btn" onclick="switchTab('recipe-generator')">✨ AI Recipe Generator</button>
         </div>
 
         <!-- Tab: Profile & Targets -->
@@ -958,8 +957,63 @@
                         </div>
                     </div>
 
+                    <!-- Subsection: Today Nutrition & Logged Meals -->
+                    <div class="card" id="todayNutritionCard" style="display:none;margin-top:16px;">
+                        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <span>Today's Nutrition & Logged Meals</span>
+                            </div>
+                            <div style="display:flex;gap:6px;align-items:center;">
+                                <span id="todayNutDateBadge" style="font-size:11px;font-weight:600;color:var(--text-muted);background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:10px;"></span>
+                                <button type="button" class="btn btn-xs btn-outline" onclick="loadTodayNutrition()" title="Refresh Today Nutrition" style="padding:2px 8px;font-size:11px;">🔄 Refresh</button>
+                            </div>
+                        </div>
+
+                        <!-- Progress to Daily Targets -->
+                        <div id="todayProgressBars" style="margin-top:10px;display:flex;flex-direction:column;gap:8px;">
+                            <!-- Progress elements dynamically inserted by loadTodayNutrition -->
+                        </div>
+
+                        <!-- Today's Logged Meal Items -->
+                        <div style="margin-top:16px; border-top:1px solid var(--card-border); padding-top:12px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                                <span style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--text-muted);letter-spacing:0.5px;">Today's Meal Items</span>
+                                <button class="btn btn-xs btn-primary" onclick="toggleQuickMealLogger()" style="padding:2px 8px;font-size:11px;font-weight:600;">➕ Quick Log Meal</button>
+                            </div>
+
+                            <!-- Inline Quick Meal Logger Form -->
+                            <div id="quickMealLogForm" style="display:none;background:rgba(79,70,229,0.06);border:1px solid rgba(79,70,229,0.25);border-radius:8px;padding:12px;margin-bottom:12px;">
+                                <div style="font-size:12px;font-weight:600;color:var(--primary);margin-bottom:8px;">Log Food Directly</div>
+                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+                                    <input type="text" id="quickLogFoodName" placeholder="Food Name (e.g. 2 Boiled Eggs)" style="font-size:12px;padding:6px 8px;">
+                                    <select id="quickLogMealSlot" style="font-size:12px;padding:6px 8px;">
+                                        <option value="Breakfast">Breakfast</option>
+                                        <option value="Lunch">Lunch</option>
+                                        <option value="Snack">Snack</option>
+                                        <option value="Dinner">Dinner</option>
+                                    </select>
+                                </div>
+                                <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:6px;margin-bottom:8px;">
+                                    <input type="number" id="quickLogCal" placeholder="kcal" style="font-size:11px;padding:4px 6px;">
+                                    <input type="number" id="quickLogProt" placeholder="Prot (g)" style="font-size:11px;padding:4px 6px;">
+                                    <input type="number" id="quickLogCarb" placeholder="Carb (g)" style="font-size:11px;padding:4px 6px;">
+                                    <input type="number" id="quickLogFat" placeholder="Fat (g)" style="font-size:11px;padding:4px 6px;">
+                                </div>
+                                <div style="display:flex;justify-content:flex-end;gap:6px;">
+                                    <button type="button" class="btn btn-xs btn-outline" onclick="toggleQuickMealLogger()">Cancel</button>
+                                    <button type="button" class="btn btn-xs btn-primary" onclick="submitQuickMealLog()">Save Meal Log</button>
+                                </div>
+                            </div>
+
+                            <div id="todayMealLogsList">
+                                <div class="placeholder-text" style="padding:10px 0;font-size:12px;">No meals logged today yet.</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Quick stats -->
-                    <div class="card" id="statsCard" style="display:none;">
+                    <div class="card" id="statsCard" style="display:none;margin-top:16px;">
                         <div class="card-title">
                             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
                             Quick Stats
@@ -989,12 +1043,13 @@
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
                     <span>AI Coach</span>
                 </div>
-                <div class="action-card" onclick="switchTab('recipe-generator')">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21l5-2.778L19 21l-.813-5.096L22 12.316l-5.125-.747L14.75 7l-2.125 4.569L7.5 12.316l3.813 3.588zM14.75 3a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                    <span>AI Recipe Gen</span>
+                <div class="action-card" onclick="switchTab('tracking')">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6l3 12h12l3-12H3zM9 10h6"/></svg>
+                    <span>Weight Tracking</span>
                 </div>
             </div>
         </div>
+
 
         <!-- Tab: Recipe Intelligence -->
         <div id="tab-intelligence" class="tab-content">
@@ -1135,27 +1190,53 @@
                         Ranked Food Recommendations
                         <span id="recCount" class="badge badge-score" style="margin-left:auto;font-size:12px;"></span>
                     </div>
-                    <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
-                        <div class="form-group" style="margin-bottom:0;flex:1;min-width:120px;">
-                            <select id="recLimit" style="padding:8px 12px;font-size:13px;">
-                                <option value="20">Show 20</option>
-                                <option value="50" selected>Show 50</option>
-                                <option value="100">Show 100</option>
-                                <option value="200">Show 200</option>
-                            </select>
+
+                    <!-- Search Bar & Filters Grid -->
+                    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+                        <div style="display:flex;gap:10px;">
+                            <input type="text" id="recSearch" placeholder="🔍 Search recipes by name or ingredient..." oninput="filterRecommendations()" style="flex:1;padding:8px 12px;font-size:13px;border-radius:6px;border:1px solid var(--card-border);background:var(--bg-color);color:var(--text-color);">
+                            <button class="btn btn-sm btn-outline" onclick="loadRecommendations()" style="width:auto;white-space:nowrap;">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                                Refresh
+                            </button>
                         </div>
-                        <div class="form-group" style="margin-bottom:0;flex:1;min-width:120px;">
-                            <select id="recCategory" style="padding:8px 12px;font-size:13px;">
-                                <option value="all">All Categories</option>
-                                <option value="Breakfast">Breakfast</option>
-                                <option value="Lunch/Dinner">Lunch/Dinner</option>
-                                <option value="Snack">Snack</option>
-                            </select>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                            <div class="form-group" style="margin-bottom:0;flex:1;min-width:130px;">
+                                <label style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:2px;">Category</label>
+                                <select id="recCategory" onchange="filterRecommendations()" style="padding:6px 10px;font-size:12px;">
+                                    <option value="all">All Categories</option>
+                                    <option value="Breakfast">Breakfast</option>
+                                    <option value="Lunch/Dinner">Lunch/Dinner</option>
+                                    <option value="Snack">Snack</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;flex:1;min-width:130px;">
+                                <label style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:2px;">Cuisine</label>
+                                <select id="recCuisine" onchange="filterRecommendations()" style="padding:6px 10px;font-size:12px;">
+                                    <option value="all">All Cuisines</option>
+                                    <option value="North Indian">North Indian</option>
+                                    <option value="South Indian">South Indian</option>
+                                    <option value="Gujarati">Gujarati</option>
+                                    <option value="Maharashtrian">Maharashtrian</option>
+                                    <option value="Punjabi">Punjabi</option>
+                                    <option value="Rajasthani">Rajasthani</option>
+                                    <option value="Bengali">Bengali</option>
+                                    <option value="Continental / Global">Continental / Global</option>
+                                    <option value="Chinese / Pan-Asian">Chinese / Pan-Asian</option>
+                                    <option value="Mediterranean">Mediterranean</option>
+                                    <option value="Homely Indian">Homely Indian</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;flex:1;min-width:100px;">
+                                <label style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:2px;">Limit</label>
+                                <select id="recLimit" onchange="loadRecommendations()" style="padding:6px 10px;font-size:12px;">
+                                    <option value="20">Show 20</option>
+                                    <option value="50" selected>Show 50</option>
+                                    <option value="100">Show 100</option>
+                                    <option value="200">Show 200</option>
+                                </select>
+                            </div>
                         </div>
-                        <button class="btn btn-sm btn-outline" onclick="loadRecommendations()" style="width:auto;">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                            Refresh
-                        </button>
                     </div>
                     <div id="recipeListContainer" class="recipe-list">
                         <div class="placeholder-text">Save your profile first to view customized recommendations.</div>
@@ -1391,32 +1472,47 @@
                     <div class="card">
                         <div class="card-title">
                             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-4v-4m-4 4H4m6 0v4m0-4v-4m4-4h4a2 2 0 012 2v4a2 2 0 01-2 2h-4a2 2 0 01-2-2V8a2 2 0 012-2z"/></svg>
-                            Barcode Scanner & Lookup
+                            Barcode Scanner & Food Intelligence
                         </div>
                         <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">
-                            Fetch product details from local cache or Open Food Facts.
+                            Scan or enter product barcodes to analyze nutrition, health scores, allergens, and discover healthier alternatives.
                         </p>
+
+                        <!-- Quick Test Presets -->
+                        <div style="margin-bottom:12px;">
+                            <span style="font-size:11px;font-weight:600;text-transform:uppercase;color:var(--text-muted);letter-spacing:0.5px;display:block;margin-bottom:6px;">⚡ Quick Test Barcodes:</span>
+                            <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                                <button type="button" class="btn btn-xs" style="background:rgba(234,179,8,0.12);color:#fde047;border:1px solid rgba(234,179,8,0.3);border-radius:12px;font-size:11px;padding:3px 8px;" onclick="document.getElementById('barcodeInput').value='8901058852712';lookupBarcode();">🍜 Maggi Noodles</button>
+                                <button type="button" class="btn btn-xs" style="background:rgba(59,130,246,0.12);color:#93c5fd;border:1px solid rgba(59,130,246,0.3);border-radius:12px;font-size:11px;padding:3px 8px;" onclick="document.getElementById('barcodeInput').value='8901262010052';lookupBarcode();">🧈 Amul Butter</button>
+                                <button type="button" class="btn btn-xs" style="background:rgba(249,115,22,0.12);color:#fdba74;border:1px solid rgba(249,115,22,0.3);border-radius:12px;font-size:11px;padding:3px 8px;" onclick="document.getElementById('barcodeInput').value='8901491101835';lookupBarcode();">🥔 Lay's Magic Masala</button>
+                                <button type="button" class="btn btn-xs" style="background:rgba(168,85,247,0.12);color:#d8b4fe;border:1px solid rgba(168,85,247,0.3);border-radius:12px;font-size:11px;padding:3px 8px;" onclick="document.getElementById('barcodeInput').value='8000500310427';lookupBarcode();">🍫 Nutella</button>
+                                <button type="button" class="btn btn-xs" style="background:rgba(239,68,68,0.12);color:#fca5a5;border:1px solid rgba(239,68,68,0.3);border-radius:12px;font-size:11px;padding:3px 8px;" onclick="document.getElementById('barcodeInput').value='5449000000996';lookupBarcode();">🥤 Coca-Cola</button>
+                            </div>
+                        </div>
+
                         <div class="form-group">
-                            <label for="barcodeInput">Product Barcode</label>
-                            <div style="display:flex;gap:10px;">
-                                <input type="text" id="barcodeInput" placeholder="e.g. 8901058002476" style="flex:1;">
-                                <button class="btn btn-sm btn-outline" onclick="toggleBarcodeCamera()" style="width:44px; height:44px; padding:0; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center;" title="Scan with Camera">
+                            <label for="barcodeInput">Product Barcode (8 to 14 Digits)</label>
+                            <div style="display:flex;gap:8px;">
+                                <input type="text" id="barcodeInput" placeholder="e.g. 8901058852712" style="flex:1;">
+                                <button class="btn btn-sm btn-outline" type="button" onclick="toggleBarcodeCamera()" style="width:44px; height:44px; padding:0; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center;" title="Scan with Camera">
                                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
                                     </svg>
                                 </button>
-                                <button class="btn btn-sm btn-secondary" onclick="lookupBarcode()" style="width:auto;white-space:nowrap;height:44px;">Lookup</button>
+                                <label class="btn btn-sm btn-outline" style="width:44px; height:44px; padding:0; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; margin-bottom:0;" title="Upload Barcode Image">
+                                    <input type="file" id="barcodeImageUploadInput" accept="image/*" style="display:none;" onchange="uploadBarcodeImage(event)">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                </label>
+                                <button class="btn btn-sm btn-primary" type="button" onclick="lookupBarcode()" style="width:auto;white-space:nowrap;height:44px;font-weight:600;">Lookup</button>
                             </div>
                         </div>
-                        <div style="font-size:12px;color:var(--text-dim);margin-bottom:12px;display:flex;gap:6px;flex-wrap:wrap;">
-                            <span>Try:</span>
-                            <a href="#" onclick="document.getElementById('barcodeInput').value='8901058002476';lookupBarcode();return false;" style="color:var(--primary);text-decoration:none;">8901058002476 (Maggi)</a> |
-                            <a href="#" onclick="document.getElementById('barcodeInput').value='1234567890123';lookupBarcode();return false;" style="color:var(--primary);text-decoration:none;">1234567890123 (Mock)</a>
-                        </div>
+
                         <div id="barcodeCameraContainer" style="display:none; margin-top: 14px; position: relative; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--card-border); background: #000;">
                             <div id="barcodeReader" style="width: 100%; min-height: 250px;"></div>
-                            <button class="btn btn-sm btn-outline" onclick="stopBarcodeCamera()" style="position: absolute; bottom: 10px; right: 10px; width: auto; z-index: 10; background: rgba(0,0,0,0.6); color: white; border-color: rgba(255,255,255,0.3); padding: 6px 12px; font-size:12px;">
+                            <button class="btn btn-sm btn-outline" type="button" onclick="stopBarcodeCamera()" style="position: absolute; bottom: 10px; right: 10px; width: auto; z-index: 10; background: rgba(0,0,0,0.6); color: white; border-color: rgba(255,255,255,0.3); padding: 6px 12px; font-size:12px;">
                                 Close Camera
                             </button>
                         </div>
@@ -1425,23 +1521,37 @@
                         <div id="barcodeError" class="status-alert alert-warning" style="margin-top:10px;display:none;"></div>
                     </div>
 
+
                     <!-- Card: Dietary Rules Classifier -->
                     <div class="card">
                         <div class="card-title">
                             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
-                            Dietary Rule Classifier
+                            Dietary & Allergen Classifier
                         </div>
                         <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">
-                            Check ingredients against Jain, Vegetarian, Vegan, and Eggetarian rules.
+                            Classify ingredients against 14+ diets (Jain, Vegan, Keto, Sattvic, GF, etc.), 14+ allergens, and get smart culinary substitutions.
                         </p>
+
+                        <!-- Quick Test Presets -->
+                        <div style="margin-bottom:12px;">
+                            <span style="font-size:11px;font-weight:600;text-transform:uppercase;color:var(--text-muted);letter-spacing:0.5px;display:block;margin-bottom:6px;">⚡ Quick Presets:</span>
+                            <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                                <button type="button" class="btn btn-xs" style="background:rgba(217,119,6,0.12);color:#fbbf24;border:1px solid rgba(217,119,6,0.3);border-radius:12px;font-size:11px;padding:3px 8px;" onclick="setClassifierPreset('Paneer, Tomato, Capsicum, Ghee, Jeera, Salt')">🙏 Jain Curry</button>
+                                <button type="button" class="btn btn-xs" style="background:rgba(22,163,74,0.12);color:#4ade80;border:1px solid rgba(22,163,74,0.3);border-radius:12px;font-size:11px;padding:3px 8px;" onclick="setClassifierPreset('Tofu, Spinach, Coconut Milk, Garlic, Rice')">🌱 Vegan Bowl</button>
+                                <button type="button" class="btn btn-xs" style="background:rgba(147,51,234,0.12);color:#c084fc;border:1px solid rgba(147,51,234,0.3);border-radius:12px;font-size:11px;padding:3px 8px;" onclick="setClassifierPreset('Chicken, Butter, Heavy Cream, Red Chili, Salt')">🥑 Keto Butter Chicken</button>
+                                <button type="button" class="btn btn-xs" style="background:rgba(2,132,199,0.12);color:#38bdf8;border:1px solid rgba(2,132,199,0.3);border-radius:12px;font-size:11px;padding:3px 8px;" onclick="setClassifierPreset('Jowar Roti, Mustard Greens, Desi Ghee')">🌾 Gluten-Free Roti</button>
+                                <button type="button" class="btn btn-xs" style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.3);border-radius:12px;font-size:11px;padding:3px 8px;" onclick="setClassifierPreset('Chicken, Basmati Rice, Onion, Garlic, Desi Ghee, Saffron')">🍗 Chicken Biryani</button>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label for="classifyIngredientsInput">Ingredients (comma-separated)</label>
                             <input type="text" id="classifyIngredientsInput" placeholder="e.g. potato, spinach, onion, chicken">
                         </div>
-                        <button class="btn btn-sm btn-purple" onclick="classifyIngredients()" style="height:44px;margin-bottom:12px;">Analyze Ingredients</button>
+                        <button class="btn btn-sm btn-purple" onclick="classifyIngredients()" style="height:44px;margin-bottom:12px;width:100%;font-weight:600;">Analyze Ingredients & Find Swaps</button>
                         <div id="classifyResult" style="display:none;background:var(--bg-color);border:1px solid var(--card-border);border-radius:var(--radius-sm);padding:14px;">
                         </div>
-                        <div id="classifyError" class="status-alert alert-warning" style="margin-top:10px;"></div>
+                        <div id="classifyError" class="status-alert alert-warning" style="margin-top:10px;display:none;"></div>
                     </div>
                 </div>
 
@@ -1542,13 +1652,13 @@
             </div>
         </div>
 
-        <!-- Tab: Tracking -->
+        <!-- Tab: Weight Tracking -->
         <div id="tab-tracking" class="tab-content">
             <div class="two-col-grid">
                 <div class="card">
                     <div class="card-title">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
-                        Log Weight & Adherence
+                        Log Weight & Adaptive Progress
                     </div>
                     <form id="trackForm">
                         <div class="form-row" style="align-items: flex-end;">
@@ -1567,7 +1677,7 @@
                         </div>
                         <button type="submit" id="trackBtn" class="btn" style="margin-top:14px;" disabled>
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-                            Log Data & Run Adaptive Analysis
+                            Log Weight & Run Adaptive Analysis
                         </button>
                     </form>
                     <div id="trackerOutput" class="status-alert"></div>
@@ -1576,7 +1686,7 @@
                 <div class="card">
                     <div class="card-title">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"/></svg>
-                        Weight History
+                        Weight Tracking History
                     </div>
                     <div id="weightChartContainer" style="min-height:160px;">
                         <div class="placeholder-text">Log your weight to see history here.</div>
@@ -1885,34 +1995,6 @@ Ask me anything! For example:
             </div>
         </div>
 
-        <!-- Tab: AI Recipe Generator -->
-        <div id="tab-recipe-generator" class="tab-content">
-            <div class="dashboard-grid">
-                <!-- Inputs -->
-                <div class="card" style="grid-column: 1 / 2;">
-                    <div class="card-title">✨ AI Recipe Generator</div>
-                    <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px; line-height:1.5;">Type in whatever ingredients you have in your kitchen, and Gemini will generate a custom healthy recipe with calories and macros.</p>
-                    <div class="form-group" style="margin-bottom:16px;">
-                        <label for="recipeIngredientsInput">Ingredients in your kitchen</label>
-                        <textarea id="recipeIngredientsInput" placeholder="e.g. egg, chicken breast, spinach, olive oil, garlic" rows="4" style="border-radius: var(--radius-sm); padding: 12px; font-size: 14px; outline: none; width:100%; resize:vertical;"></textarea>
-                    </div>
-                    <button class="btn btn-primary" id="generateRecipeBtn" onclick="generateAIRecipe()">Generate Recipe</button>
-                </div>
-
-                <!-- Result -->
-                <div class="card" style="grid-column: 2 / -1;">
-                    <div class="card-title">🍽️ Generated Recipe Details</div>
-                    <div id="recipeResultContainer" style="display: none;">
-                        <div id="recipeContent" style="font-size: 14px; line-height: 1.7; white-space: pre-wrap; border-radius: var(--radius-sm); padding: 20px; max-height: 350px; overflow-y: auto; margin-bottom:16px;"></div>
-                        <button class="btn btn-outline" id="logRecipeBtn" onclick="logGeneratedRecipe()" style="width:auto;">📝 Log as Custom Meal</button>
-                    </div>
-                    <div id="recipeResultPlaceholder" style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--text-dim); padding: 40px 20px;">
-                        <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom:12px; opacity:0.5;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/></svg>
-                        <p style="font-size:14px;">Your generated recipe details will be displayed here.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Mobile Bottom Navigation -->
@@ -1977,10 +2059,10 @@ Ask me anything! For example:
                 <ul>
                     <li><a href="#" onclick="switchTab('homely'); return false;">Homely Meals</a></li>
                     <li><a href="#" onclick="switchTab('coach'); return false;">AI Coach</a></li>
-                    <li><a href="#" onclick="switchTab('recipe-generator'); return false;">AI Recipe Generator</a></li>
-                    <li><a href="#" onclick="switchTab('tracking'); return false;">Weight Log</a></li>
+                    <li><a href="#" onclick="switchTab('tracking'); return false;">Weight Tracking</a></li>
                 </ul>
             </div>
+
             
             <div class="footer-links-column">
                 <h3>Legal & Privacy</h3>
@@ -2222,7 +2304,6 @@ Ask me anything! For example:
             const date = new Date(d);
             return date.toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' });
         }
-
         function setLoading(btn, loading, originalHTML) {
             if (loading) {
                 btn._originalHTML = originalHTML || btn.innerHTML;
@@ -2245,6 +2326,7 @@ Ask me anything! For example:
             document.querySelectorAll(`.tab-btn[onclick="switchTab('${tab}')"]`).forEach(el => el.classList.add('active'));
 
             // Load data when switching to certain tabs
+            if (tab === 'profile' && userId) loadTodayNutrition();
             if (tab === 'recommendations' && userId) loadRecommendations();
             if (tab === 'optimizer') loadMealPlanHistory();
             if (tab === 'scanners' && userId) loadAnalytics();
@@ -2270,15 +2352,28 @@ Ask me anything! For example:
             hideError();
         }
 
+        function showError(msg) {
+            const el = document.getElementById('loginError');
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('loginError').style.display = 'none';
+        }
+
         async function loginUser() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
-            if (!email) { showError('Please enter your email address.'); return; }
-            if (!password) { showError('Please enter your password.'); return; }
-            hideError();
+
+            if (!email || !password) {
+                showError('Please enter both email and password.');
+                return;
+            }
 
             const btn = document.getElementById('loginBtn');
-            setLoading(btn, true, '');
+            setLoading(btn, true, 'Logging in...');
+            hideError();
 
             try {
                 const res = await fetch('/api/auth/login', {
@@ -2286,15 +2381,12 @@ Ask me anything! For example:
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
+
                 if (!res.ok) {
-                    if (res.status === 401) {
-                        showError('Incorrect email or password.');
-                        setLoading(btn, false, '');
-                        return;
-                    }
                     const errorData = await res.json().catch(() => ({ detail: 'Login failed.' }));
-                    throw new Error(errorData.detail || 'Could not find user.');
+                    throw new Error(errorData.detail || 'Invalid email or password.');
                 }
+
                 const data = await res.json();
                 localStorage.setItem('token', data.access_token);
                 userId = data.user.id;
@@ -2303,97 +2395,64 @@ Ask me anything! For example:
                 closeLogin();
                 showNotification('Welcome back, ' + data.user.name + '!', 'success');
             } catch (err) {
+                setLoading(btn, false);
                 showError(err.message);
-            } finally {
-                setLoading(btn, false, '');
             }
         }
 
-        async function handleGoogleSignInResponse(response) {
-            if (response && response.credential) {
-                await loginWithGoogle(response.credential);
-            } else {
-                showNotification("Google authentication failed.", "error");
-            }
-        }
-        window.handleGoogleSignInResponse = handleGoogleSignInResponse;
-
-        async function loginWithGoogle(tokenOrPrefix) {
-            const btn = document.getElementById('googleLoginBtn');
-            const originalText = btn ? btn.innerHTML : 'Sign in with Google';
-            if (btn) setLoading(btn, true, originalText);
+        async function loginWithGoogle(emailPrefix) {
             hideError();
-
             try {
-                let id_token = tokenOrPrefix;
-                // If it is a mock username prefix rather than a signed JWT (mock has no dots), prepend mock identifier
-                if (tokenOrPrefix && !tokenOrPrefix.includes('.')) {
-                    id_token = "mock-google-" + tokenOrPrefix;
-                }
-                
                 const res = await fetch('/api/auth/google', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id_token })
+                    body: JSON.stringify({ id_token: 'google_simulated_token_' + emailPrefix })
                 });
+
                 if (!res.ok) {
                     const errorData = await res.json().catch(() => ({ detail: 'Google Sign-In failed.' }));
-                    throw new Error(errorData.detail || 'Google Sign-in verification failed.');
+                    throw new Error(errorData.detail || 'Google sign-in failed.');
                 }
+
                 const data = await res.json();
                 localStorage.setItem('token', data.access_token);
                 userId = data.user.id;
                 userData = data.user;
                 await loadUserProfile();
                 closeLogin();
-                showNotification('Welcome, ' + data.user.name + '! Signed in via Google.', 'success');
+                showNotification('Welcome, ' + data.user.name + '!', 'success');
             } catch (err) {
                 showError(err.message);
-            } finally {
-                if (btn) setLoading(btn, false, originalText);
             }
         }
 
-        async function createNewUser() {
+        async function registerUser() {
             const name = document.getElementById('newName').value.trim();
             const email = document.getElementById('newEmail').value.trim();
             const password = document.getElementById('newPassword').value.trim();
-            const confirmPassword = document.getElementById('newConfirmPassword').value.trim();
-            const age = parseInt(document.getElementById('newAge').value);
+            const age = parseInt(document.getElementById('newAge').value) || 25;
             const gender = document.getElementById('newGender').value;
-            const height = parseFloat(document.getElementById('newHeight').value);
-            const weight = parseFloat(document.getElementById('newWeight').value);
+            const height = parseFloat(document.getElementById('newHeight').value) || 170;
+            const weight = parseFloat(document.getElementById('newWeight').value) || 70;
             const activity = document.getElementById('newActivity').value;
             const goal = document.getElementById('newGoal').value;
             const dietType = document.getElementById('newDietType').value;
 
-            if (!name || !email || !password || !confirmPassword || !age || !height || !weight) {
-                showError('Please fill in all required fields (Name, Email, Password, Age, Height, Weight).');
+            if (!name || !email || !password) {
+                showError('Please fill all required fields.');
                 return;
             }
-            if (password !== confirmPassword) {
-                showError('Passwords do not match.');
-                return;
-            }
+
+            const btn = document.getElementById('registerBtn');
+            setLoading(btn, true, 'Creating Account...');
             hideError();
 
-            const btn = document.querySelector('#newUserForm .btn');
-            setLoading(btn, true, btn.innerHTML);
-
-            const preferences = [
-                { preference_type: 'diet_type', value: dietType }
-            ];
-            const likes = document.getElementById('newLikes').value.split(',').map(s => s.trim()).filter(s => s);
-            likes.forEach(l => preferences.push({ preference_type: 'like', value: l }));
-            const allergies = document.getElementById('newAllergies').value.split(',').map(s => s.trim()).filter(s => s);
-            allergies.forEach(a => preferences.push({ preference_type: 'allergy', value: a }));
-            const dislikes = document.getElementById('newDislikes').value.split(',').map(s => s.trim()).filter(s => s);
-            dislikes.forEach(d => preferences.push({ preference_type: 'dislike', value: d }));
+            const preferences = [{ preference_type: 'diet_type', value: dietType }];
 
             const payload = { 
                 name, 
                 email, 
-                password,
+                password, 
                 age, 
                 gender, 
                 height, 
@@ -2454,20 +2513,6 @@ Ask me anything! For example:
                 document.getElementById('allergies').value = data.allergies || '';
                 document.getElementById('dislikes').value = data.dislikes || '';
 
-                // Pre-populate Recipe Intelligence search filters to match user profile
-                if (data.diet_type) {
-                    const dietVal = data.diet_type.toLowerCase();
-                    if (['vegetarian', 'vegan', 'jain', 'eggetarian'].includes(dietVal)) {
-                        document.getElementById('intelDiet').value = dietVal;
-                    } else {
-                        document.getElementById('intelDiet').value = '';
-                    }
-                }
-                let exclusions = [];
-                if (data.allergies) exclusions.push(data.allergies.split(',').map(s => s.trim()).filter(s => s));
-                if (data.dislikes) exclusions.push(data.dislikes.split(',').map(s => s.trim()).filter(s => s));
-                document.getElementById('intelExclude').value = exclusions.flat().filter(Boolean).join(', ');
-
                 // Show user badge
                 showUserBadge(data);
 
@@ -2481,6 +2526,9 @@ Ask me anything! For example:
 
                 // Populate stats
                 updateQuickStats(data);
+
+                // Load Today's Nutrition Breakdown
+                loadTodayNutrition();
 
                 // Load recommendations
                 loadRecommendations();
@@ -2576,6 +2624,197 @@ Ask me anything! For example:
             `;
         }
 
+        // ==========================
+        // Today Nutrition & Meal Logs
+        // ==========================
+        let todayNutritionData = null;
+
+        function toggleQuickMealLogger() {
+            const form = document.getElementById('quickMealLogForm');
+            if (!form) return;
+            form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
+        }
+
+        async function submitQuickMealLog() {
+            if (!userId) {
+                showNotification('Please save your profile first.', 'error');
+                return;
+            }
+            const foodName = document.getElementById('quickLogFoodName').value.trim();
+            if (!foodName) {
+                showNotification('Please enter a food name.', 'error');
+                return;
+            }
+            const mealSlot = document.getElementById('quickLogMealSlot').value;
+            const calories = parseFloat(document.getElementById('quickLogCal').value) || 0;
+            const protein = parseFloat(document.getElementById('quickLogProt').value) || 0;
+            const carbs = parseFloat(document.getElementById('quickLogCarb').value) || 0;
+            const fat = parseFloat(document.getElementById('quickLogFat').value) || 0;
+
+            const todayStr = new Date().toISOString().split('T')[0];
+            try {
+                const res = await fetchWithAuth('/api/meal-logs', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        log_date: todayStr,
+                        meal_type: mealSlot,
+                        food_name: foodName,
+                        calories: calories,
+                        protein: protein,
+                        carbs: carbs,
+                        fat: fat
+                    })
+                });
+                if (!res.ok) throw new Error('Could not log meal.');
+                showNotification(`Logged "${foodName}" to ${mealSlot}!`, 'success');
+                document.getElementById('quickLogFoodName').value = '';
+                document.getElementById('quickLogCal').value = '';
+                document.getElementById('quickLogProt').value = '';
+                document.getElementById('quickLogCarb').value = '';
+                document.getElementById('quickLogFat').value = '';
+                toggleQuickMealLogger();
+                await loadTodayNutrition();
+            } catch (err) {
+                showNotification('Error logging meal: ' + err.message, 'error');
+            }
+        }
+
+        async function deleteMealLogEntry(logId) {
+            if (!confirm('Are you sure you want to delete this meal log?')) return;
+            try {
+                const res = await fetchWithAuth(`/api/meal-logs/${logId}`, {
+                    method: 'DELETE'
+                });
+                if (!res.ok) throw new Error('Failed to delete meal log.');
+                showNotification('Meal log deleted.', 'success');
+                await loadTodayNutrition();
+            } catch (err) {
+                showNotification('Error deleting meal log: ' + err.message, 'error');
+            }
+        }
+
+        async function loadTodayNutrition() {
+            if (!userId) return;
+            const card = document.getElementById('todayNutritionCard');
+            if (card) card.style.display = 'block';
+
+            const dateBadge = document.getElementById('todayNutDateBadge');
+            const now = new Date();
+            if (dateBadge) {
+                dateBadge.textContent = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            }
+
+            try {
+                const res = await fetchWithAuth(`/api/meal-logs/today/${userId}`);
+                if (!res.ok) return;
+                const data = await res.json();
+                todayNutritionData = data;
+
+                const totals = data.totals || { calories: 0, protein: 0, carbs: 0, fat: 0 };
+                const targets = data.targets || { calories: 2000, protein: 140, carbs: 220, fat: 60 };
+
+                // Render Macro Progress Bars
+                const calPct = Math.min(100, Math.round((totals.calories / (targets.calories || 1)) * 100));
+                const protPct = Math.min(100, Math.round((totals.protein / (targets.protein || 1)) * 100));
+                const carbPct = Math.min(100, Math.round((totals.carbs / (targets.carbs || 1)) * 100));
+                const fatPct = Math.min(100, Math.round((totals.fat / (targets.fat || 1)) * 100));
+
+                const progressContainer = document.getElementById('todayProgressBars');
+                if (progressContainer) {
+                    progressContainer.innerHTML = `
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                            <!-- Calories Bar -->
+                            <div style="background:var(--bg-color);padding:8px 10px;border-radius:6px;border:1px solid var(--card-border);">
+                                <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;">
+                                    <span style="font-weight:600;color:var(--text-main);">🔥 Calories</span>
+                                    <span style="color:var(--text-muted);font-weight:600;">${Math.round(totals.calories)} / ${Math.round(targets.calories)} kcal (${calPct}%)</span>
+                                </div>
+                                <div style="background:rgba(255,255,255,0.08);border-radius:10px;height:7px;overflow:hidden;">
+                                    <div style="width:${calPct}%;height:100%;background:linear-gradient(90deg, #f97316, #ea580c);border-radius:10px;transition:width 0.4s ease;"></div>
+                                </div>
+                            </div>
+                            <!-- Protein Bar -->
+                            <div style="background:var(--bg-color);padding:8px 10px;border-radius:6px;border:1px solid var(--card-border);">
+                                <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;">
+                                    <span style="font-weight:600;color:var(--text-main);">💪 Protein</span>
+                                    <span style="color:var(--text-muted);font-weight:600;">${Math.round(totals.protein)} / ${Math.round(targets.protein)}g (${protPct}%)</span>
+                                </div>
+                                <div style="background:rgba(255,255,255,0.08);border-radius:10px;height:7px;overflow:hidden;">
+                                    <div style="width:${protPct}%;height:100%;background:linear-gradient(90deg, #3b82f6, #2563eb);border-radius:10px;transition:width 0.4s ease;"></div>
+                                </div>
+                            </div>
+                            <!-- Carbs Bar -->
+                            <div style="background:var(--bg-color);padding:8px 10px;border-radius:6px;border:1px solid var(--card-border);">
+                                <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;">
+                                    <span style="font-weight:600;color:var(--text-main);">🌾 Carbs</span>
+                                    <span style="color:var(--text-muted);font-weight:600;">${Math.round(totals.carbs)} / ${Math.round(targets.carbs)}g (${carbPct}%)</span>
+                                </div>
+                                <div style="background:rgba(255,255,255,0.08);border-radius:10px;height:7px;overflow:hidden;">
+                                    <div style="width:${carbPct}%;height:100%;background:linear-gradient(90deg, #10b981, #059669);border-radius:10px;transition:width 0.4s ease;"></div>
+                                </div>
+                            </div>
+                            <!-- Fat Bar -->
+                            <div style="background:var(--bg-color);padding:8px 10px;border-radius:6px;border:1px solid var(--card-border);">
+                                <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;">
+                                    <span style="font-weight:600;color:var(--text-main);">🥑 Fat</span>
+                                    <span style="color:var(--text-muted);font-weight:600;">${Math.round(totals.fat)} / ${Math.round(targets.fat)}g (${fatPct}%)</span>
+                                </div>
+                                <div style="background:rgba(255,255,255,0.08);border-radius:10px;height:7px;overflow:hidden;">
+                                    <div style="width:${fatPct}%;height:100%;background:linear-gradient(90deg, #a855f7, #9333ea);border-radius:10px;transition:width 0.4s ease;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Render Grouped Meal Logs List
+                const listContainer = document.getElementById('todayMealLogsList');
+                if (!listContainer) return;
+
+                if (!data.logs || data.logs.length === 0) {
+                    listContainer.innerHTML = '<div class="placeholder-text" style="padding:10px 0;font-size:12px;">No meals logged today yet. Log food items or scan barcodes to track your day.</div>';
+                    return;
+                }
+
+                const slots = ['Breakfast', 'Lunch', 'Snack', 'Dinner'];
+                const slotIcons = { 'Breakfast': '🍳', 'Lunch': '🍛', 'Snack': '🥪', 'Dinner': '🍲' };
+                let html = '';
+
+                slots.forEach(slot => {
+                    const slotLogs = data.logs.filter(l => (l.meal_type || '').toLowerCase() === slot.toLowerCase());
+                    if (slotLogs.length > 0) {
+                        const slotCals = slotLogs.reduce((acc, l) => acc + (l.calories || 0), 0);
+                        html += `
+                            <div style="margin-bottom:10px;background:var(--bg-color);border:1px solid var(--card-border);border-radius:8px;padding:8px 10px;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.05);padding-bottom:4px;">
+                                    <span style="font-size:12px;font-weight:700;color:var(--text-main);">${slotIcons[slot] || '🍽️'} ${slot}</span>
+                                    <span style="font-size:11px;font-weight:600;color:var(--text-muted);">${Math.round(slotCals)} kcal</span>
+                                </div>
+                                <div style="display:flex;flex-direction:column;gap:4px;">
+                                    ${slotLogs.map(l => `
+                                        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:3px 0;">
+                                            <div style="display:flex;flex-direction:column;overflow:hidden;padding-right:6px;">
+                                                <span style="font-weight:500;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.food_name}</span>
+                                                <span style="font-size:10px;color:var(--text-muted);">🔥 ${Math.round(l.calories)} kcal | P: ${Math.round(l.protein)}g | C: ${Math.round(l.carbs)}g | F: ${Math.round(l.fat)}g</span>
+                                            </div>
+                                            <button type="button" onclick="deleteMealLogEntry(${l.id})" title="Delete entry" style="background:none;border:none;color:#ef4444;cursor:pointer;padding:2px 4px;font-size:12px;opacity:0.7;transition:opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">🗑️</button>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+
+                listContainer.innerHTML = html || '<div class="placeholder-text" style="padding:10px 0;font-size:12px;">No meals logged today yet.</div>';
+
+            } catch (err) {
+                console.error('Failed to load today nutrition:', err);
+            }
+        }
+
         function closeLogin() {
             document.getElementById('loginOverlay').style.display = 'none';
         }
@@ -2588,6 +2827,7 @@ Ask me anything! For example:
             document.getElementById('userBadge').style.display = 'none';
             document.getElementById('targetsCard').style.display = 'none';
             document.getElementById('statsCard').style.display = 'none';
+            document.getElementById('todayNutritionCard').style.display = 'none';
             document.getElementById('optimizerPlaceholder').style.display = 'block';
             document.getElementById('optimizerOutput').style.display = 'none';
             document.getElementById('optimizeBtn').setAttribute('disabled', 'true');
@@ -2619,14 +2859,6 @@ Ask me anything! For example:
             document.getElementById('ocrResult').style.display = 'none';
             document.getElementById('ocrError').style.display = 'none';
         }
-
-        // Enter key for login
-        document.getElementById('loginEmail').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') loginUser();
-        });
-        document.getElementById('loginPassword').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') loginUser();
-        });
 
         // ==========================
         // Profile Form
@@ -2714,8 +2946,24 @@ Ask me anything! For example:
         }
 
         // ==========================
-        // Recommendations
+        // Global Dietary Badges
         // ==========================
+        function getDietBadge(tag) {
+            var t = tag || 'Vegetarian';
+            if (t === 'Jain') return '<span class="badge" style="background:rgba(234,179,8,0.18);color:#fbbf24;border:1px solid rgba(234,179,8,0.4);font-weight:600;">🙏 Jain</span>';
+            if (t === 'Vegan') return '<span class="badge" style="background:rgba(16,185,129,0.18);color:#34d399;border:1px solid rgba(16,185,129,0.4);font-weight:600;">🌱 Vegan</span>';
+            if (t === 'Vegetarian') return '<span class="badge" style="background:rgba(34,197,94,0.18);color:#4ade80;border:1px solid rgba(34,197,94,0.4);font-weight:600;">🥗 Veg</span>';
+            if (t === 'Eggetarian') return '<span class="badge" style="background:rgba(245,158,11,0.18);color:#facc15;border:1px solid rgba(245,158,11,0.4);font-weight:600;">🥚 Eggetarian</span>';
+            if (t === 'Homely') return '<span class="badge" style="background:rgba(139,92,246,0.18);color:#c084fc;border:1px solid rgba(139,92,246,0.4);font-weight:600;">🏡 Homely</span>';
+            return '<span class="badge" style="background:rgba(239,68,68,0.18);color:#f87171;border:1px solid rgba(239,68,68,0.4);font-weight:600;">🍖 Non-Veg</span>';
+        }
+        window.getDietBadge = getDietBadge;
+
+        // ==========================
+        // Recommendations Engine
+        // ==========================
+        let rawRecommendationsData = [];
+
         async function loadRecommendations() {
             if (!userId) {
                 document.getElementById('recipeListContainer').innerHTML = '<div class="placeholder-text">Save your profile first to view recommendations.</div>';
@@ -2725,8 +2973,7 @@ Ask me anything! For example:
             const container = document.getElementById('recipeListContainer');
             container.innerHTML = '<div style="text-align:center;padding:20px;"><span class="spinner"></span> Loading recommendations...</div>';
 
-            const limit = parseInt(document.getElementById('recLimit').value);
-            const category = document.getElementById('recCategory').value;
+            const limit = parseInt(document.getElementById('recLimit')?.value || 50);
 
             // Show targets in sidebar
             if (userTargets) {
@@ -2759,51 +3006,107 @@ Ask me anything! For example:
                     body: JSON.stringify({ user_id: userId, limit: limit })
                 });
                 if (!res.ok) throw new Error('Could not load recommendations.');
-                let items = await res.json();
-
-                // Apply category filter client-side
-                if (category !== 'all') {
-                    items = items.filter(item => item.category === category);
-                }
-
-                document.getElementById('recCount').textContent = items.length + ' recipes';
-
-                if (items.length === 0) {
-                    container.innerHTML = '<div class="placeholder-text">No recommendations found matching your preferences.</div>';
-                    return;
-                }
-
-                container.innerHTML = '';
-                items.forEach((item, idx) => {
-                    const el = document.createElement('div');
-                    el.className = 'recipe-item';
-
-                    let catClass = 'badge';
-                    if (item.category === 'Breakfast') catClass += ' badge-orange';
-                    else if (item.category === 'Snack') catClass += ' badge-score';
-                    else catClass += ' badge-purple';
-
-                    const rank = idx + 1;
-
-                    el.innerHTML = `
-                        <div class="recipe-info">
-                            <h4>${rank}. ${item.recipe_name}</h4>
-                            <div class="recipe-meta">
-                                <span class="${catClass}">${item.category}</span>
-                                <span>🔥 ${Math.round(item.energy_kcal)} kcal</span>
-                                <span>💪 ${Math.round(item.protein_g)}g P</span>
-                                <span>🌾 ${Math.round(item.carb_g)}g C</span>
-                                <span>🥑 ${Math.round(item.fat_g)}g F</span>
-                            </div>
-                        </div>
-                        <div class="badge badge-score score-pill">★ ${item.score}</div>
-                    `;
-                    container.appendChild(el);
-                });
+                rawRecommendationsData = await res.json();
+                filterRecommendations();
             } catch (err) {
                 container.innerHTML = `<div class="placeholder-text" style="color:var(--danger);">Error: ${err.message}</div>`;
             }
         }
+
+        function filterRecommendations() {
+            const container = document.getElementById('recipeListContainer');
+            if (!container) return;
+
+            if (!rawRecommendationsData || rawRecommendationsData.length === 0) {
+                container.innerHTML = '<div class="placeholder-text">No recommendations available. Save your profile or adjust filters.</div>';
+                const countBadge = document.getElementById('recCount');
+                if (countBadge) countBadge.textContent = '0 recipes';
+                return;
+            }
+
+            const search = (document.getElementById('recSearch')?.value || '').toLowerCase().trim();
+            const category = document.getElementById('recCategory')?.value || 'all';
+            const cuisine = document.getElementById('recCuisine')?.value || 'all';
+
+            let items = rawRecommendationsData.slice();
+
+            // Filter Category
+            if (category !== 'all') {
+                items = items.filter(item => (item.category || '').toLowerCase() === category.toLowerCase());
+            }
+
+            // Filter Cuisine
+            if (cuisine !== 'all') {
+                items = items.filter(item => {
+                    const itemCuisine = (item.cuisine || '').toLowerCase();
+                    const filterCuisine = cuisine.toLowerCase();
+                    return itemCuisine.includes(filterCuisine) || filterCuisine.includes(itemCuisine);
+                });
+            }
+
+            // Filter Search Text
+            if (search) {
+                items = items.filter(item => {
+                    const name = (item.recipe_name || '').toLowerCase();
+                    const cat = (item.category || '').toLowerCase();
+                    const cuis = (item.cuisine || '').toLowerCase();
+                    const dietary = (item.dietary_tag || '').toLowerCase();
+                    return name.includes(search) || cat.includes(search) || cuis.includes(search) || dietary.includes(search);
+                });
+            }
+
+            const countBadge = document.getElementById('recCount');
+            if (countBadge) countBadge.textContent = items.length + ' recipes';
+
+            if (items.length === 0) {
+                container.innerHTML = '<div class="placeholder-text">No recipes match your search and filter criteria. Try clearing search or cuisine.</div>';
+                return;
+            }
+
+            container.innerHTML = '';
+            items.forEach((item, idx) => {
+                const el = document.createElement('div');
+                el.className = 'recipe-item';
+                el.style.cursor = 'pointer';
+                el.style.transition = 'all 0.2s ease';
+                el.title = 'Click to view full recipe details';
+                el.onclick = function() {
+                    showRecipeDetail(item.recipe_code);
+                };
+
+                let catClass = 'badge';
+                if (item.category === 'Breakfast') catClass += ' badge-orange';
+                else if (item.category === 'Snack') catClass += ' badge-score';
+                else catClass += ' badge-purple';
+
+                const rank = idx + 1;
+                const dietBadgeHtml = getDietBadge(item.dietary_tag);
+                const cuisineBadge = item.cuisine ? `<span class="badge" style="background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.3);font-size:11px;">🌍 ${item.cuisine}</span>` : '';
+
+                el.innerHTML = `
+                    <div class="recipe-info">
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                            <h4 style="margin:0;font-size:15px;color:var(--text-main);">${rank}. ${item.recipe_name}</h4>
+                            ${dietBadgeHtml}
+                            ${cuisineBadge}
+                        </div>
+                        <div class="recipe-meta" style="margin-top:6px;gap:8px;">
+                            <span class="${catClass}">${item.category}</span>
+                            <span>🔥 ${Math.round(item.energy_kcal)} kcal</span>
+                            <span>💪 ${Math.round(item.protein_g)}g P</span>
+                            <span>🌾 ${Math.round(item.carb_g)}g C</span>
+                            <span>🥑 ${Math.round(item.fat_g)}g F</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+                        <div class="badge badge-score score-pill" title="Nutritional Match Score">★ ${item.score}</div>
+                        <span style="font-size:10px;color:var(--text-muted);font-weight:600;">View Recipe ➔</span>
+                    </div>
+                `;
+                container.appendChild(el);
+            });
+        }
+
 
         // ==========================
         // Optimizer
@@ -3170,14 +3473,6 @@ Ask me anything! For example:
                 countSpan.style.display = 'inline-block';
                 container.innerHTML = '<div class="recipe-list"></div>';
                 const list = container.querySelector('.recipe-list');
-                function getDietBadge(tag) {
-                    var t = tag || 'Vegetarian';
-                    if (t === 'Jain') return '<span class="badge" style="background:rgba(234,179,8,0.18);color:#b45309;border:1px solid rgba(234,179,8,0.4);font-weight:600;">🌱 Jain</span>';
-                    if (t === 'Vegan') return '<span class="badge" style="background:rgba(16,185,129,0.18);color:#047857;border:1px solid rgba(16,185,129,0.4);font-weight:600;">🌱 Vegan</span>';
-                    if (t === 'Vegetarian') return '<span class="badge" style="background:rgba(34,197,94,0.18);color:#15803d;border:1px solid rgba(34,197,94,0.4);font-weight:600;">🥛 Veg</span>';
-                    if (t === 'Eggetarian') return '<span class="badge" style="background:rgba(245,158,11,0.18);color:#b45309;border:1px solid rgba(245,158,11,0.4);font-weight:600;">🥚 Eggetarian</span>';
-                    return '<span class="badge" style="background:rgba(239,68,68,0.18);color:#b91c1c;border:1px solid rgba(239,68,68,0.4);font-weight:600;">🍖 Non-Veg</span>';
-                }
 
                 recipes.forEach((r, idx) => {
                     const el = document.createElement('div');
@@ -3325,10 +3620,43 @@ Ask me anything! For example:
             }
         }
 
+        async function uploadBarcodeImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const resDiv = document.getElementById('barcodeResult');
+            const errDiv = document.getElementById('barcodeError');
+            
+            errDiv.style.display = 'none';
+            resDiv.innerHTML = '<div style="display:flex;align-items:center;gap:8px;padding:12px;"><span class="spinner"></span> <span>Decoding barcode image...</span></div>';
+            resDiv.style.display = 'block';
+
+            try {
+                if (!html5QrcodeScanner) {
+                    html5QrcodeScanner = new Html5Qrcode("barcodeReader");
+                }
+                const decodedText = await html5QrcodeScanner.scanFile(file, true);
+                document.getElementById('barcodeInput').value = decodedText;
+                showNotification('Barcode detected: ' + decodedText, 'success');
+                lookupBarcode();
+            } catch (err) {
+                resDiv.style.display = 'none';
+                errDiv.innerHTML = '⚠️ Could not decode barcode from image. <a href="#" onclick="openManualBarcodeModal();return false;" style="color:var(--primary);text-decoration:underline;">Enter product details manually</a>.';
+                errDiv.style.display = 'block';
+            }
+        }
+
+        function openManualBarcodeModal() {
+            const currentBarcode = document.getElementById('barcodeInput').value.trim() || 'MANUAL-' + Date.now().toString().slice(-6);
+            document.getElementById('manualBarcode').value = currentBarcode;
+            document.getElementById('barcodeFallbackModal').style.display = 'flex';
+            document.getElementById('manualProdName').value = '';
+            document.getElementById('manualBrand').value = '';
+        }
+
         // ==========================
         // Barcode Lookup & Scan
         // ==========================
-        let scannedProductTemp = null;
+        let currentScannedProduct = null;
 
         async function lookupBarcode() {
             const barcode = document.getElementById('barcodeInput').value.trim();
@@ -3336,14 +3664,14 @@ Ask me anything! For example:
             const errDiv = document.getElementById('barcodeError');
             
             if (!barcode) {
-                errDiv.textContent = 'Please enter a barcode.';
+                errDiv.textContent = 'Please enter a barcode number.';
                 errDiv.style.display = 'block';
                 resDiv.style.display = 'none';
                 return;
             }
             
             errDiv.style.display = 'none';
-            resDiv.innerHTML = '<span class="spinner"></span> Querying Open Food Facts...';
+            resDiv.innerHTML = '<div style="display:flex;align-items:center;gap:8px;padding:14px;"><span class="spinner"></span> <span>Scanning database & Open Food Facts...</span></div>';
             resDiv.style.display = 'block';
             
             try {
@@ -3353,29 +3681,25 @@ Ask me anything! For example:
                     throw new Error(err.detail || 'Product lookup failed.');
                 }
                 const data = await res.json();
-                
-                scannedProductTemp = data;
-                
-                // Show meal picker slot dialog
-                document.getElementById('mealTypePickerModal').style.display = 'flex';
+                currentScannedProduct = data;
+                renderBarcodeProduct(data);
                 
             } catch (err) {
                 resDiv.style.display = 'none';
-                errDiv.textContent = '⚠️ ' + err.message + '. Opening manual fallback...';
+                errDiv.innerHTML = `⚠️ ${err.message}. <a href="#" onclick="openManualBarcodeModal();return false;" style="color:var(--primary);font-weight:600;text-decoration:underline;">Add this product manually</a>.`;
                 errDiv.style.display = 'block';
-                
-                // Set the barcode in manual modal
-                document.getElementById('manualBarcode').value = barcode;
-                // Open manual entry modal
-                document.getElementById('barcodeFallbackModal').style.display = 'flex';
-                document.getElementById('manualProdName').value = '';
-                document.getElementById('manualBrand').value = '';
             }
         }
 
+
         // ==========================
-        // Dietary Classifier
+        // Dietary Classifier & Presets
         // ==========================
+        function setClassifierPreset(text) {
+            document.getElementById('classifyIngredientsInput').value = text;
+            classifyIngredients();
+        }
+
         async function classifyIngredients() {
             const ingredientsStr = document.getElementById('classifyIngredientsInput').value.trim();
             const resDiv = document.getElementById('classifyResult');
@@ -3397,7 +3721,7 @@ Ask me anything! For example:
             }
             
             errDiv.style.display = 'none';
-            resDiv.innerHTML = '<span class="spinner"></span> Classifying...';
+            resDiv.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:16px;"><span class="spinner"></span> <span>Analyzing dietary compliance & allergens...</span></div>';
             resDiv.style.display = 'block';
             
             try {
@@ -3412,31 +3736,110 @@ Ask me anything! For example:
                 }
                 const data = await res.json();
                 
-                let dietsHtml = '';
-                const check = (val) => val ? '✅ <span style="color:var(--accent);">Yes</span>' : '❌ <span style="color:var(--danger);">No</span>';
+                const check = (val) => val 
+                    ? '<span style="color:#22c55e;font-weight:700;display:inline-flex;align-items:center;gap:3px;"><svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Yes</span>' 
+                    : '<span style="color:#ef4444;font-weight:700;display:inline-flex;align-items:center;gap:3px;"><svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg> No</span>';
                 
-                dietsHtml += `
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-                        <div>Vegan: <strong>${check(data.is_vegan)}</strong></div>
-                        <div>Vegetarian: <strong>${check(data.is_vegetarian)}</strong></div>
-                        <div>Jain: <strong>${check(data.is_jain)}</strong></div>
-                        <div>Eggetarian: <strong>${check(data.is_eggetarian)}</strong></div>
+                const tagColorMap = {
+                    'Jain': '#d97706',
+                    'Vegan': '#16a34a',
+                    'Vegetarian': '#2563eb',
+                    'Eggetarian': '#ca8a04',
+                    'Pescatarian': '#0284c7',
+                    'Non-Vegetarian': '#dc2626'
+                };
+                const primaryTag = data.dietary_tag || 'Vegetarian';
+                const tagBg = tagColorMap[primaryTag] || '#64748b';
+                const safetyRating = data.safety_rating || 'Safe / Highly Compliant';
+                const confScore = Math.round((data.confidence_score || 0.99) * 100);
+
+                let dietsHtml = `
+                    <!-- Header: Primary Tag & Safety Score -->
+                    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--card-border);">
+                        <div>
+                            <span style="font-size:11px;text-transform:uppercase;color:var(--text-muted);letter-spacing:0.5px;display:block;">Primary Classification</span>
+                            <span style="background:${tagBg};color:#fff;padding:4px 12px;border-radius:12px;font-size:13px;font-weight:700;display:inline-block;margin-top:2px;">
+                                ${primaryTag}
+                            </span>
+                        </div>
+                        <div style="text-align:right;">
+                            <span style="font-size:11px;text-transform:uppercase;color:var(--text-muted);letter-spacing:0.5px;display:block;">Accuracy Confidence</span>
+                            <span style="color:var(--accent);font-size:12px;font-weight:700;">${confScore}% Confident</span>
+                        </div>
+                    </div>
+
+                    <!-- 14-Diet Matrix Grid -->
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;font-size:12px;">
+                        <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;"><span>🌱 Vegan:</span> ${check(data.is_vegan)}</div>
+                        <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;"><span>🥗 Vegetarian:</span> ${check(data.is_vegetarian)}</div>
+                        <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;"><span>🙏 Jain:</span> ${check(data.is_jain)}</div>
+                        <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;"><span>🥚 Eggetarian:</span> ${check(data.is_eggetarian)}</div>
+                        <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;"><span>🐟 Pescatarian:</span> ${check(data.is_pescatarian)}</div>
+                        <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;"><span>🥑 Keto / Low-Carb:</span> ${check(data.is_keto)}</div>
+                        <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;"><span>🥩 Paleo:</span> ${check(data.is_paleo)}</div>
+                        <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;"><span>🧘 Sattvic:</span> ${check(data.is_sattvic)}</div>
+                        <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;"><span>🌾 Gluten-Free:</span> ${check(data.is_gluten_free)}</div>
+                        <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;"><span>🥛 Dairy-Free:</span> ${check(data.is_dairy_free)}</div>
+                        <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;"><span>🥜 Nut-Free:</span> ${check(data.is_nut_free)}</div>
+                        <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;"><span>☪️ Halal:</span> ${check(data.is_halal)}</div>
+                        <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;"><span>✡️ Kosher:</span> ${check(data.is_kosher)}</div>
+                        <div style="background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;"><span>✨ Clean-Label:</span> ${check(data.is_clean_label)}</div>
                     </div>
                 `;
                 
+                // Detected Allergens
+                if (data.allergens && data.allergens.length > 0) {
+                    dietsHtml += `
+                        <div style="font-size:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:6px;padding:8px 10px;margin-bottom:10px;">
+                            <strong style="color:var(--danger);display:block;margin-bottom:4px;">⚠️ Detected Allergens (Top 14+ Global Standards):</strong>
+                            <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                ${data.allergens.map(a => `<span style="background:rgba(239,68,68,0.2);color:#fca5a5;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;">${a}</span>`).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Smart Culinary Substitutions
+                if (data.substitutions && data.substitutions.length > 0) {
+                    dietsHtml += `
+                        <div style="font-size:12px;background:rgba(147,51,234,0.08);border:1px solid rgba(147,51,234,0.25);border-radius:6px;padding:10px;margin-bottom:10px;">
+                            <strong style="color:#c084fc;display:flex;align-items:center;gap:4px;margin-bottom:6px;">
+                                💡 Smart Culinary Substitutions:
+                            </strong>
+                            <div style="display:flex;flex-direction:column;gap:6px;">
+                                ${data.substitutions.map(s => `
+                                    <div style="background:rgba(0,0,0,0.25);padding:8px;border-radius:6px;border-left:3px solid #a855f7;">
+                                        <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+                                            <span style="font-weight:600;color:#e2e8f0;">🚫 Swap: <span style="color:#f87171;">${s.original_ingredient}</span></span>
+                                            <span style="font-size:10px;background:rgba(168,85,247,0.2);color:#d8b4fe;padding:1px 6px;border-radius:8px;">${s.violates_diet}</span>
+                                        </div>
+                                        <div style="color:#4ade80;font-size:11px;font-weight:500;">
+                                            ✅ <strong>Try:</strong> ${s.recommended_substitutes.join(' <em>or</em> ')}
+                                        </div>
+                                        <div style="color:var(--text-muted);font-size:10px;margin-top:2px;font-style:italic;">
+                                            🍳 ${s.culinary_tip}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Exclusion Warnings
                 if (data.reasons && data.reasons.length > 0) {
                     dietsHtml += `
-                        <div style="font-size:12px;color:var(--text-muted);border-top:1px solid var(--card-border);padding-top:6px;margin-top:6px;">
-                            <strong>Exclusion Warnings:</strong>
-                            <ul style="margin-left:16px;margin-top:4px;">
+                        <div style="font-size:12px;color:var(--text-muted);border-top:1px solid var(--card-border);padding-top:8px;margin-top:6px;">
+                            <strong style="color:var(--text-color);">Ingredient Audit Trail:</strong>
+                            <ul style="margin-left:18px;margin-top:4px;line-height:1.5;">
                                 ${data.reasons.map(r => `<li>${r}</li>`).join('')}
                             </ul>
                         </div>
                     `;
                 } else {
                     dietsHtml += `
-                        <div style="font-size:12px;color:var(--accent);border-top:1px solid var(--card-border);padding-top:6px;margin-top:6px;">
-                            Perfect match! No exclusions detected.
+                        <div style="font-size:12px;color:#22c55e;border-top:1px solid var(--card-border);padding-top:8px;margin-top:6px;font-weight:600;">
+                            ✨ Zero dietary exclusions detected. 100% compliant!
                         </div>
                     `;
                 }
@@ -4159,101 +4562,9 @@ Ask me anything! For example:
             coachChatHistory = [];
         }
 
-        // ==========================
-        // AI Recipe Generator Logic
-        // ==========================
-        async function generateAIRecipe() {
-            const ingredients = document.getElementById('recipeIngredientsInput').value.trim();
-            if (!ingredients) {
-                showNotification('Please enter some ingredients.', 'error');
-                return;
-            }
-
-            const btn = document.getElementById('generateRecipeBtn');
-            setLoading(btn, true, 'Generate Recipe');
-            
-            document.getElementById('recipeResultPlaceholder').style.display = 'none';
-            const resultContainer = document.getElementById('recipeResultContainer');
-            resultContainer.style.display = 'none';
-
-            try {
-                const res = await fetchWithAuth('/api/ai/recipe-generator', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ingredients: ingredients })
-                });
-
-                if (!res.ok) throw new Error('Recipe generation failed');
-                const data = await res.json();
-                
-                generatedRecipeData = data.recipe;
-                
-                document.getElementById('recipeContent').textContent = data.recipe;
-                resultContainer.style.display = 'block';
-            } catch (err) {
-                showNotification(err.message, 'error');
-                document.getElementById('recipeResultPlaceholder').style.display = 'flex';
-            } finally {
-                setLoading(btn, false, 'Generate Recipe');
-            }
-        }
-
-        async function logGeneratedRecipe() {
-            if (!generatedRecipeData) return;
-            
-            const lines = generatedRecipeData.split('\n');
-            let recipeName = 'AI Generated Meal';
-            let calories = 350;
-            let protein = 20;
-            let carbs = 30;
-            let fat = 10;
-
-            for (const line of lines) {
-                const cleanLine = line.toLowerCase();
-                if (cleanLine.includes('recipe name:')) {
-                    recipeName = line.split(':')[1].trim();
-                } else if (cleanLine.includes('calories') && !cleanLine.includes('macros')) {
-                    const match = line.match(/\\d+/);
-                    if (match) calories = parseInt(match[0]);
-                } else if (cleanLine.includes('protein:')) {
-                    const match = line.match(/\\d+/);
-                    if (match) protein = parseInt(match[0]);
-                } else if (cleanLine.includes('carbs:') || cleanLine.includes('carbohydrates:')) {
-                    const match = line.match(/\\d+/);
-                    if (match) carbs = parseInt(match[0]);
-                } else if (cleanLine.includes('fat:')) {
-                    const match = line.match(/\\d+/);
-                    if (match) fat = parseInt(match[0]);
-                }
-            }
-
-            const logBtn = document.getElementById('logRecipeBtn');
-            setLoading(logBtn, true, '📝 Log as Custom Meal');
-
-            try {
-                const response = await fetchWithAuth('/api/meal-logs', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        user_id: userId,
-                        item_name: recipeName,
-                        calories: calories,
-                        protein: protein,
-                        carbs: carbs,
-                        fat: fat,
-                        category: 'Breakfast',
-                        serving_size: '1 portion'
-                    })
-                });
-
-                if (!response.ok) throw new Error('Failed to log recipe meal');
-                showNotification(`Successfully logged "${recipeName}"!`, 'success');
-            } catch (err) {
-                showNotification(err.message, 'error');
-            } finally {
-                setLoading(logBtn, false, '📝 Log as Custom Meal');
-            }
-        }
+        // ==========================================
+        // Barcode Fallback & Alternatives Helpers
+        // ==========================================
 
         // ==========================================
         // Barcode Fallback & Alternatives Helpers
@@ -4315,145 +4626,194 @@ Ask me anything! For example:
             }
         }
         
-        async function selectMealTypeForScanned(mealType) {
-            document.getElementById('mealTypePickerModal').style.display = 'none';
-            if (!scannedProductTemp) return;
-            
+        function renderBarcodeProduct(data) {
             const resDiv = document.getElementById('barcodeResult');
-            const errDiv = document.getElementById('barcodeError');
-            
-            resDiv.innerHTML = '<span class="spinner"></span> Processing and fetching healthy alternatives...';
-            resDiv.style.display = 'block';
-            
-            const data = scannedProductTemp;
             const nut = data.nutriments || {};
             
+            const sourceDetailText = data.source_detail || (data.source === 'cache' ? 'Local Cache (Verified)' : 'Open Food Facts API');
+            const sourceBadge = `<span class="badge" style="background:#4f46e5;color:#fff;font-size:10px;font-weight:600;padding:2px 8px;border-radius:12px;display:inline-flex;align-items:center;gap:4px;" title="Data Source">🔍 ${sourceDetailText}</span>`;
+            
+            // Health Score badge styling
+            const scoreVal = data.health_score ? Math.round(data.health_score) : null;
+            const catName = data.health_category || 'Moderate';
+            let catColor = '#eab308';
+            if (catName.toLowerCase().includes('good') || catName.toLowerCase().includes('excellent')) catColor = '#22c55e';
+            else if (catName.toLowerCase().includes('poor') || catName.toLowerCase().includes('unhealthy')) catColor = '#ef4444';
+
+            // Dietary & Allergen Badges
+            let dietaryHtml = '';
+            const diet = data.dietary_classification;
+            if (diet) {
+                const dietFlags = [];
+                if (diet.is_jain) dietFlags.push('<span style="background:rgba(217,119,6,0.15);color:#fbbf24;border:1px solid rgba(217,119,6,0.3);padding:2px 6px;border-radius:6px;font-size:11px;font-weight:600;">🙏 Jain</span>');
+                else if (diet.is_vegan) dietFlags.push('<span style="background:rgba(22,163,74,0.15);color:#4ade80;border:1px solid rgba(22,163,74,0.3);padding:2px 6px;border-radius:6px;font-size:11px;font-weight:600;">🌱 Vegan</span>');
+                else if (diet.is_vegetarian) dietFlags.push('<span style="background:rgba(37,99,235,0.15);color:#60a5fa;border:1px solid rgba(37,99,235,0.3);padding:2px 6px;border-radius:6px;font-size:11px;font-weight:600;">🥗 Vegetarian</span>');
+                else if (diet.is_eggetarian) dietFlags.push('<span style="background:rgba(202,138,4,0.15);color:#facc15;border:1px solid rgba(202,138,4,0.3);padding:2px 6px;border-radius:6px;font-size:11px;font-weight:600;">🥚 Eggetarian</span>');
+                else dietFlags.push('<span style="background:rgba(220,38,38,0.15);color:#f87171;border:1px solid rgba(220,38,38,0.3);padding:2px 6px;border-radius:6px;font-size:11px;font-weight:600;">🍗 Non-Veg</span>');
+
+                if (diet.is_gluten_free) dietFlags.push('<span style="background:rgba(2,132,199,0.15);color:#38bdf8;border:1px solid rgba(2,132,199,0.3);padding:2px 6px;border-radius:6px;font-size:11px;font-weight:600;">🌾 Gluten-Free</span>');
+                if (diet.is_keto) dietFlags.push('<span style="background:rgba(147,51,234,0.15);color:#c084fc;border:1px solid rgba(147,51,234,0.3);padding:2px 6px;border-radius:6px;font-size:11px;font-weight:600;">🥑 Keto</span>');
+
+                dietaryHtml = `
+                    <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;">
+                        ${dietFlags.join('')}
+                    </div>
+                `;
+
+                if (diet.allergens && diet.allergens.length > 0) {
+                    dietaryHtml += `
+                        <div style="font-size:11px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:6px;padding:6px 8px;margin-bottom:10px;">
+                            <strong style="color:var(--danger);">⚠️ Detected Allergens:</strong>
+                            <span style="color:#fca5a5;margin-left:4px;">${diet.allergens.join(', ')}</span>
+                        </div>
+                    `;
+                }
+            }
+
+            // Healthier Alternatives
+            let alternativesHtml = '';
+            const alts = data.alternatives || [];
+            if (alts.length > 0) {
+                alternativesHtml = `
+                    <div style="margin-top:14px; border-top:1px solid var(--card-border); padding-top:12px;">
+                        <h5 style="font-weight:600;font-size:12px;color:var(--primary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">💡 Recommended Healthier Alternatives</h5>
+                        <div style="display:flex; flex-direction:column; gap:8px;">
+                `;
+                alts.forEach(alt => {
+                    alternativesHtml += `
+                        <div class="alternative-card" style="border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:4px;background:rgba(255,255,255,0.02);border:1px solid var(--card-border);">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <strong style="font-size:12px;color:var(--text-main);">${alt.name}</strong>
+                                <span style="font-size:11px;font-weight:600;color:var(--warning);">Rs. ${alt.price}</span>
+                            </div>
+                            <div style="font-size:11px;color:var(--text-muted);">${alt.reason}</div>
+                            <div style="font-size:11px;color:#22c55e;font-weight:500;">${alt.comparison}</div>
+                            <a href="${alt.link}" target="_blank" class="btn btn-xs btn-primary" style="width:auto;align-self:flex-end;font-size:11px;padding:3px 8px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-top:2px;">
+                                🛒 View Online
+                            </a>
+                        </div>
+                    `;
+                });
+                alternativesHtml += `</div></div>`;
+            }
+
+            resDiv.innerHTML = `
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+                    <div>
+                        <h4 style="font-weight:700;font-size:15px;color:var(--text-main);margin-bottom:2px;">${data.product_name || 'Unknown Product'}</h4>
+                        <div style="font-size:12px;color:var(--text-muted);">
+                            Brand: <strong>${data.brand || '—'}</strong> | Grade: <strong style="color:${catColor};">${(data.nutrition_grade || 'N/A').toUpperCase()}</strong>
+                        </div>
+                    </div>
+                    ${sourceBadge}
+                </div>
+
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                    <span style="background:${catColor};color:#000;font-weight:700;font-size:11px;padding:2px 8px;border-radius:10px;">
+                        Health Score: ${scoreVal !== null ? scoreVal : '—'}/100
+                    </span>
+                    <span style="font-size:12px;color:var(--text-muted);">${catName}</span>
+                </div>
+
+                ${dietaryHtml}
+
+                <h5 style="font-size:11px;color:var(--text-dim);text-transform:uppercase;margin-bottom:6px;letter-spacing:0.5px;">Nutrition per 100g</h5>
+                <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:6px;text-align:center;margin-bottom:12px;">
+                    <div style="background:var(--bg-color);padding:6px;border-radius:4px;border:1px solid var(--card-border);">
+                        <div style="font-size:13px;font-weight:700;color:var(--primary);">${Math.round(nut.energy_kcal || 0)}</div>
+                        <div style="font-size:9px;color:var(--text-dim);">Energy (kcal)</div>
+                    </div>
+                    <div style="background:var(--bg-color);padding:6px;border-radius:4px;border:1px solid var(--card-border);">
+                        <div style="font-size:13px;font-weight:700;color:var(--accent);">${Number(nut.protein_g || 0).toFixed(1)}g</div>
+                        <div style="font-size:9px;color:var(--text-dim);">Protein</div>
+                    </div>
+                    <div style="background:var(--bg-color);padding:6px;border-radius:4px;border:1px solid var(--card-border);">
+                        <div style="font-size:13px;font-weight:700;color:var(--warning);">${Number(nut.carb_g || 0).toFixed(1)}g</div>
+                        <div style="font-size:9px;color:var(--text-dim);">Carbs</div>
+                    </div>
+                    <div style="background:var(--bg-color);padding:6px;border-radius:4px;border:1px solid var(--card-border);">
+                        <div style="font-size:13px;font-weight:700;color:var(--danger);">${Number(nut.fat_g || 0).toFixed(1)}g</div>
+                        <div style="font-size:9px;color:var(--text-dim);">Fat</div>
+                    </div>
+                    <div style="background:var(--bg-color);padding:6px;border-radius:4px;border:1px solid var(--card-border);">
+                        <div style="font-size:13px;font-weight:700;color:var(--text-main);">${Number(nut.fibre_g || 0).toFixed(1)}g</div>
+                        <div style="font-size:9px;color:var(--text-dim);">Fiber</div>
+                    </div>
+                    <div style="background:var(--bg-color);padding:6px;border-radius:4px;border:1px solid var(--card-border);">
+                        <div style="font-size:13px;font-weight:700;color:var(--text-muted);">${Math.round(nut.sodium_mg || 0)}mg</div>
+                        <div style="font-size:9px;color:var(--text-dim);">Sodium</div>
+                    </div>
+                </div>
+
+                ${data.ingredients_text && data.ingredients_text !== 'No ingredients listed' ? `
+                    <div style="font-size:11px;color:var(--text-muted);margin-bottom:12px;background:rgba(255,255,255,0.02);padding:8px;border-radius:6px;border:1px solid var(--card-border);">
+                        <strong style="color:var(--text-color);">Ingredients:</strong> ${data.ingredients_text}
+                    </div>
+                ` : ''}
+
+                <!-- Quick Log Action -->
+                <div style="background:rgba(79,70,229,0.06);border:1px solid rgba(79,70,229,0.2);border-radius:6px;padding:10px;margin-bottom:10px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                        <span style="font-size:12px;font-weight:600;color:var(--primary);">➕ Log this item to your meals</span>
+                    </div>
+                    <div style="display:flex;gap:6px;align-items:center;">
+                        <select id="scannedMealSlotSelect" style="flex:1;height:36px;font-size:12px;border-radius:4px;border:1px solid var(--card-border);background:var(--bg-color);color:var(--text-color);padding:0 8px;">
+                            <option value="Snack">Snack</option>
+                            <option value="Breakfast">Breakfast</option>
+                            <option value="Lunch">Lunch</option>
+                            <option value="Dinner">Dinner</option>
+                        </select>
+                        <input type="number" id="scannedGramsInput" value="100" min="10" max="1000" style="width:70px;height:36px;font-size:12px;border-radius:4px;border:1px solid var(--card-border);background:var(--bg-color);color:var(--text-color);padding:0 6px;" title="Serving size in grams">
+                        <span style="font-size:11px;color:var(--text-dim);">g</span>
+                        <button class="btn btn-sm btn-primary" onclick="logScannedMealDirect()" style="height:36px;padding:0 12px;font-size:12px;font-weight:600;">Log</button>
+                    </div>
+                    <div id="scannedLogFeedback" style="display:none;margin-top:6px;font-size:11px;"></div>
+                </div>
+
+                ${alternativesHtml}
+            `;
+            resDiv.style.display = 'block';
+        }
+
+        async function logScannedMealDirect() {
+            if (!currentScannedProduct) return;
+            const data = currentScannedProduct;
+            const nut = data.nutriments || {};
+            const mealType = document.getElementById('scannedMealSlotSelect').value;
+            const grams = parseFloat(document.getElementById('scannedGramsInput').value) || 100.0;
+            const ratio = grams / 100.0;
+
+            const feedbackDiv = document.getElementById('scannedLogFeedback');
+            feedbackDiv.innerHTML = '<span class="spinner"></span> Logging...';
+            feedbackDiv.style.display = 'block';
+
             try {
-                // 1. Log to database
                 const logBody = {
                     user_id: userId,
                     log_date: new Date().toISOString().split('T')[0],
                     meal_type: mealType,
-                    food_name: `${data.product_name} (${data.brand || 'Unknown Brand'})`,
-                    calories: nut.energy_kcal || 0,
-                    protein: nut.protein_g || 0,
-                    carbs: nut.carb_g || 0,
-                    fat: nut.fat_g || 0
+                    food_name: `${data.product_name} (${grams}g)`,
+                    calories: Math.round((nut.energy_kcal || 0) * ratio),
+                    protein: Number(((nut.protein_g || 0) * ratio).toFixed(1)),
+                    carbs: Number(((nut.carb_g || 0) * ratio).toFixed(1)),
+                    fat: Number(((nut.fat_g || 0) * ratio).toFixed(1))
                 };
-                
-                const logRes = await fetchWithAuth('/api/meal-logs', {
+
+                const res = await fetchWithAuth('/api/meal-logs', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(logBody)
                 });
+
+                if (!res.ok) throw new Error('Could not log meal. Check your login status.');
                 
-                let logStatusText = "";
-                if (logRes.ok) {
-                    logStatusText = `<div style="margin-top:10px;padding:8px;background:rgba(16,185,129,0.15);border:1px solid var(--primary);border-radius:6px;font-size:12px;color:#15803d;text-align:center;font-weight:600;">Logged as ${mealType} successfully!</div>`;
-                    showNotification(`Logged "${data.product_name}" to ${mealType}!`, 'success');
-                }
-                
-                // 2. Fetch alternatives
-                const altRes = await fetchWithAuth('/api/barcode/alternatives', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        product_name: data.product_name,
-                        meal_type: mealType,
-                        protein_g: nut.protein_g || 0,
-                        energy_kcal: nut.energy_kcal || 0,
-                        sugar_g: nut.sugar_g || 0,
-                        fat_g: nut.fat_g || 0
-                    })
-                });
-                
-                let alternativesHtml = "";
-                if (altRes.ok) {
-                    const altData = await altRes.json();
-                    if (altData.alternatives && altData.alternatives.length > 0) {
-                        alternativesHtml = `
-                            <div style="margin-top:16px; border-top:1px solid var(--card-border); padding-top:14px;">
-                                <h4 style="font-weight:600;font-size:13px;color:var(--primary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Recommended Healthier Alternatives</h4>
-                                <div style="display:flex; flex-direction:column; gap:10px;">
-                        `;
-                        altData.alternatives.forEach(alt => {
-                            alternativesHtml += `
-                                <div class="alternative-card" style="border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:6px;">
-                                    <div style="display:flex;justify-content:space-between;align-items:center;">
-                                        <strong style="font-size:13px;color:var(--text-main);">${alt.name}</strong>
-                                        <span style="font-size:11px;font-weight:600;color:var(--warning);">Rs. ${alt.price}</span>
-                                    </div>
-                                    <div style="font-size:11px;color:var(--text-muted);">${alt.reason}</div>
-                                    <div style="font-size:11px;color:var(--accent);font-weight:500;">${alt.comparison}</div>
-                                    <a href="${alt.link}" target="_blank" class="btn btn-sm btn-primary" style="width:auto;align-self:flex-end;font-size:11px;padding:4px 10px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">
-                                        🛒 Buy on Amazon
-                                    </a>
-                                </div>
-                            `;
-                        });
-                        alternativesHtml += `</div></div>`;
-                    }
-                }
-                
-                let sourceDetailText = data.source_detail || (data.source === 'cache' ? 'Local Cache' : 'Open Food Facts API');
-                let sourceBadge = `<span class="badge" style="background:#4f46e5;color:#fff;font-size:10px;font-weight:600;padding:2px 8px;border-radius:12px;display:inline-flex;align-items:center;gap:4px;" title="Admin Source Audit">🔍 ${sourceDetailText}</span>`;
-                
-                resDiv.innerHTML = `
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
-                        <h4 style="font-weight:600;font-size:15px;color:var(--text-main);">${data.product_name || 'Unknown Product'}</h4>
-                        ${sourceBadge}
-                    </div>
-                    <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">
-                        Brand: <strong>${data.brand || '—'}</strong> | Grade: <strong>${(data.nutrition_grade || 'N/A').toUpperCase()}</strong>
-                    </div>
-                    <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">
-                        Health Score: <strong>${data.health_score ? Math.round(data.health_score) : '—'}</strong> (${data.health_category || '—'})
-                    </div>
-                    
-                    <h5 style="font-size:11px;color:var(--text-dim);text-transform:uppercase;margin-bottom:6px;letter-spacing:0.5px;">Nutrition per 100g</h5>
-                    <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;text-align:center;">
-                        <div style="background:var(--bg-color);padding:6px;border-radius:4px;border:1px solid var(--card-border);">
-                            <div style="font-size:14px;font-weight:600;color:var(--primary);">${Math.round(nut.energy_kcal || 0)}</div>
-                            <div style="font-size:9px;color:var(--text-dim);">Energy (kcal)</div>
-                        </div>
-                        <div style="background:var(--bg-color);padding:6px;border-radius:4px;border:1px solid var(--card-border);">
-                            <div style="font-size:14px;font-weight:600;color:var(--accent);">${Number(nut.protein_g || 0).toFixed(1)}g</div>
-                            <div style="font-size:9px;color:var(--text-dim);">Protein</div>
-                        </div>
-                        <div style="background:var(--bg-color);padding:6px;border-radius:4px;border:1px solid var(--card-border);">
-                            <div style="font-size:14px;font-weight:600;color:var(--warning);">${Number(nut.carb_g || 0).toFixed(1)}g</div>
-                            <div style="font-size:9px;color:var(--text-dim);">Carbs</div>
-                        </div>
-                        <div style="background:var(--bg-color);padding:6px;border-radius:4px;border:1px solid var(--card-border);">
-                            <div style="font-size:14px;font-weight:600;color:var(--danger);">${Number(nut.fat_g || 0).toFixed(1)}g</div>
-                            <div style="font-size:9px;color:var(--text-dim);">Fat</div>
-                        </div>
-                        <div style="background:var(--bg-color);padding:6px;border-radius:4px;border:1px solid var(--card-border);">
-                            <div style="font-size:14px;font-weight:600;color:var(--text-main);">${Number(nut.fibre_g || 0).toFixed(1)}g</div>
-                            <div style="font-size:9px;color:var(--text-dim);">Fiber</div>
-                        </div>
-                        <div style="background:var(--bg-color);padding:6px;border-radius:4px;border:1px solid var(--card-border);">
-                            <div style="font-size:14px;font-weight:600;color:var(--text-muted);">${Math.round(nut.sodium_mg || 0)}mg</div>
-                            <div style="font-size:9px;color:var(--text-dim);">Sodium</div>
-                        </div>
-                    </div>
-                    ${logStatusText}
-                    ${alternativesHtml}
-                `;
-                
-                scannedProductTemp = null;
-                
+                feedbackDiv.innerHTML = `<span style="color:#22c55e;font-weight:600;">✅ Logged ${grams}g to ${mealType}!</span>`;
+                showNotification(`Logged "${data.product_name}" (${grams}g) as ${mealType}!`, 'success');
             } catch (err) {
-                resDiv.style.display = 'none';
-                errDiv.textContent = '⚠️ Failed to log or fetch alternatives: ' + err.message;
-                errDiv.style.display = 'block';
+                feedbackDiv.innerHTML = `<span style="color:#ef4444;">⚠️ ${err.message}</span>`;
             }
         }
-        
-        function closeMealTypePickerModal() {
-            document.getElementById('mealTypePickerModal').style.display = 'none';
-            scannedProductTemp = null;
-        }
+
 
         // ==========================================
         // Homely Meals Condiments Builder Helpers

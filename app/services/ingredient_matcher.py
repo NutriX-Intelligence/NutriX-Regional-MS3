@@ -200,9 +200,21 @@ _STOP_WORDS: Set[str] = {"fresh", "dried", "dry", "raw", "chopped", "diced",
                          "to", "taste", "as", "needed", "for", "garnish",
                          "some", "a", "an", "the", "or", "and", ","}
 
+import functools
+import re
+from typing import List, Dict, Set, Tuple, Optional
+from rapidfuzz import fuzz, process
 
+_SYNONYM_REGEX = re.compile(
+    r"\b(" + "|".join(re.escape(k) for k in sorted(SYNONYM_MAP.keys(), key=len, reverse=True)) + r")\b",
+    re.IGNORECASE
+)
+
+@functools.lru_cache(maxsize=32768)
 def clean_ingredient(name: str) -> str:
     """Lowercase, strip, remove parenthetical notes and stop-words."""
+    if not name:
+        return ""
     name = name.lower().strip()
     name = re.sub(r"\(.*?\)", "", name)          # remove (optional), (to taste) …
     name = re.sub(r"\s+", " ", name).strip()
@@ -212,25 +224,22 @@ def clean_ingredient(name: str) -> str:
     return " ".join(tokens)
 
 
+@functools.lru_cache(maxsize=32768)
 def normalise(name: str) -> str:
-    """Apply synonym map and clean."""
+    """Apply synonym map and clean in a single high-performance regex pass."""
     name = clean_ingredient(name)
-    # Apply synonym map – only whole-word matches
-    for raw, canonical in SYNONYM_MAP.items():
-        # Replace whole word occurrences
-        name = re.sub(rf"\b{re.escape(raw)}\b", canonical, name)
-    return name
+    if not name:
+        return ""
+    return _SYNONYM_REGEX.sub(lambda m: SYNONYM_MAP.get(m.group(0).lower(), m.group(0)), name)
 
 
+@functools.lru_cache(maxsize=32768)
 def extract_core_ingredient(name: str) -> str:
     """Return the shortest meaningful ingredient stem (e.g. 'chili powder' → 'chili')."""
     name = normalise(name)
-    # Take the first 1-2 tokens that aren't generic
     tokens = name.split()
     if not tokens:
         return ""
-    # If the last token is a generic qualifier like 'powder', 'leaves', 'seeds',
-    # keep the preceding term too
     generics = {"powder", "leaves", "seeds", "paste", "pieces", "strips", "root"}
     if len(tokens) >= 2 and tokens[-1] in generics:
         return " ".join(tokens[-2:])
@@ -243,6 +252,7 @@ def extract_core_ingredient(name: str) -> str:
 MIN_FUZZY_SCORE: int = 78  # threshold for fuzzy ingredient match
 
 
+@functools.lru_cache(maxsize=65536)
 def fuzzy_match_ingredient(user_ing: str, recipe_ing: str) -> bool:
     """
     Return True if the two ingredient names are considered a match,
@@ -258,10 +268,8 @@ def fuzzy_match_ingredient(user_ing: str, recipe_ing: str) -> bool:
     if u_norm == r_norm:
         return True
 
-    # Word boundary match (e.g. user enters "dal", "paneer", "rice", "curd")
-    if len(u_norm) >= 3 and re.search(rf"\b{re.escape(u_norm)}\b", r_norm):
-        return True
-    if len(r_norm) >= 3 and re.search(rf"\b{re.escape(r_norm)}\b", u_norm):
+    # Substring / word boundary fast match
+    if u_norm in r_norm or r_norm in u_norm:
         return True
 
     # Check if core ingredient is present in the other
@@ -271,14 +279,11 @@ def fuzzy_match_ingredient(user_ing: str, recipe_ing: str) -> bool:
     if u_core and r_core and u_core == r_core:
         return True
 
-    # Fuzzy scoring
-    score = fuzz.token_sort_ratio(u_norm, r_norm)
-    if score >= MIN_FUZZY_SCORE:
+    # Fuzzy scoring with RapidFuzz
+    if fuzz.token_sort_ratio(u_norm, r_norm) >= MIN_FUZZY_SCORE:
         return True
 
-    # Partial matching – user ingredient appears within recipe ingredient
-    partial = fuzz.partial_ratio(u_norm, r_norm)
-    if partial >= MIN_FUZZY_SCORE:
+    if fuzz.partial_ratio(u_norm, r_norm) >= MIN_FUZZY_SCORE:
         return True
 
     return False

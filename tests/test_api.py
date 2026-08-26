@@ -247,5 +247,67 @@ class TestAPIEndpoints(unittest.TestCase):
         self.assertIn("access_token", data)
         self.assertEqual(data["user"]["email"], "john@example.com")
 
+    def test_today_meal_logs_and_cuisine_recommendations(self):
+        # Create user
+        payload_profile = {
+            "name": "Alex Smith",
+            "email": "alex@example.com",
+            "age": 30,
+            "gender": "male",
+            "height": 178.0,
+            "weight": 75.0,
+            "activity_level": "moderately_active",
+            "goal": "maintenance",
+            "preferences": [
+                {"preference_type": "diet_type", "value": "Vegetarian"}
+            ]
+        }
+        res = self.client.post("/calculate-profile", json=payload_profile)
+        self.assertEqual(res.status_code, 201)
+        user_id = res.json()["id"]
+
+        # 1. Log a meal
+        meal_payload = {
+            "user_id": user_id,
+            "log_date": "2026-08-26",
+            "meal_type": "Breakfast",
+            "food_name": "Poha with Peanuts",
+            "calories": 280.0,
+            "protein": 12.0,
+            "carbs": 42.0,
+            "fat": 8.0
+        }
+        log_res = self.client.post("/api/meal-logs", json=meal_payload)
+        self.assertEqual(log_res.status_code, 201)
+        log_id = log_res.json()["id"]
+
+        # 2. Get today meal logs
+        today_res = self.client.get(f"/api/meal-logs/today/{user_id}?log_date=2026-08-26")
+        self.assertEqual(today_res.status_code, 200)
+        today_data = today_res.json()
+        self.assertEqual(today_data["totals"]["calories"], 280.0)
+        self.assertEqual(today_data["totals"]["protein"], 12.0)
+        self.assertEqual(len(today_data["logs"]), 1)
+        self.assertEqual(today_data["logs"][0]["food_name"], "Poha with Peanuts")
+
+        # 3. Test recommendations cuisine field
+        rec_res = self.client.post("/recommend-foods", json={"user_id": user_id, "limit": 10})
+        self.assertEqual(rec_res.status_code, 200)
+        rec_data = rec_res.json()
+        self.assertTrue(len(rec_data) > 0)
+        self.assertIn("cuisine", rec_data[0])
+        self.assertTrue(len(rec_data[0]["cuisine"]) > 0)
+
+        # 4. Delete meal log
+        del_res = self.client.delete(f"/api/meal-logs/{log_id}")
+        self.assertEqual(del_res.status_code, 200)
+
+        # Verify deletion
+        today_res_after = self.client.get(f"/api/meal-logs/today/{user_id}?log_date=2026-08-26")
+        self.assertEqual(today_res_after.status_code, 200)
+        self.assertEqual(len(today_res_after.json()["logs"]), 0)
+        self.assertEqual(today_res_after.json()["totals"]["calories"], 0.0)
+
 if __name__ == "__main__":
     unittest.main()
+

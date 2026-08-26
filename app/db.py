@@ -34,8 +34,24 @@ except Exception as e:
     logger.warning(f"PostgreSQL connection failed ({e}). Falling back to SQLite database: {DB_PATH}")
     DATABASE_URL = f"sqlite:///{DB_PATH.as_posix()}"
     engine = create_engine(
-        DATABASE_URL, connect_args={"check_same_thread": False}
+        DATABASE_URL,
+        connect_args={"check_same_thread": False, "timeout": 30.0}
     )
+    # Enable WAL mode, memory caching, and busy timeout for concurrent high-speed queries
+    from sqlalchemy import event, text
+    @event.listens_for(engine, "connect")
+    def set_sqlite_pragma(dbapi_connection, connection_record):
+        try:
+            cursor = dbapi_connection.cursor()
+            cursor.execute("PRAGMA journal_mode=WAL")
+            cursor.execute("PRAGMA synchronous=NORMAL")
+            cursor.execute("PRAGMA cache_size=-64000")  # 64MB in-memory cache
+            cursor.execute("PRAGMA temp_store=MEMORY")
+            cursor.execute("PRAGMA busy_timeout=30000")
+            cursor.close()
+        except Exception:
+            pass
+
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

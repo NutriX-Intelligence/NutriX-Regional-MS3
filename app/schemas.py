@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Any
 from datetime import date, datetime
+
 
 class PreferenceItem(BaseModel):
     preference_type: str = Field(..., description="Type of preference: 'allergy', 'dislike', 'like', 'diet_type'")
@@ -53,12 +54,15 @@ class RankedFoodItem(BaseModel):
     recipe_code: str
     recipe_name: str
     category: str
+    cuisine: Optional[str] = "Indian"
     score: float
+    health_score: Optional[float] = 80.0
     dietary_tag: Optional[str] = "Vegetarian"
     energy_kcal: float
     protein_g: float
     carb_g: float
     fat_g: float
+
 
 class GenerateMealPlanRequest(BaseModel):
     user_id: int
@@ -139,8 +143,46 @@ class ClassifyResponse(BaseModel):
     is_vegetarian: bool
     is_eggetarian: bool
     is_jain: bool
+    dietary_tag: Optional[str] = "Vegetarian"
+    is_gluten_free: Optional[bool] = True
+    is_dairy_free: Optional[bool] = True
+    is_nut_free: Optional[bool] = True
+    is_pescatarian: Optional[bool] = True
+    is_halal: Optional[bool] = True
+    is_kosher: Optional[bool] = True
+    is_keto: Optional[bool] = True
+    is_paleo: Optional[bool] = True
+    is_low_fodmap: Optional[bool] = True
+    is_sattvic: Optional[bool] = True
+    is_clean_label: Optional[bool] = True
+    confidence_score: Optional[float] = 0.99
+    safety_rating: Optional[str] = "Safe / Highly Compliant"
+    allergens: Optional[List[str]] = []
+    dietary_flags: Optional[Dict[str, bool]] = {}
+    detailed_reasons: Optional[Dict[str, List[str]]] = {}
+    ingredient_breakdown: Optional[List[Dict[str, Any]]] = []
+    substitutions: Optional[List[Dict[str, Any]]] = []
     reasons: List[str]
     tags: Optional[List[str]] = []
+
+
+class SubstitutionRequest(BaseModel):
+    ingredients: List[str]
+    target_diet: str = "jain"
+
+
+class SubstitutionItem(BaseModel):
+    original_ingredient: str
+    violates_diet: str
+    detected_trigger: str
+    recommended_substitutes: List[str]
+    culinary_tip: str
+
+
+class SubstitutionResponse(BaseModel):
+    target_diet: str
+    substitutions: List[SubstitutionItem]
+
 
 
 class HomelyMealIngredientSchema(BaseModel):

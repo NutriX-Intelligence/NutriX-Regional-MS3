@@ -120,6 +120,19 @@ class TestNewEnginesAPI(unittest.TestCase):
         self.assertTrue(data["is_vegetarian"]) # Dairy is ok for vegetarian
         self.assertTrue(data["is_eggetarian"])
 
+    def test_classify_substitutions_endpoint(self):
+        res = self.client.post("/api/classify/substitutions", json={
+            "ingredients": ["Onion", "Garlic", "Potato", "Tomato"],
+            "target_diet": "jain"
+        })
+        self.assertEqual(res.status_code, 200)
+        data = res.json()
+        self.assertEqual(data["target_diet"], "jain")
+        self.assertTrue(len(data["substitutions"]) >= 3)
+        triggers = [s["detected_trigger"] for s in data["substitutions"]]
+        self.assertIn("onion", triggers)
+
+
     @patch("app.services.barcode_service.httpx.get")
     def test_barcode_scan_and_cache(self, mock_get):
         # Mock Open Food Facts API response
@@ -145,7 +158,7 @@ class TestNewEnginesAPI(unittest.TestCase):
         mock_get.return_value = mock_response
 
         # Scan new barcode
-        res = self.client.get("/api/barcode/1234567890123")
+        res = self.client.get("/api/barcode/9999999999999")
         self.assertEqual(res.status_code, 200)
         data = res.json()
         print("DEBUG SCAN DATA:", data)
@@ -156,7 +169,7 @@ class TestNewEnginesAPI(unittest.TestCase):
         self.assertEqual(data["nutriments"]["sodium_mg"], 150.0)
 
         # Retrieve from cache
-        res_cached = self.client.get("/api/barcode/1234567890123")
+        res_cached = self.client.get("/api/barcode/9999999999999")
         self.assertEqual(res_cached.status_code, 200)
         data_cached = res_cached.json()
         self.assertEqual(data_cached["source"], "cache")
