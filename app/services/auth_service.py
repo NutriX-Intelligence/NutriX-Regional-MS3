@@ -51,14 +51,25 @@ async def verify_google_id_token(id_token: str) -> Dict[str, Any]:
     
     Includes a fallback/mock block for emulator testing.
     """
-    # 1. Check for mock token to ease testing
+    # 1. Check for mock / simulated token to ease testing and simulator usage
     if id_token.startswith("mock-google-"):
-        email = id_token.replace("mock-google-", "") + "@example.com"
-        name = id_token.replace("mock-google-", "").capitalize()
+        prefix = id_token.replace("mock-google-", "")
+        email = f"{prefix}@example.com" if "@" not in prefix else prefix
+        name = prefix.split("@")[0].capitalize()
         return {
             "email": email,
             "name": name,
-            "sub": f"mock-sub-{id_token}",
+            "sub": f"mock-sub-{prefix}",
+            "picture": "https://www.gravatar.com/avatar/"
+        }
+    elif id_token.startswith("google_simulated_token_"):
+        prefix = id_token.replace("google_simulated_token_", "")
+        email = f"{prefix}@gmail.com" if "@" not in prefix else prefix
+        name = prefix.split("@")[0].capitalize()
+        return {
+            "email": email,
+            "name": name,
+            "sub": f"mock-sub-{prefix}",
             "picture": "https://www.gravatar.com/avatar/"
         }
 

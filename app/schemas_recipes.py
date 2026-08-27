@@ -112,6 +112,7 @@ class RecipeDetailResponse(BaseModel):
     difficulty: Optional[str] = None
     cooking_time_minutes: Optional[int] = None
     dietary_tag: Optional[str] = "Vegetarian"
+    description: Optional[str] = None
     instructions: Optional[str] = None
     primarysource: Optional[str] = None
     ingredients: List[Dict[str, Any]] = []

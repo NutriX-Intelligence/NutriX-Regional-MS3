@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, DateTime, Date, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property
-from datetime import datetime
+from datetime import datetime, date
 from app.db import Base
 
 class User(Base):
@@ -69,9 +69,18 @@ class User(Base):
     def goal(self, val): self._set_profile_val("goal", val)
 
     @property
-    def diet_type(self): return self._get_profile_val("diet_type")
+    def diet_type(self):
+        val = self._get_profile_val("diet_type")
+        if val:
+            return val
+        for p in (self.preferences or []):
+            if (getattr(p, "preference_type", "") or "").lower().strip() == "diet_type":
+                return p.value
+        return "Non-Vegetarian"
+
     @diet_type.setter
-    def diet_type(self, val): self._set_profile_val("diet_type", val)
+    def diet_type(self, val):
+        self._set_profile_val("diet_type", val)
 
     @property
     def target_calories(self): return self._get_profile_val("target_calories")
@@ -93,6 +102,11 @@ class User(Base):
     @target_fat.setter
     def target_fat(self, val): self._set_profile_val("target_fat", val)
 
+    @property
+    def water_target_ml(self): return self._get_profile_val("water_target_ml")
+    @water_target_ml.setter
+    def water_target_ml(self, val): self._set_profile_val("water_target_ml", val)
+
 
 class Profile(Base):
     __tablename__ = "profiles"
@@ -110,6 +124,7 @@ class Profile(Base):
     target_protein = Column(Float)
     target_carbs = Column(Float)
     target_fat = Column(Float)
+    water_target_ml = Column(Float, nullable=True)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationships
@@ -341,13 +356,13 @@ class MealLog(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    log_date = Column(Date, nullable=False)
+    log_date = Column(Date, nullable=False, default=date.today)
     meal_type = Column(String, nullable=False)  # 'Breakfast', 'Lunch', 'Dinner', 'Snack'
     food_name = Column(String, nullable=False)
-    calories = Column(Float, nullable=False)
-    protein = Column(Float, nullable=False)
-    carbs = Column(Float, nullable=False)
-    fat = Column(Float, nullable=False)
+    calories = Column(Float, nullable=False, default=0.0)
+    protein = Column(Float, nullable=False, default=0.0)
+    carbs = Column(Float, nullable=False, default=0.0)
+    fat = Column(Float, nullable=False, default=0.0)
 
     # Relationships
     user = relationship("User", back_populates="meal_logs")
@@ -359,7 +374,7 @@ class WaterLog(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     amount_ml = Column(Float, nullable=False)
-    logged_at = Column(Date, nullable=False)
+    logged_at = Column(Date, nullable=False, default=date.today)
 
     # Relationships
     user = relationship("User", back_populates="water_logs")
@@ -591,4 +606,6 @@ class Settings(Base):
 
     # Relationships
     user = relationship("User", back_populates="settings")
+
+
 

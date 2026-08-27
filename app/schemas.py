@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Union
 from datetime import date, datetime
 
 
@@ -16,6 +16,7 @@ class UserProfileCreate(BaseModel):
     weight: float = Field(..., gt=10.0, lt=600.0, description="Weight in kg")
     activity_level: str = Field(..., description="'sedentary', 'lightly_active', 'moderately_active', 'active', 'very_active'")
     goal: str = Field(..., description="'fat loss', 'weight gain', 'muscle gain', 'maintenance'")
+    water_target_ml: Optional[float] = None
     preferences: Optional[List[PreferenceItem]] = None
 
 class UserProfileResponse(BaseModel):
@@ -32,6 +33,7 @@ class UserProfileResponse(BaseModel):
     target_protein_g: float = Field(..., alias="target_protein")
     target_carbs_g: float = Field(..., alias="target_carbs")
     target_fat_g: float = Field(..., alias="target_fat")
+    water_target_ml: Optional[float] = None
     bmi: Optional[float] = None
     bmi_status: Optional[str] = None
     bmr: Optional[float] = None
@@ -67,7 +69,7 @@ class RankedFoodItem(BaseModel):
 class GenerateMealPlanRequest(BaseModel):
     user_id: int
     plan_date: Optional[date] = None # Defaults to today
-    tolerance: Optional[float] = Field(0.15, ge=0.01, le=0.50)
+    tolerance: Optional[float] = Field(None, ge=0.01, le=0.50)
     preference: Optional[str] = "balanced"  # 'balanced', 'high_protein', 'low_carb', 'low_fat', 'high_fiber'
     meal_cuisines: Optional[Dict[str, str]] = Field(
         None,
@@ -259,18 +261,18 @@ class HomelyMealStatusUpdateRequest(BaseModel):
 
 class MealLogCreate(BaseModel):
     user_id: int
-    log_date: date
-    meal_type: str
+    log_date: Optional[Union[date, str]] = None
+    meal_type: str = "Snack"
     food_name: str
-    calories: float
-    protein: float
-    carbs: float
-    fat: float
+    calories: float = 0.0
+    protein: float = 0.0
+    carbs: float = 0.0
+    fat: float = 0.0
 
 class MealLogResponse(BaseModel):
     id: int
     user_id: int
-    log_date: date
+    log_date: Union[datetime, date, str]
     meal_type: str
     food_name: str
     calories: float
@@ -291,12 +293,13 @@ class UserRegisterRequest(BaseModel):
     email: EmailStr
     password: str
     name: str
-    age: int = Field(..., gt=0, lt=120)
-    gender: str = Field(..., description="'male' or 'female'")
-    height: float = Field(..., gt=30.0, lt=300.0, description="Height in cm")
-    weight: float = Field(..., gt=10.0, lt=600.0, description="Weight in kg")
-    activity_level: str = Field(..., description="'sedentary', 'lightly_active', 'moderately_active', 'active', 'very_active'")
-    goal: str = Field(..., description="'fat loss', 'weight gain', 'muscle gain', 'maintenance'")
+    age: Optional[int] = Field(25, gt=0, lt=120)
+    gender: Optional[str] = Field("male", description="'male' or 'female'")
+    height: Optional[float] = Field(170.0, gt=30.0, lt=300.0, description="Height in cm")
+    weight: Optional[float] = Field(70.0, gt=10.0, lt=600.0, description="Weight in kg")
+    activity_level: Optional[str] = Field("sedentary", description="'sedentary', 'lightly_active', 'moderately_active', 'active', 'very_active'")
+    goal: Optional[str] = Field("maintenance", description="'fat loss', 'weight gain', 'muscle gain', 'maintenance'")
+    water_target_ml: Optional[float] = Field(None, description="Daily water target in ml")
     preferences: Optional[List[PreferenceItem]] = None
 
 
@@ -366,6 +369,46 @@ class AlternativesRequest(BaseModel):
     sugar_g: Optional[float] = 0.0
     fat_g: Optional[float] = 0.0
     estimated_price: Optional[float] = 20.0
+
+
+class WaterLogCreate(BaseModel):
+    user_id: int
+    amount_ml: float = Field(..., gt=0.0, le=10000.0, description="Amount of water in ml")
+    logged_at: Optional[Union[datetime, date]] = None
+
+
+class WaterLogResponse(BaseModel):
+    id: int
+    user_id: int
+    amount_ml: float
+    logged_at: Union[datetime, date]
+
+    class Config:
+        from_attributes = True
+
+
+class WaterTodayResponse(BaseModel):
+    user_id: int
+    date: date
+    total_ml: float
+    target_ml: float
+    progress_pct: float
+    logs: List[WaterLogResponse]
+
+
+class WaterHistoryItem(BaseModel):
+    date: str
+    total_ml: float
+
+
+class WaterHistoryResponse(BaseModel):
+    user_id: int
+    history: List[WaterHistoryItem]
+
+
+class StatusResponse(BaseModel):
+    status: str = "success"
+    message: str
 
 
 

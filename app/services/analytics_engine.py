@@ -97,10 +97,11 @@ class AnalyticsEngine:
             "user_id": user_id,
             "calculated_at": str(now),
             "targets": {
-                "calories": user.target_calories,
-                "protein_g": user.target_protein,
-                "carbs_g": user.target_carbs,
-                "fat_g": user.target_fat
+                "calories": user.target_calories or 2000.0,
+                "protein_g": user.target_protein or 120.0,
+                "carbs_g": user.target_carbs or 250.0,
+                "fat_g": user.target_fat or 60.0,
+                "water_target_ml": user.water_target_ml or 2500.0
             },
             "averages_7_days": {
                 "calories": round(avg_cal_weekly, 2),

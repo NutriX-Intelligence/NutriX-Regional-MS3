@@ -13,7 +13,7 @@ try:
 except Exception:
     pass
 
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File, Form
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from datetime import datetime, date
@@ -51,6 +51,17 @@ from app.services import homely_meals_engine
 # Create tables in the SQLite database if they don't exist
 Base.metadata.create_all(bind=engine)
 
+# Auto-migrate SQLite columns if missing
+try:
+    with engine.begin() as conn:
+        from sqlalchemy import text
+        res = conn.execute(text("PRAGMA table_info(profiles)")).fetchall()
+        cols = [r[1] for r in res]
+        if "water_target_ml" not in cols:
+            conn.execute(text("ALTER TABLE profiles ADD COLUMN water_target_ml FLOAT;"))
+except Exception as e:
+    pass
+
 app = FastAPI(
     title="NutriX AI Diet Planner API",
     description="Intelligent, production-grade nutrition recommendation and meal plan optimization system.",
@@ -67,6 +78,10 @@ def read_root():
         return HTMLResponse(content="<h1>NutriX - AI Diet Planner</h1><p>Frontend template not found.</p>")
     with open(template_path, "r", encoding="utf-8") as f:
         html_content = f.read()
+    
+    # Ensure current GOOGLE_CLIENT_ID from .env/environment is injected
+    client_id = os.environ.get("GOOGLE_CLIENT_ID", "646201262537-nmt9gmqglkrad4vk495k1qe05hnh57o5.apps.googleusercontent.com")
+    html_content = html_content.replace('data-client_id="984515824955-jjec804gresaml38o7eicr2cegklmqtt.apps.googleusercontent.com"', f'data-client_id="{client_id}"')
     return HTMLResponse(content=html_content)
 
 @app.get("/api/health")
@@ -121,9 +136,9 @@ def format_user_profile(user: models.User) -> Dict[str, Any]:
     likes_list = []
     allergies_list = []
     dislikes_list = []
-    for p in user.preferences:
-        t = p.preference_type.lower()
-        val = p.value.strip()
+    for p in (user.preferences or []):
+        t = (p.preference_type or "").lower()
+        val = (p.value or "").strip()
         if t == "diet_type":
             diet_type = val
         elif t == "like":
@@ -147,6 +162,7 @@ def format_user_profile(user: models.User) -> Dict[str, Any]:
         "target_protein": user.target_protein or targets.get("target_protein_g") or 120.0,
         "target_carbs": user.target_carbs or targets.get("target_carbs_g") or 250.0,
         "target_fat": user.target_fat or targets.get("target_fat_g") or 60.0,
+        "water_target_ml": user.water_target_ml or targets.get("water_target_ml") or 2500.0,
         "bmi": targets.get("bmi"),
         "bmi_status": targets.get("bmi_status"),
         "bmr": targets.get("bmr"),
@@ -160,12 +176,28 @@ def format_user_profile(user: models.User) -> Dict[str, Any]:
 
 @app.post("/api/auth/register", response_model=schemas.AuthTokenResponse, status_code=status.HTTP_201_CREATED)
 def register_user(req: schemas.UserRegisterRequest, db: Session = Depends(get_db)):
+    if not req.name or not req.name.strip():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Full Name is required."
+        )
+    if not req.email or "@" not in req.email or "." not in req.email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Please provide a valid email address."
+        )
+    if not req.password or len(req.password) < 6:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Password must be at least 6 characters long."
+        )
+
     # Check if user already exists
-    existing_user = db.query(models.User).filter(models.User.email == req.email).first()
+    existing_user = db.query(models.User).filter(models.User.email == req.email.strip().lower()).first()
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="A user with this email address already exists."
+            detail="An account with this email already exists. Please sign in instead."
         )
 
     # Compute targets using NutritionEngine
@@ -180,8 +212,8 @@ def register_user(req: schemas.UserRegisterRequest, db: Session = Depends(get_db
 
     # Create new user
     user = models.User(
-        name=req.name,
-        email=req.email,
+        name=req.name.strip(),
+        email=req.email.strip().lower(),
         hashed_password=hash_password(req.password),
         age=req.age,
         gender=req.gender,
@@ -192,7 +224,8 @@ def register_user(req: schemas.UserRegisterRequest, db: Session = Depends(get_db
         target_calories=targets["target_calories"],
         target_protein=targets["target_protein_g"],
         target_carbs=targets["target_carbs_g"],
-        target_fat=targets["target_fat_g"]
+        target_fat=targets["target_fat_g"],
+        water_target_ml=req.water_target_ml or targets["water_target_ml"]
     )
     db.add(user)
     db.flush() # Eagerly generate ID
@@ -223,17 +256,28 @@ def register_user(req: schemas.UserRegisterRequest, db: Session = Depends(get_db
 
 @app.post("/api/auth/login", response_model=schemas.AuthTokenResponse)
 def login_user(req: schemas.UserLoginRequest, db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.email == req.email).first()
-    if not user or not user.hashed_password:
+    if not req.email or not req.email.strip():
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password."
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email address is required."
+        )
+    if not req.password:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Password is required."
         )
 
-    if not verify_password(req.password, user.hashed_password):
+    user = db.query(models.User).filter(models.User.email == req.email.strip().lower()).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Please sign up or create an account."
+        )
+
+    if not user.hashed_password or not verify_password(req.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password."
+            detail="Incorrect password. Please try again."
         )
 
     token_data = {"sub": user.email, "id": user.id}
@@ -533,6 +577,8 @@ def calculate_profile(profile_in: schemas.UserProfileCreate, db: Session = Depen
         goal=profile_in.goal
     )
 
+    water_target = profile_in.water_target_ml or targets["water_target_ml"]
+
     # Check if user already exists
     user = db.query(models.User).filter(models.User.email == profile_in.email).first()
     if user:
@@ -548,6 +594,7 @@ def calculate_profile(profile_in: schemas.UserProfileCreate, db: Session = Depen
         user.target_protein = targets["target_protein_g"]
         user.target_carbs = targets["target_carbs_g"]
         user.target_fat = targets["target_fat_g"]
+        user.water_target_ml = water_target
         
         # Delete old preferences to replace them
         db.query(models.UserPreference).filter(models.UserPreference.user_id == user.id).delete()
@@ -565,7 +612,8 @@ def calculate_profile(profile_in: schemas.UserProfileCreate, db: Session = Depen
             target_calories=targets["target_calories"],
             target_protein=targets["target_protein_g"],
             target_carbs=targets["target_carbs_g"],
-            target_fat=targets["target_fat_g"]
+            target_fat=targets["target_fat_g"],
+            water_target_ml=water_target
         )
         db.add(user)
         db.flush() # Eagerly generate ID
@@ -583,48 +631,7 @@ def calculate_profile(profile_in: schemas.UserProfileCreate, db: Session = Depen
     db.commit()
     db.refresh(user)
 
-    # Return targets as additional dict fields (not stored in DB but computed)
-    diet_type = "Non-Vegetarian"
-    likes_list = []
-    allergies_list = []
-    dislikes_list = []
-    for p in user.preferences:
-        t = p.preference_type.lower()
-        val = p.value.strip()
-        if t == "diet_type":
-            diet_type = val
-        elif t == "like":
-            likes_list.append(val)
-        elif t == "allergy":
-            allergies_list.append(val)
-        elif t == "dislike":
-            dislikes_list.append(val)
-
-    response_data = {
-        "id": user.id,
-        "name": user.name,
-        "email": user.email,
-        "age": user.age,
-        "gender": user.gender,
-        "height": user.height,
-        "weight": user.weight,
-        "activity_level": user.activity_level,
-        "goal": user.goal,
-        "target_calories": user.target_calories,
-        "target_protein": user.target_protein,
-        "target_carbs": user.target_carbs,
-        "target_fat": user.target_fat,
-        "bmi": targets.get("bmi"),
-        "bmi_status": targets.get("bmi_status"),
-        "bmr": targets.get("bmr"),
-        "tdee": targets.get("tdee"),
-        "created_at": user.created_at,
-        "diet_type": diet_type,
-        "likes": ", ".join(likes_list),
-        "allergies": ", ".join(allergies_list),
-        "dislikes": ", ".join(dislikes_list),
-    }
-    return response_data
+    return format_user_profile(user)
 
 @app.post("/recommend-foods", response_model=List[schemas.RankedFoodItem])
 def recommend_foods(req: schemas.RecommendFoodsRequest, db: Session = Depends(get_db)):
@@ -828,6 +835,19 @@ def get_recipe_detail(recipe_code: str, db: Session = Depends(get_db)):
             "sodium_mg": recipe.nutrition.sodium_mg,
         }
 
+    # Generate brief appetizing description
+    desc = ""
+    if recipe.instructions:
+        first_sentence = recipe.instructions.split(".")[0].strip()
+        if len(first_sentence) > 15:
+            desc = first_sentence + "."
+    if not desc or len(desc) < 15:
+        ing_highlights = [i["food_name"] or i["ingredient_name"] for i in ingredients_list if i.get("food_name") or i.get("ingredient_name")][:3]
+        ing_str = f" featuring {', '.join(ing_highlights)}" if ing_highlights else ""
+        cal_val = nutrition_data.get('energy_kcal') if nutrition_data else 0
+        cal_str = f" delivering ~{int(cal_val)} kcal" if cal_val else ""
+        desc = f"A wholesome {recipe.cuisine or ''} {recipe.category or 'culinary specialty'}{ing_str}{cal_str} with balanced macro profile."
+
     return {
         "recipe_code": recipe.recipe_code,
         "recipe_name": recipe.recipe_name,
@@ -836,6 +856,7 @@ def get_recipe_detail(recipe_code: str, db: Session = Depends(get_db)):
         "difficulty": recipe.difficulty,
         "cooking_time_minutes": recipe.cooking_time_minutes,
         "dietary_tag": RecommendationEngine.get_dietary_tag(recipe),
+        "description": desc,
         "instructions": recipe.instructions,
         "primarysource": recipe.primarysource,
         "ingredients": ingredients_list,
@@ -947,8 +968,12 @@ def recommend_recipes_by_ingredients(
 
         # Max cooking time
         if req.max_cooking_time is not None:
-            if r.cooking_time_minutes and r.cooking_time_minutes > req.max_cooking_time:
-                continue
+            if req.max_cooking_time == 999 or req.max_cooking_time == 9999:
+                if not r.cooking_time_minutes or r.cooking_time_minutes <= 60:
+                    continue
+            elif req.max_cooking_time > 0:
+                if r.cooking_time_minutes and r.cooking_time_minutes > req.max_cooking_time:
+                    continue
 
         # Exclude ingredient filter
         if req.exclude_ingredients:
@@ -1110,8 +1135,12 @@ def filter_recipes(req: schemas_recipes.RecipeFilterRequest, db: Session = Depen
                 continue
 
         if req.max_cooking_time is not None:
-            if r.cooking_time_minutes and r.cooking_time_minutes > req.max_cooking_time:
-                continue
+            if req.max_cooking_time == 999 or req.max_cooking_time == 9999:
+                if not r.cooking_time_minutes or r.cooking_time_minutes <= 60:
+                    continue
+            elif req.max_cooking_time > 0:
+                if r.cooking_time_minutes and r.cooking_time_minutes > req.max_cooking_time:
+                    continue
 
         # Diet type filter
         if req.diet_type:
@@ -1146,6 +1175,18 @@ def filter_recipes(req: schemas_recipes.RecipeFilterRequest, db: Session = Depen
                 "sodium_mg": r.nutrition.sodium_mg,
             }
 
+        desc = ""
+        if r.instructions:
+            first_sentence = r.instructions.split(".")[0].strip()
+            if len(first_sentence) > 15:
+                desc = first_sentence + "."
+        if not desc or len(desc) < 15:
+            ing_highlights = [i["food_name"] or i["ingredient_name"] for i in ingredients_list if i.get("food_name") or i.get("ingredient_name")][:3]
+            ing_str = f" featuring {', '.join(ing_highlights)}" if ing_highlights else ""
+            cal_val = nutrition_data.get('energy_kcal') if nutrition_data else 0
+            cal_str = f" delivering ~{int(cal_val)} kcal" if cal_val else ""
+            desc = f"A wholesome {r.cuisine or ''} {r.category or 'culinary specialty'}{ing_str}{cal_str} with balanced macro profile."
+
         results.append({
             "recipe_code": r.recipe_code,
             "recipe_name": r.recipe_name,
@@ -1153,6 +1194,7 @@ def filter_recipes(req: schemas_recipes.RecipeFilterRequest, db: Session = Depen
             "cuisine": r.cuisine,
             "difficulty": r.difficulty,
             "cooking_time_minutes": r.cooking_time_minutes,
+            "description": desc,
             "instructions": r.instructions,
             "primarysource": r.primarysource,
             "ingredients": ingredients_list,
@@ -1249,7 +1291,7 @@ def train_ml_model(
 
 @app.post("/track-weight")
 def track_weight(req: schemas.TrackWeightRequest, db: Session = Depends(get_db)):
-    """Log weight, update adherence, and run adaptive planner to adjust future targets."""
+    """Log weight, dynamically update user profile metrics and water target, update adherence, and run adaptive planner."""
     user = db.query(models.User).filter(models.User.id == req.user_id).first()
     if not user:
         raise HTTPException(
@@ -1276,6 +1318,21 @@ def track_weight(req: schemas.TrackWeightRequest, db: Session = Depends(get_db))
     # Update current user weight
     user.weight = req.weight
 
+    # Dynamically update targets & water target with new weight
+    targets = NutritionEngine.calculate_targets(
+        age=user.age or 25,
+        gender=user.gender or "male",
+        height=user.height or 170.0,
+        weight=req.weight,
+        activity_level=user.activity_level or "sedentary",
+        goal=user.goal or "maintenance"
+    )
+    user.target_calories = targets["target_calories"]
+    user.target_protein = targets["target_protein_g"]
+    user.target_carbs = targets["target_carbs_g"]
+    user.target_fat = targets["target_fat_g"]
+    user.water_target_ml = targets["water_target_ml"]
+
     # 2. Update adherence on meal plan for the day if specified
     if req.adherence is not None:
         meal_plan = db.query(models.GeneratedMealPlan).filter(
@@ -1285,7 +1342,6 @@ def track_weight(req: schemas.TrackWeightRequest, db: Session = Depends(get_db))
         if meal_plan:
             meal_plan.adherence = req.adherence
         else:
-            # Create a shell meal plan just to record adherence if none existed
             db_plan = models.GeneratedMealPlan(
                 user_id=req.user_id,
                 plan_date=logged_at,
@@ -1294,6 +1350,7 @@ def track_weight(req: schemas.TrackWeightRequest, db: Session = Depends(get_db))
             db.add(db_plan)
 
     db.commit()
+    db.refresh(user)
 
     # 3. Run Adaptive Planner to check trends and adjust targets
     analysis = AdaptivePlanner.track_and_adjust(db=db, user_id=req.user_id)
@@ -1305,8 +1362,141 @@ def track_weight(req: schemas.TrackWeightRequest, db: Session = Depends(get_db))
             "date": logged_at
         },
         "adherence_logged": req.adherence,
-        "adaptive_adjustment": analysis
+        "adaptive_adjustment": analysis,
+        "user_profile": format_user_profile(user)
     }
+
+@app.delete("/api/weight-logs/{log_id}")
+def delete_weight_log(log_id: int, db: Session = Depends(get_db)):
+    """Delete a specific weight log entry and restore previous latest weight."""
+    db_log = db.query(models.WeightLog).filter(models.WeightLog.id == log_id).first()
+    if not db_log:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Weight log entry not found.")
+    user_id = db_log.user_id
+    db.delete(db_log)
+    db.commit()
+
+    # Update latest weight on user profile if needed
+    latest = db.query(models.WeightLog).filter(models.WeightLog.user_id == user_id).order_by(models.WeightLog.logged_at.desc()).first()
+    if latest:
+        user = db.query(models.User).filter(models.User.id == user_id).first()
+        if user:
+            user.weight = latest.weight
+            targets = NutritionEngine.calculate_targets(
+                age=user.age or 25,
+                gender=user.gender or "male",
+                height=user.height or 170.0,
+                weight=latest.weight,
+                activity_level=user.activity_level or "sedentary",
+                goal=user.goal or "maintenance"
+            )
+            user.target_calories = targets["target_calories"]
+            user.target_protein = targets["target_protein_g"]
+            user.target_carbs = targets["target_carbs_g"]
+            user.target_fat = targets["target_fat_g"]
+            user.water_target_ml = targets["water_target_ml"]
+            db.commit()
+
+    return {"status": "success", "message": f"Deleted weight log {log_id}"}
+
+
+# =====================================================================
+# WATER LOGGING ENDPOINTS
+# =====================================================================
+
+@app.post("/api/water-logs", response_model=schemas.WaterLogResponse, status_code=status.HTTP_201_CREATED)
+def log_water_intake(req: schemas.WaterLogCreate, db: Session = Depends(get_db)):
+    """Log water intake for a user."""
+    user = db.query(models.User).filter(models.User.id == req.user_id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with ID {req.user_id} not found.")
+
+    from datetime import datetime, date, time
+    from sqlalchemy import or_, and_, func
+
+    logged_date = req.logged_at or date.today()
+
+    db_log = models.WaterLog(
+        user_id=req.user_id,
+        amount_ml=req.amount_ml,
+        logged_at=logged_date
+    )
+    db.add(db_log)
+    db.commit()
+    db.refresh(db_log)
+    return db_log
+
+
+@app.get("/api/water-logs/today/{user_id}", response_model=schemas.WaterTodayResponse)
+def get_today_water_logs(user_id: int, log_date: Optional[str] = None, db: Session = Depends(get_db)):
+    """Fetch all water logs for today (or specified date), along with total intake and personalized target."""
+    from datetime import datetime, date, time
+    from sqlalchemy import or_, and_, func
+    try:
+        target_date = date.fromisoformat(log_date) if log_date else date.today()
+    except Exception:
+        target_date = date.today()
+
+    start_of_day = datetime.combine(target_date, time.min)
+    end_of_day = datetime.combine(target_date, time.max)
+
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    target_ml = 2500.0
+    if user:
+        target_ml = user.water_target_ml or NutritionEngine.calculate_water_target(user.weight or 70.0, user.activity_level or "sedentary")
+
+    logs = db.query(models.WaterLog).filter(
+        models.WaterLog.user_id == user_id,
+        or_(
+            models.WaterLog.logged_at == target_date,
+            and_(models.WaterLog.logged_at >= start_of_day, models.WaterLog.logged_at <= end_of_day),
+            func.date(models.WaterLog.logged_at) == target_date.isoformat()
+        )
+    ).order_by(models.WaterLog.id.asc()).all()
+
+    total_ml = sum(float(l.amount_ml or 0.0) for l in logs)
+    pct = round((total_ml / target_ml * 100.0), 1) if target_ml > 0 else 0.0
+
+    return {
+        "user_id": user_id,
+        "date": target_date,
+        "total_ml": round(total_ml, 1),
+        "target_ml": round(target_ml, 1),
+        "progress_pct": min(pct, 200.0),
+        "logs": logs
+    }
+
+
+@app.get("/api/water-logs/history/{user_id}", response_model=schemas.WaterHistoryResponse)
+def get_water_history(user_id: int, days: int = 30, db: Session = Depends(get_db)):
+    """Fetch daily aggregated water intake history for trends."""
+    from datetime import date, timedelta
+    from sqlalchemy import func
+    cutoff = date.today() - timedelta(days=days)
+    records = db.query(
+        models.WaterLog.logged_at,
+        func.sum(models.WaterLog.amount_ml).label("total_ml")
+    ).filter(
+        models.WaterLog.user_id == user_id,
+        models.WaterLog.logged_at >= cutoff
+    ).group_by(models.WaterLog.logged_at).order_by(models.WaterLog.logged_at.asc()).all()
+
+    history = [
+        {"date": r[0].isoformat() if hasattr(r[0], "isoformat") else str(r[0]), "total_ml": round(float(r[1] or 0.0), 1)}
+        for r in records
+    ]
+    return {"user_id": user_id, "history": history}
+
+
+@app.delete("/api/water-logs/{log_id}")
+def delete_water_log(log_id: int, db: Session = Depends(get_db)):
+    """Delete a specific water log entry."""
+    db_log = db.query(models.WaterLog).filter(models.WaterLog.id == log_id).first()
+    if not db_log:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Water log entry not found.")
+    db.delete(db_log)
+    db.commit()
+    return {"status": "success", "message": f"Deleted water log {log_id}"}
 
 
 # =====================================================================
@@ -1353,15 +1543,76 @@ def get_dietary_substitutions(req: schemas.SubstitutionRequest):
 
 
 @app.get("/api/barcode/{barcode}")
-def scan_barcode(barcode: str, db: Session = Depends(get_db)):
-    """Fetch product details by barcode, utilizing local caching and Open Food Facts API."""
-    result = BarcodeService.get_product(db, barcode)
+def scan_barcode(barcode: str, diet_type: Optional[str] = None, user_id: Optional[int] = None, db: Session = Depends(get_db)):
+    """Fetch product details by barcode, utilizing local caching, Open Food Facts API, web scraper, and Gemini API."""
+    if user_id and not diet_type:
+        user = db.query(models.User).filter(models.User.id == user_id).first()
+        if user:
+            diet_type = user.diet_type
+    result = BarcodeService.get_product(db, barcode, diet_type=diet_type or "all")
     if result.get("status") == "error":
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=result["message"]
         )
     return result
+
+
+@app.post("/api/barcode/scan-image")
+async def scan_barcode_from_image(
+    file: UploadFile = File(...),
+    diet_type: Optional[str] = Form(None),
+    user_id: Optional[int] = Form(None),
+    db: Session = Depends(get_db)
+):
+    """Detect barcode and/or OCR nutrition facts from uploaded image using OpenCV/Gemini Vision AI."""
+    contents = await file.read()
+    if not contents:
+        raise HTTPException(status_code=400, detail="Empty image file uploaded.")
+
+    if user_id and not diet_type:
+        user = db.query(models.User).filter(models.User.id == user_id).first()
+        if user:
+            diet_type = user.diet_type
+
+    # 1. Try to detect barcode number
+    barcode = BarcodeService.detect_barcode_from_image(contents)
+    product = None
+    if barcode:
+        product = BarcodeService.get_product(db, barcode, diet_type=diet_type or "all")
+
+    # 2. Extract OCR label facts
+    ocr_result = OCREngine.parse_label_image(contents)
+    has_valid_ocr = bool(ocr_result and (
+        (ocr_result.get("nutrients") and float(ocr_result["nutrients"].get("energy_kcal", 0.0) or 0.0) > 0.0) or
+        (ocr_result.get("detected_text") and len(ocr_result["detected_text"].strip()) > 10)
+    ))
+
+    # 3. Return appropriate response
+    if barcode and product and product.get("status") == "success":
+        if has_valid_ocr:
+            return {
+                "type": "dual",
+                "barcode": barcode,
+                "product": product,
+                "ocr_result": ocr_result
+            }
+        return {
+            "type": "barcode",
+            "barcode": barcode,
+            "product": product
+        }
+
+    if has_valid_ocr:
+        return {
+            "type": "ocr",
+            "ocr_result": ocr_result
+        }
+
+    raise HTTPException(
+        status_code=400,
+        detail="Could not detect a clear barcode or nutrition facts label in the image. Please try a clearer photo or enter the barcode manually."
+    )
 
 
 @app.post("/api/barcode/manual")
@@ -1688,7 +1939,7 @@ def get_homely_builder_defaults(db: Session = Depends(get_db)):
     
     def get_nutrients_or_fallback(code, fallback_dict):
         item = items_map.get(code)
-        if item and item.nutrients:
+        if item and item.nutrients and (item.nutrients.energy_kcal or 0) > 0:
             n = item.nutrients
             return {
                 "name": item.name,
@@ -1708,6 +1959,7 @@ def get_homely_builder_defaults(db: Session = Depends(get_db)):
             "name": "Paneer Tikka (Home Made)",
             "unit": "piece",
             "unit_weight_g": 25.0,
+            "type": "Standard",
             "nutrients_100g": get_nutrients_or_fallback("IND_FOOD_0078", {
                 "name": "Paneer Tikka", "energy_kcal": 190.0, "protein_g": 14.0, "carb_g": 4.5, "fat_g": 13.0, "fibre_g": 0.5, "sodium_mg": 380.0, "sugar_g": 1.2
             })
@@ -1717,15 +1969,37 @@ def get_homely_builder_defaults(db: Session = Depends(get_db)):
             "name": "Chicken Tikka (Home Made)",
             "unit": "piece",
             "unit_weight_g": 30.0,
+            "type": "Standard",
             "nutrients_100g": get_nutrients_or_fallback("IND_FOOD_0026", {
                 "name": "Chicken Tikka", "energy_kcal": 150.0, "protein_g": 18.0, "carb_g": 3.0, "fat_g": 7.0, "fibre_g": 0.2, "sodium_mg": 410.0, "sugar_g": 0.8
             })
+        },
+        {
+            "code": "Roti",
+            "name": "Wheat Roti / Chapati",
+            "unit": "piece",
+            "unit_weight_g": 35.0,
+            "type": "Standard",
+            "nutrients_100g": {
+                "name": "Roti", "energy_kcal": 240.0, "protein_g": 8.0, "carb_g": 48.0, "fat_g": 2.0, "fibre_g": 6.5, "sodium_mg": 180.0, "sugar_g": 1.0
+            }
+        },
+        {
+            "code": "Dal_Tadka",
+            "name": "Yellow Dal Tadka",
+            "unit": "bowl",
+            "unit_weight_g": 150.0,
+            "type": "Standard",
+            "nutrients_100g": {
+                "name": "Dal Tadka", "energy_kcal": 115.0, "protein_g": 6.2, "carb_g": 16.0, "fat_g": 3.5, "fibre_g": 3.8, "sodium_mg": 320.0, "sugar_g": 0.8
+            }
         },
         {
             "code": "Samosa",
             "name": "Samosa (Home Made)",
             "unit": "piece",
             "unit_weight_g": 50.0,
+            "type": "Standard",
             "nutrients_100g": {
                 "name": "Samosa", "energy_kcal": 260.0, "protein_g": 4.5, "carb_g": 32.0, "fat_g": 12.0, "fibre_g": 1.5, "sodium_mg": 290.0, "sugar_g": 1.0
             }
@@ -1735,6 +2009,7 @@ def get_homely_builder_defaults(db: Session = Depends(get_db)):
             "name": "Khaman Dhokla (Home Made)",
             "unit": "piece",
             "unit_weight_g": 35.0,
+            "type": "Standard",
             "nutrients_100g": {
                 "name": "Dhokla", "energy_kcal": 160.0, "protein_g": 6.0, "carb_g": 28.0, "fat_g": 2.5, "fibre_g": 1.8, "sodium_mg": 340.0, "sugar_g": 4.0
             }
@@ -1744,6 +2019,7 @@ def get_homely_builder_defaults(db: Session = Depends(get_db)):
             "name": "Idli (Home Made)",
             "unit": "piece",
             "unit_weight_g": 40.0,
+            "type": "Standard",
             "nutrients_100g": {
                 "name": "Idli", "energy_kcal": 100.0, "protein_g": 2.5, "carb_g": 22.0, "fat_g": 0.2, "fibre_g": 1.0, "sodium_mg": 120.0, "sugar_g": 0.2
             }
@@ -1753,16 +2029,54 @@ def get_homely_builder_defaults(db: Session = Depends(get_db)):
             "name": "Plain Dosa (Home Made)",
             "unit": "serving",
             "unit_weight_g": 80.0,
+            "type": "Standard",
             "nutrients_100g": {
                 "name": "Dosa", "energy_kcal": 170.0, "protein_g": 4.0, "carb_g": 35.0, "fat_g": 1.5, "fibre_g": 1.2, "sodium_mg": 180.0, "sugar_g": 0.3
             }
         }
     ]
 
+    # Query approved Community Homely Meals to include in base selections
+    try:
+        comm_meals = db.query(models.HomelyMeal).options(joinedload(models.HomelyMeal.nutrition)).filter(
+            models.HomelyMeal.status == "approved"
+        ).order_by(models.HomelyMeal.id.desc()).limit(20).all()
+        for cm in comm_meals:
+            nut = cm.nutrition
+            if nut and nut.energy_kcal:
+                base_meals.append({
+                    "code": f"HOMELY_{cm.id}",
+                    "name": f"{cm.name} (Community)",
+                    "unit": "serving",
+                    "unit_weight_g": 100.0,
+                    "type": "Community",
+                    "nutrients_100g": {
+                        "name": cm.name,
+                        "energy_kcal": float(nut.energy_kcal),
+                        "protein_g": float(nut.protein_g or 0.0),
+                        "carb_g": float(nut.carb_g or 0.0),
+                        "fat_g": float(nut.fat_g or 0.0),
+                        "fibre_g": float(getattr(nut, "fibre_g", 0.0) or 0.0),
+                        "sodium_mg": float(getattr(nut, "sodium_mg", 0.0) or 0.0),
+                        "sugar_g": float(getattr(nut, "sugar_g", 0.0) or 0.0)
+                    }
+                })
+    except Exception as e:
+        logger.warning(f"Error querying community meals for builder defaults: {e}")
+
     condiments = [
         {
+            "id": "curd_raita",
+            "name": "Dahi / Fresh Curd / Raita",
+            "unit": "tbsp",
+            "unit_weight_g": 20.0,
+            "nutrients_100g": get_nutrients_or_fallback("PACKAGED_0902", {
+                "name": "Dahi Curd", "energy_kcal": 60.0, "protein_g": 3.5, "carb_g": 4.7, "fat_g": 3.2, "fibre_g": 0.0, "sodium_mg": 50.0, "sugar_g": 4.0
+            })
+        },
+        {
             "id": "green_chutney",
-            "name": "Green Chutney (Mint & Cilantro)",
+            "name": "Green Chutney (Mint & Coriander)",
             "unit": "tsp",
             "unit_weight_g": 5.0,
             "nutrients_100g": get_nutrients_or_fallback("IND_FOOD_0045", {
@@ -1771,12 +2085,39 @@ def get_homely_builder_defaults(db: Session = Depends(get_db)):
         },
         {
             "id": "imli_chutney",
-            "name": "Imli Chutney (Tamarind)",
+            "name": "Imli Chutney (Sweet Tamarind)",
             "unit": "tsp",
             "unit_weight_g": 5.0,
             "nutrients_100g": get_nutrients_or_fallback("IND_FOOD_0046", {
                 "name": "Tamarind Chutney", "energy_kcal": 180.0, "protein_g": 1.0, "carb_g": 45.0, "fat_g": 0.2, "fibre_g": 1.5, "sodium_mg": 450.0, "sugar_g": 38.0
             })
+        },
+        {
+            "id": "garlic_chutney",
+            "name": "Red Garlic Chutney (Lahsun)",
+            "unit": "tsp",
+            "unit_weight_g": 5.0,
+            "nutrients_100g": {
+                "name": "Garlic Chutney", "energy_kcal": 125.0, "protein_g": 3.0, "carb_g": 12.0, "fat_g": 7.0, "fibre_g": 2.5, "sodium_mg": 680.0, "sugar_g": 1.5
+            }
+        },
+        {
+            "id": "coconut_chutney",
+            "name": "Fresh Coconut Chutney",
+            "unit": "tbsp",
+            "unit_weight_g": 15.0,
+            "nutrients_100g": {
+                "name": "Coconut Chutney", "energy_kcal": 210.0, "protein_g": 3.2, "carb_g": 8.5, "fat_g": 18.0, "fibre_g": 4.0, "sodium_mg": 380.0, "sugar_g": 2.0
+            }
+        },
+        {
+            "id": "gunpowder_podi",
+            "name": "Gunpowder / Idli Podi + Oil",
+            "unit": "tsp",
+            "unit_weight_g": 5.0,
+            "nutrients_100g": {
+                "name": "Gunpowder Podi", "energy_kcal": 360.0, "protein_g": 15.0, "carb_g": 30.0, "fat_g": 20.0, "fibre_g": 8.0, "sodium_mg": 550.0, "sugar_g": 1.0
+            }
         },
         {
             "id": "tomato_sauce",
@@ -1789,7 +2130,7 @@ def get_homely_builder_defaults(db: Session = Depends(get_db)):
         },
         {
             "id": "butter_ghee",
-            "name": "Butter / Ghee / Oil",
+            "name": "Desi Ghee / Butter",
             "unit": "tsp",
             "unit_weight_g": 5.0,
             "nutrients_100g": {
@@ -1797,13 +2138,67 @@ def get_homely_builder_defaults(db: Session = Depends(get_db)):
             }
         },
         {
-            "id": "curd_raita",
-            "name": "Curd / Plain Yogurt",
+            "id": "crispy_sev",
+            "name": "Crispy Sev / Bhujia Topping",
+            "unit": "tbsp",
+            "unit_weight_g": 10.0,
+            "nutrients_100g": {
+                "name": "Sev Bhujia", "energy_kcal": 560.0, "protein_g": 12.0, "carb_g": 42.0, "fat_g": 38.0, "fibre_g": 4.5, "sodium_mg": 720.0, "sugar_g": 1.5
+            }
+        },
+        {
+            "id": "roasted_peanuts",
+            "name": "Roasted Peanuts / Seeds",
+            "unit": "tbsp",
+            "unit_weight_g": 10.0,
+            "nutrients_100g": {
+                "name": "Peanuts", "energy_kcal": 567.0, "protein_g": 25.8, "carb_g": 16.1, "fat_g": 49.2, "fibre_g": 8.5, "sodium_mg": 18.0, "sugar_g": 4.7
+            }
+        },
+        {
+            "id": "grated_paneer",
+            "name": "Grated Fresh Paneer",
             "unit": "tbsp",
             "unit_weight_g": 15.0,
-            "nutrients_100g": get_nutrients_or_fallback("PACKAGED_0902", {
-                "name": "Curd", "energy_kcal": 60.0, "protein_g": 3.5, "carb_g": 4.5, "fat_g": 3.0, "fibre_g": 0.0, "sodium_mg": 50.0, "sugar_g": 4.0
-            })
+            "nutrients_100g": {
+                "name": "Paneer", "energy_kcal": 265.0, "protein_g": 18.3, "carb_g": 3.4, "fat_g": 20.8, "fibre_g": 0.0, "sodium_mg": 22.0, "sugar_g": 1.5
+            }
+        },
+        {
+            "id": "shredded_cheese",
+            "name": "Shredded Processed Cheese",
+            "unit": "tbsp",
+            "unit_weight_g": 15.0,
+            "nutrients_100g": {
+                "name": "Cheese", "energy_kcal": 320.0, "protein_g": 20.0, "carb_g": 2.5, "fat_g": 26.0, "fibre_g": 0.0, "sodium_mg": 850.0, "sugar_g": 0.5
+            }
+        },
+        {
+            "id": "spicy_pickle",
+            "name": "Mango / Lime Pickle (Achar)",
+            "unit": "tsp",
+            "unit_weight_g": 5.0,
+            "nutrients_100g": {
+                "name": "Pickle", "energy_kcal": 175.0, "protein_g": 2.0, "carb_g": 11.0, "fat_g": 14.0, "fibre_g": 3.0, "sodium_mg": 1200.0, "sugar_g": 2.0
+            }
+        },
+        {
+            "id": "fried_onions",
+            "name": "Fried Onions (Birista)",
+            "unit": "tbsp",
+            "unit_weight_g": 10.0,
+            "nutrients_100g": {
+                "name": "Fried Onions", "energy_kcal": 490.0, "protein_g": 4.5, "carb_g": 48.0, "fat_g": 32.0, "fibre_g": 6.0, "sodium_mg": 280.0, "sugar_g": 8.0
+            }
+        },
+        {
+            "id": "lemon_juice_masala",
+            "name": "Fresh Lemon Juice & Chaat Masala",
+            "unit": "tsp",
+            "unit_weight_g": 5.0,
+            "nutrients_100g": {
+                "name": "Lemon Chaat", "energy_kcal": 25.0, "protein_g": 0.4, "carb_g": 6.0, "fat_g": 0.2, "fibre_g": 0.3, "sodium_mg": 480.0, "sugar_g": 1.5
+            }
         }
     ]
 
@@ -1822,15 +2217,29 @@ def create_custom_homely_meal(req: schemas.HomelyMealCreateRequest, db: Session 
     meal = homely_meals_engine.create_homely_meal(db, req)
     return format_homely_meal_response(meal)
 
-@app.get("/api/homely-meals/pending", response_model=List[schemas.HomelyMealResponse])
-def get_pending_homely_meals(db: Session = Depends(get_db)):
-    """Retrieve all pending homely meals for community kitchen moderation."""
+@app.get("/api/homely-meals/user/{user_id}", response_model=List[schemas.HomelyMealResponse])
+def get_user_homely_meals(user_id: int, db: Session = Depends(get_db)):
+    """Retrieve all homely meals created by a specific user."""
     from sqlalchemy.orm import joinedload
     meals = db.query(models.HomelyMeal).options(
         joinedload(models.HomelyMeal.nutrition),
         joinedload(models.HomelyMeal.ingredients),
         joinedload(models.HomelyMeal.tags)
-    ).filter(models.HomelyMeal.status == "pending").all()
+    ).filter(models.HomelyMeal.creator_id == user_id).order_by(models.HomelyMeal.created_at.desc()).all()
+    return [format_homely_meal_response(m) for m in meals]
+
+@app.get("/api/homely-meals/pending", response_model=List[schemas.HomelyMealResponse])
+def get_pending_homely_meals(exclude_creator_id: Optional[int] = None, db: Session = Depends(get_db)):
+    """Retrieve all pending homely meals for community kitchen moderation."""
+    from sqlalchemy.orm import joinedload
+    query = db.query(models.HomelyMeal).options(
+        joinedload(models.HomelyMeal.nutrition),
+        joinedload(models.HomelyMeal.ingredients),
+        joinedload(models.HomelyMeal.tags)
+    ).filter(models.HomelyMeal.status == "pending")
+    if exclude_creator_id:
+        query = query.filter(models.HomelyMeal.creator_id != exclude_creator_id)
+    meals = query.all()
     return [format_homely_meal_response(m) for m in meals]
 
 @app.post("/api/homely-meals/review/{meal_id}", response_model=schemas.HomelyMealResponse)
@@ -1903,15 +2312,24 @@ def review_comment_homely_meal(meal_id: int, req: schemas.HomelyMealReviewReques
 @app.post("/api/meal-logs", response_model=schemas.MealLogResponse, status_code=status.HTTP_201_CREATED)
 def log_meal_directly(req: schemas.MealLogCreate, db: Session = Depends(get_db)):
     """Log a meal intake for tracking metrics."""
+    target_date = req.log_date
+    if isinstance(target_date, str):
+        try:
+            target_date = date.fromisoformat(target_date)
+        except Exception:
+            target_date = date.today()
+    elif not target_date:
+        target_date = date.today()
+
     db_log = models.MealLog(
         user_id=req.user_id,
-        log_date=req.log_date,
-        meal_type=req.meal_type,
+        log_date=target_date,
+        meal_type=req.meal_type or "Snack",
         food_name=req.food_name,
-        calories=req.calories,
-        protein=req.protein,
-        carbs=req.carbs,
-        fat=req.fat
+        calories=float(req.calories or 0.0),
+        protein=float(req.protein or 0.0),
+        carbs=float(req.carbs or 0.0),
+        fat=float(req.fat or 0.0)
     )
     db.add(db_log)
     db.commit()
@@ -1983,6 +2401,7 @@ def delete_meal_log(log_id: int, db: Session = Depends(get_db)):
     db.delete(db_log)
     db.commit()
     return {"status": "success", "message": f"Deleted meal log {log_id}"}
+
 
 
 

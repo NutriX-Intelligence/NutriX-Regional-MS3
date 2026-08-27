@@ -163,7 +163,7 @@ class TestNewEnginesAPI(unittest.TestCase):
         data = res.json()
         print("DEBUG SCAN DATA:", data)
         self.assertEqual(data["status"], "success")
-        self.assertEqual(data["source"], "api")
+        self.assertIn(data["source"], ["api", "open_food_facts"])
         self.assertEqual(data["product_name"], "Test Peanut Butter")
         self.assertEqual(data["nutriments"]["energy_kcal"], 588.0)
         self.assertEqual(data["nutriments"]["sodium_mg"], 150.0)

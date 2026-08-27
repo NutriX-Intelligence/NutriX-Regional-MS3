@@ -55,7 +55,10 @@ except Exception as e:
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-Base = declarative_base()
+class CustomBase:
+    __table_args__ = {'extend_existing': True}
+
+Base = declarative_base(cls=CustomBase)
 
 def get_db():
     db = SessionLocal()

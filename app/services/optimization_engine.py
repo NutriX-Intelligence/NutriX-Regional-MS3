@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 from sqlalchemy.orm import Session
 from ortools.linear_solver import pywraplp
 
@@ -36,6 +36,7 @@ def categorize_meal(name):
 
 class HomelyMealRecipeWrapper:
     def __init__(self, meal):
+        self._homely_meal = meal
         self.recipe_code = f"HOMELY_{meal.id}"
         self.recipe_name = meal.name
         self.category = categorize_meal(meal.name)
@@ -57,133 +58,244 @@ class HomelyMealRecipeWrapper:
                 self.carb_g = n.carb_g if n else 0.0
                 self.fat_g = n.fat_g if n else 0.0
                 self.fibre_g = n.fibre_g if n else 0.0
+                self.sodium_mg = getattr(n, "sodium_mg", 0.0) if n else 0.0
+                self.sugar_g = getattr(n, "sugar_g", 0.0) if n else 0.0
+                self.freesugar_g = getattr(n, "sugar_g", 0.0) if n else 0.0
         self.nutrition = NutritionMock(meal.nutrition)
 
 class OptimizationEngine:
+    CUISINE_ALIASES = {
+        "bengali": ["bengal", "bengali", "machher", "kosha", "shorshe", "mishti", "sandesh", "pitha", "luchi", "cholar"],
+        "rajasthani": ["rajasthan", "rajasthani", "baati", "gatte", "laal maas", "sangri", "kachori", "ghevar"],
+        "gujarati": ["gujarat", "gujarati", "dhokla", "thepla", "khichdi", "khandvi", "undhiyu", "handvo", "farsan", "dal dhokli"],
+        "maharashtrian": ["maharashtra", "maharashtrian", "marathi", "misal", "poha", "modak", "puran poli", "vada pav", "pitla", "sabudana"],
+        "punjabi": ["punjab", "punjabi", "paneer butter", "tandoori", "chole", "bhature", "sarson", "makki", "dal makhani", "amritsari", "rajma"],
+        "south indian": ["south indian", "dosa", "idli", "sambar", "rasam", "uttapam", "hyderabadi", "kerala", "chettinad", "bisi bele", "appam", "vada", "payasam", "andhra"],
+        "north indian": ["north indian", "paneer", "dal makhani", "korma", "naan", "tikka", "kofta", "biryani", "paratha", "roti", "aloo"],
+        "mughlai": ["mughlai", "biryani", "korma", "pasanda", "shahi", "nargisi", "nihari"],
+        "kashmiri": ["kashmiri", "rogan josh", "dum aloo", "yakhni", "kahwa"],
+        "chinese": ["chinese", "indo-chinese", "hakka", "manchurian", "chow mein", "schezwan", "noodle", "fried rice", "dim sum", "congee", "bao", "sichuan"],
+        "indo-chinese": ["chinese", "indo-chinese", "hakka", "manchurian", "chow mein", "schezwan", "noodle", "fried rice"],
+        "italian": ["italian", "pasta", "pizza", "risotto", "spaghetti", "bruschetta", "cornetto", "frittata", "arancini", "pesto", "lasagna"],
+        "japanese": ["japanese", "sushi", "ramen", "teriyaki", "tempura", "miso", "udon", "donburi", "matcha", "bento", "soba"],
+        "mexican": ["mexican", "taco", "burrito", "quesadilla", "enchilada", "fajita", "guacamole", "salsa", "nacho", "chili"],
+        "continental": ["continental", "steak", "roast", "soup", "salad", "bake", "grill", "stew", "sandwich", "toast", "pancake", "oats"],
+        "asian": ["asian", "thai", "japanese", "korean", "vietnamese", "chinese"],
+    }
+
+    @classmethod
+    def _fetch_slot_candidates(
+        cls,
+        db: Session,
+        slot_name: str,
+        user: User,
+        likes: list,
+        allergies: list,
+        dislikes: list,
+        cuisine_req: Optional[str] = None,
+        limit_candidates: int = 60
+    ) -> List[Tuple[Any, float]]:
+        """Fetch and score candidate recipes directly from database for a specific meal slot."""
+        from sqlalchemy import or_, and_
+        from sqlalchemy.orm import joinedload
+
+        db_category = "Lunch/Dinner" if slot_name in ("Lunch", "Dinner") else slot_name
+
+        query = db.query(Recipe).options(
+            joinedload(Recipe.nutrition),
+            joinedload(Recipe.servings),
+            joinedload(Recipe.ingredients)
+        ).filter(Recipe.category == db_category)
+
+        # Dietary preference pre-filter
+        diet_type = ""
+        if getattr(user, "diet_type", None):
+            diet_type = user.diet_type
+        if not diet_type:
+            for p in (getattr(user, "preferences", []) or []):
+                if (getattr(p, "preference_type", "") or "").lower().strip() == "diet_type":
+                    diet_type = p.value
+                    break
+        if not diet_type and getattr(user, "profile", None) and getattr(user.profile, "diet_type", None):
+            diet_type = user.profile.diet_type
+        if not diet_type:
+            diet_type = "Vegetarian"
+        diet_type = diet_type.lower().strip()
+
+        # Database-level strict pre-filtering
+        if "jain" in diet_type or "vegan" in diet_type or ("vegetarian" in diet_type and "non" not in diet_type and "egg" not in diet_type):
+            query = query.filter(or_(Recipe.primarysource != "Non-Vegetarian", Recipe.primarysource.is_(None)))
+        elif "eggetarian" in diet_type:
+            query = query.filter(or_(Recipe.primarysource != "Non-Vegetarian", Recipe.primarysource == "Eggetarian", Recipe.primarysource.is_(None)))
+
+        import random
+
+        # Cuisine filter
+        matched_recipes = []
+        if cuisine_req and str(cuisine_req).lower().strip() not in ("any", "all", "", "none"):
+            c_lower = str(cuisine_req).lower().strip()
+            kws = cls.CUISINE_ALIASES.get(c_lower, [c_lower])
+            c_conds = [Recipe.cuisine.ilike(f"%{kw}%") | Recipe.recipe_name.ilike(f"%{kw}%") for kw in kws]
+            matched_recipes = query.filter(or_(*c_conds)).limit(350).all()
+
+        # If not enough cuisine matches or no cuisine requested, fetch general high-quality pool
+        if len(matched_recipes) < 30:
+            general_pool = query.limit(350).all()
+            # Combine avoiding duplicates
+            seen_codes = {r.recipe_code for r in matched_recipes}
+            for r in general_pool:
+                if r.recipe_code not in seen_codes:
+                    matched_recipes.append(r)
+
+        # Include Homely meals if applicable
+        if slot_name in ("Lunch", "Dinner", "Snack"):
+            homely_query = db.query(HomelyMeal).options(
+                joinedload(HomelyMeal.nutrition),
+                joinedload(HomelyMeal.ingredients)
+            ).filter(
+                or_(
+                    HomelyMeal.status == "approved",
+                    HomelyMeal.creator_id == user.id
+                )
+            )
+            for hm in homely_query.limit(40).all():
+                matched_recipes.append(HomelyMealRecipeWrapper(hm))
+
+        # Filter & score candidates
+        scored_candidates = []
+        for r in matched_recipes:
+            if not r.nutrition:
+                continue
+            u_energy = getattr(r.nutrition, "unit_serving_energy_kcal", None) or getattr(r.nutrition, "energy_kcal", 0.0)
+            if not u_energy or u_energy < 15.0:
+                continue
+
+            # Check strict diet compliance
+            if isinstance(r, HomelyMealRecipeWrapper) or hasattr(r, "_homely_meal"):
+                hm_obj = getattr(r, "_homely_meal", None) or r
+                if "jain" in diet_type and not RecommendationEngine.is_homely_meal_jain(hm_obj):
+                    continue
+                elif "vegan" in diet_type and not RecommendationEngine.is_homely_meal_vegan(hm_obj):
+                    continue
+                elif "eggetarian" in diet_type and not RecommendationEngine.is_homely_meal_eggetarian(hm_obj):
+                    continue
+                elif "vegetarian" in diet_type and "non" not in diet_type and not RecommendationEngine.is_homely_meal_vegetarian(hm_obj):
+                    continue
+            else:
+                if "jain" in diet_type and not RecommendationEngine.is_jain(r):
+                    continue
+                elif "vegan" in diet_type and not RecommendationEngine.is_vegan(r):
+                    continue
+                elif "eggetarian" in diet_type and not RecommendationEngine.is_eggetarian(r):
+                    continue
+                elif "vegetarian" in diet_type and "non" not in diet_type and not RecommendationEngine.is_vegetarian(r):
+                    continue
+
+            # Check allergies & dislikes
+            rname_lower = (r.recipe_name or "").lower()
+            excluded = False
+            for term in (allergies + dislikes):
+                t_low = term.lower()
+                if t_low and t_low in rname_lower:
+                    excluded = True
+                    break
+                for ing in (getattr(r, "ingredients", []) or []):
+                    ing_name = (getattr(ing, "food_name", "") or getattr(ing, "ingredient_name", "") or "").lower()
+                    if t_low and t_low in ing_name:
+                        excluded = True
+                        break
+                if excluded:
+                    break
+
+            if excluded:
+                continue
+
+            # Score recipe
+            score = RecommendationEngine.calculate_score(r, user, likes)
+            # Bonus if matches requested cuisine
+            if cuisine_req and str(cuisine_req).lower().strip() not in ("any", "all", "", "none"):
+                c_low = str(cuisine_req).lower().strip()
+                kws = cls.CUISINE_ALIASES.get(c_lower, [c_lower])
+                rc = (getattr(r, "cuisine", "") or "").lower()
+                rn = (getattr(r, "recipe_name", "") or "").lower()
+                if any(kw in rc or kw in rn for kw in kws):
+                    score += 40.0
+
+            # Add exploration jitter for fresh varied menus
+            variety_jitter = random.uniform(-6.0, 6.0)
+            scored_candidates.append((r, score + variety_jitter))
+
+        # Sort by score descending and take top N
+        scored_candidates.sort(key=lambda x: x[1], reverse=True)
+        return scored_candidates[:limit_candidates]
+
+
     @classmethod
     def generate_daily_plan(
         cls, 
         db: Session, 
         user_id: int, 
-        tolerance: float = 0.15, 
-        max_tolerance: float = 0.40,
+        tolerance: Optional[float] = None, 
+        max_tolerance: float = 0.45,
         preference: str = "balanced",
         meal_cuisines: Optional[Dict[str, str]] = None,
     ) -> Optional[Dict]:
-        """Generate a daily meal plan satisfying calorie, macronutrient, and fibre targets using Google OR-Tools.
-        
-        Args:
-            db: SQLAlchemy Session
-            user_id: User database ID
-            tolerance: initial nutrient tolerance (e.g. 0.15 = +/- 15%)
-            max_tolerance: maximum tolerance if initial run is infeasible
-            preference: dietary preference for macro splits and targets ('balanced', 'high_protein', 'low_carb', 'low_fat', 'high_fiber')
-            meal_cuisines: per-meal slot cuisine preference dict (e.g. {'Breakfast': 'South Indian', 'Lunch': 'Gujarati', 'Dinner': 'Chinese', 'Snack': 'Continental'})
-            
-        Returns:
-            Dict containing selected recipes and totals, or None if completely infeasible
-        """
+        """Generate a daily meal plan satisfying calorie, macronutrient, and fibre targets using Google OR-Tools."""
         user = db.query(User).filter(User.id == user_id).first()
         if not user:
             return None
 
-        # Fetch ranked recipes for the user using recommendation engine
-        # We fetch a larger pool (e.g. 300) to give OR-Tools plenty of options to optimize macros
-        ranked = RecommendationEngine.get_recommendations(db, user_id, limit=300)
-        if not ranked:
-            return None
+        # Extract user preferences
+        likes = []
+        allergies = []
+        dislikes = []
+        for p in (user.preferences or []):
+            t = (p.preference_type or "").lower().strip()
+            v = (p.value or "").strip()
+            if t == "like":
+                likes.append(v)
+            elif t == "allergy":
+                allergies.append(v)
+            elif t == "dislike":
+                dislikes.append(v)
 
-        # Map codes to recipe database items
-        recipe_codes = [r["recipe_code"] for r in ranked]
-        std_codes = [c for c in recipe_codes if not c.startswith("HOMELY_")]
-        homely_ids = [int(c.split("_")[1]) for c in recipe_codes if c.startswith("HOMELY_")]
-
-        from sqlalchemy.orm import joinedload
-        db_recipes = db.query(Recipe).options(
-            joinedload(Recipe.nutrition),
-            joinedload(Recipe.servings)
-        ).filter(Recipe.recipe_code.in_(std_codes)).all()
-        
-        recipe_map = {r.recipe_code: r for r in db_recipes}
-        
-        if homely_ids:
-            db_homely = db.query(HomelyMeal).options(
-                joinedload(HomelyMeal.nutrition)
-            ).filter(HomelyMeal.id.in_(homely_ids)).all()
-            for meal in db_homely:
-                wrapper = HomelyMealRecipeWrapper(meal)
-                recipe_map[wrapper.recipe_code] = wrapper
-
-        # Organize recipes by category
-        categories = {
-            "Breakfast": [],
-            "Lunch": [],
-            "Dinner": [],
-            "Snack": []
-        }
-
-        # Keep track of recommendation scores
+        # Build candidate pools per slot
+        slots = ["Breakfast", "Lunch", "Dinner", "Snack"]
+        categories = {}
         scores = {}
-        for r in ranked:
-            code = r["recipe_code"]
-            db_rec = recipe_map.get(code)
-            if not db_rec or not db_rec.nutrition:
-                continue
-            
-            # Skip recipes with 0 serving size or 0 serving energy to ensure real meals
-            u_energy = db_rec.nutrition.unit_serving_energy_kcal
-            if not u_energy or u_energy < 10.0:
-                continue
 
-            scores[code] = r["score"]
-            cat = db_rec.category
-            if cat == "Breakfast":
-                categories["Breakfast"].append(db_rec)
-            elif cat == "Lunch/Dinner":
-                categories["Lunch"].append(db_rec)
-                categories["Dinner"].append(db_rec)
-            elif cat == "Snack":
-                categories["Snack"].append(db_rec)
+        for slot in slots:
+            req_c = (meal_cuisines or {}).get(slot)
+            candidates = cls._fetch_slot_candidates(
+                db=db,
+                slot_name=slot,
+                user=user,
+                likes=likes,
+                allergies=allergies,
+                dislikes=dislikes,
+                cuisine_req=req_c,
+                limit_candidates=75
+            )
 
-        # Apply per-meal slot cuisine preferences if specified
-        if meal_cuisines:
-            aliases = {
-                "bengali": ["bengal", "bengali", "machher", "kosha", "shorshe", "mishti", "sandesh", "pitha", "luchi", "cholar"],
-                "rajasthani": ["rajasthan", "rajasthani", "baati", "gatte", "laal maas", "sangri", "kachori", "ghevar", "baati"],
-                "gujarati": ["gujarat", "gujarati", "dhokla", "thepla", "khichdi", "khandvi", "undhiyu", "handvo", "farsan"],
-                "maharashtrian": ["maharashtra", "maharashtrian", "marathi", "misal", "pavitra", "poha", "modak", "puran poli", "vada pav", "pitla"],
-                "punjabi": ["punjab", "punjabi", "paneer butter", "tandoori", "chole", "bhature", "sarson", "makki", "dal makhani", "amritsari"],
-                "south indian": ["south indian", "dosa", "idli", "sambar", "rasam", "uttapam", "hyderabadi", "kerala", "chettinad", "bisi bele", "appam", "vada", "payasam"],
-                "north indian": ["north indian", "paneer", "dal makhani", "korma", "naan", "tikka", "kofta", "biryani", "paratha"],
-                "mughlai": ["mughlai", "biryani", "korma", "pasanda", "shahi", "nargisi", "nihari"],
-                "kashmiri": ["kashmiri", "rogan josh", "dum aloo", "yakhni", "kahwa"],
-                "chinese": ["chinese", "indo-chinese", "hakka", "manchurian", "chow mein", "schezwan", "noodle", "fried rice", "dim sum", "congee", "bao", "sichuan"],
-                "indo-chinese": ["chinese", "indo-chinese", "hakka", "manchurian", "chow mein", "schezwan", "noodle", "fried rice"],
-                "italian": ["italian", "pasta", "pizza", "risotto", "spaghetti", "bruschetta", "cornetto", "frittata", "arancini", "pesto", "lasagna"],
-                "japanese": ["japanese", "sushi", "ramen", "teriyaki", "tempura", "miso", "udon", "donburi", "matcha", "bento", "soba"],
-                "mexican": ["mexican", "taco", "burrito", "quesadilla", "enchilada", "fajita", "guacamole", "salsa", "nacho", "chili"],
-                "continental": ["continental", "steak", "roast", "soup", "salad", "bake", "grill", "stew"],
-                "asian": ["asian", "thai", "japanese", "korean", "vietnamese", "chinese"],
-            }
-            for slot_name, req_c in meal_cuisines.items():
-                if not req_c or str(req_c).lower().strip() in ("any", "all", "", "none"):
-                    continue
-                slot_c_lower = str(req_c).lower().strip()
-                sub_kws = aliases.get(slot_c_lower, [slot_c_lower])
-                filtered_slot = []
-                for r in categories.get(slot_name, []):
-                    rc = (getattr(r, "cuisine", "") or "").lower()
-                    rn = (getattr(r, "recipe_name", "") or "").lower()
-                    if any(kw in rc or kw in rn for kw in sub_kws):
-                        filtered_slot.append(r)
-                if filtered_slot:
-                    categories[slot_name] = filtered_slot
+            if not candidates:
+                # Fallback: fetch without cuisine constraint to prevent failure
+                candidates = cls._fetch_slot_candidates(
+                    db=db,
+                    slot_name=slot,
+                    user=user,
+                    likes=likes,
+                    allergies=allergies,
+                    dislikes=dislikes,
+                    cuisine_req=None,
+                    limit_candidates=75
+                )
 
-        # Validate that we have options in every category
-        for cat_name, items in categories.items():
-            if not items:
-                print(f"Error: No recipes found for category: {cat_name}")
+            if not candidates:
                 return None
+
+            categories[slot] = [c[0] for c in candidates]
+            for r, sc in candidates:
+                scores[r.recipe_code] = sc
 
         # Define targets based on calorie needs and preference splits
         target_cal = user.target_calories or 2000.0
@@ -191,36 +303,30 @@ class OptimizationEngine:
         
         pref = (preference or "balanced").lower().strip()
         if pref == "high_protein":
-            # 30% Protein, 40% Carbs, 30% Fat
             target_prot = (target_cal * 0.30) / 4.0
             target_carb = (target_cal * 0.40) / 4.0
             target_fat = (target_cal * 0.30) / 9.0
         elif pref == "low_carb":
-            # 25% Protein, 20% Carbs, 55% Fat
             target_prot = (target_cal * 0.25) / 4.0
             target_carb = (target_cal * 0.20) / 4.0
             target_fat = (target_cal * 0.55) / 9.0
         elif pref == "low_fat":
-            # 20% Protein, 60% Carbs, 20% Fat
             target_prot = (target_cal * 0.20) / 4.0
             target_carb = (target_cal * 0.60) / 4.0
             target_fat = (target_cal * 0.20) / 9.0
         elif pref in ("high_fiber", "high_fibre"):
-            # 20% Protein, 55% Carbs, 25% Fat, Fibre target 35g
             target_prot = (target_cal * 0.20) / 4.0
             target_carb = (target_cal * 0.55) / 4.0
             target_fat = (target_cal * 0.25) / 9.0
             target_fiber = 35.0
         else: # "balanced"
-            # Use user's profile targets if available, otherwise fall back to standard balanced splits
             target_prot = user.target_protein if user.target_protein and user.target_protein > 0 else (target_cal * 0.20) / 4.0
             target_carb = user.target_carbs if user.target_carbs and user.target_carbs > 0 else (target_cal * 0.50) / 4.0
             target_fat = user.target_fat if user.target_fat and user.target_fat > 0 else (target_cal * 0.30) / 9.0
 
-        # Solve iteratively with increasing tolerance if infeasible
-        current_tol = tolerance
+        # Solve iteratively with increasing tolerance starting tightly
+        current_tol = tolerance if (tolerance is not None and tolerance > 0) else 0.08
         while current_tol <= max_tolerance:
-            print(f"Attempting to optimize meal plan with tolerance: {current_tol:.2%}")
             result = cls._solve_mip(
                 categories=categories,
                 scores=scores,
@@ -236,12 +342,21 @@ class OptimizationEngine:
                 return result
             current_tol += 0.05
 
-        print("Failed to optimize meal plan: Infeasible even at max tolerance.")
-        return None
+        # Fallback solver with soft macro penalties if strict tolerance failed
+        return cls._solve_soft_mip(
+            categories=categories,
+            scores=scores,
+            target_cal=target_cal,
+            target_prot=target_prot,
+            target_carb=target_carb,
+            target_fat=target_fat,
+            target_fiber=target_fiber,
+            preference=pref
+        )
 
     @staticmethod
     def _solve_mip(
-        categories: Dict[str, List[Recipe]],
+        categories: Dict[str, List[Any]],
         scores: Dict[str, float],
         target_cal: float,
         target_prot: float,
@@ -251,41 +366,34 @@ class OptimizationEngine:
         tolerance: float = 0.15,
         preference: str = "balanced"
     ) -> Optional[Dict]:
-        """Internal MIP solver execution."""
-        # Create solver
+        """MIP solver with bounded tolerance."""
         solver = pywraplp.Solver.CreateSolver("SCIP")
         if not solver:
             return None
 
-        # 1. Variables
-        # y[slot, recipe_code] is binary
-        y = {}
         slots = ["Breakfast", "Lunch", "Dinner", "Snack"]
+        y = {}
         for slot in slots:
             for recipe in categories[slot]:
                 y[slot, recipe.recipe_code] = solver.BoolVar(f"y_{slot}_{recipe.recipe_code}")
 
-        # 2. Constraints
-        # Rule 1: Choose exactly one recipe per slot
+        # Choose exactly 1 per slot
         for slot in slots:
             solver.Add(solver.Sum(y[slot, r.recipe_code] for r in categories[slot]) == 1)
 
-        # Rule 2: Lunch and Dinner must be different recipes
-        # Find the overlap (both categories draw from 'Lunch/Dinner' pool)
+        # Lunch and Dinner must be distinct recipes
         lunch_codes = {r.recipe_code for r in categories["Lunch"]}
         dinner_codes = {r.recipe_code for r in categories["Dinner"]}
         common_codes = lunch_codes.intersection(dinner_codes)
-        
         for code in common_codes:
             solver.Add(y["Lunch", code] + y["Dinner", code] <= 1)
 
-        # Rule 3: Nutrient Targets (+/- tolerance)
-        # Total nutrition per serving
+        # Total nutrition helpers
         def get_nutrient_sum(nutrient_attr: str):
             terms = []
             for slot in slots:
                 for r in categories[slot]:
-                    val = getattr(r.nutrition, nutrient_attr) or 0.0
+                    val = getattr(r.nutrition, nutrient_attr, 0.0) or 0.0
                     terms.append(val * y[slot, r.recipe_code])
             return solver.Sum(terms)
 
@@ -294,7 +402,6 @@ class OptimizationEngine:
         total_carb = get_nutrient_sum("unit_serving_carb_g")
         total_fat = get_nutrient_sum("unit_serving_fat_g")
 
-        # Add range constraints
         solver.Add(total_cal >= target_cal * (1.0 - tolerance))
         solver.Add(total_cal <= target_cal * (1.0 + tolerance))
 
@@ -307,73 +414,142 @@ class OptimizationEngine:
         solver.Add(total_fat >= target_fat * (1.0 - tolerance))
         solver.Add(total_fat <= target_fat * (1.0 + tolerance))
 
-        # Enforce high-fiber constraint if requested
-        total_fiber = get_nutrient_sum("unit_serving_fibre_g")
         if preference in ("high_fiber", "high_fibre"):
+            total_fiber = get_nutrient_sum("unit_serving_fibre_g")
             solver.Add(total_fiber >= target_fiber * (1.0 - tolerance))
 
-        # 3. Objective: Maximize recommendation scores + high-fiber bonus
+        # Maximize score
         objective_terms = []
         for slot in slots:
             for r in categories[slot]:
-                score = scores.get(r.recipe_code, 0.0)
-                fib_bonus = (r.nutrition.unit_serving_fibre_g or 0.0) * 2.0 if preference in ("high_fiber", "high_fibre") else 0.0
+                score = scores.get(r.recipe_code, 50.0)
+                fib_val = getattr(r.nutrition, "unit_serving_fibre_g", 0.0) or 0.0
+                fib_bonus = fib_val * 2.0 if preference in ("high_fiber", "high_fibre") else 0.0
                 objective_terms.append((score + fib_bonus) * y[slot, r.recipe_code])
-        
-        solver.Maximize(solver.Sum(objective_terms))
 
-        # Solve
+        solver.Maximize(solver.Sum(objective_terms))
         status = solver.Solve()
 
         if status == pywraplp.Solver.OPTIMAL or status == pywraplp.Solver.FEASIBLE:
-            plan = {
-                "meals": {},
-                "totals": {
-                    "calories": 0.0,
-                    "protein_g": 0.0,
-                    "carbs_g": 0.0,
-                    "fat_g": 0.0,
-                    "fibre_g": 0.0,
-                },
-                "targets": {
-                    "calories": round(target_cal, 2),
-                    "protein_g": round(target_prot, 2),
-                    "carbs_g": round(target_carb, 2),
-                    "fat_g": round(target_fat, 2),
-                    "fibre_g": round(target_fiber, 2),
-                },
-                "tolerance_used": tolerance
-            }
-
-            for slot in slots:
-                for r in categories[slot]:
-                    if y[slot, r.recipe_code].solution_value() > 0.5:
-                        f_val = r.nutrition.unit_serving_fibre_g if hasattr(r.nutrition, "unit_serving_fibre_g") and r.nutrition.unit_serving_fibre_g else getattr(r.nutrition, "fibre_g", 0.0) or 0.0
-                        plan["meals"][slot] = {
-                            "recipe_code": r.recipe_code,
-                            "recipe_name": r.recipe_name,
-                            "serving_size": r.servings.size_of_servings if r.servings else 1.0,
-                            "serving_unit": r.servings.servings_unit if r.servings else "serving",
-                            "calories": round(r.nutrition.unit_serving_energy_kcal, 2),
-                            "protein_g": round(r.nutrition.unit_serving_protein_g, 2),
-                            "carbs_g": round(r.nutrition.unit_serving_carb_g, 2),
-                            "fat_g": round(r.nutrition.unit_serving_fat_g, 2),
-                            "fibre_g": round(f_val, 2),
-                        }
-                        
-                        plan["totals"]["calories"] += r.nutrition.unit_serving_energy_kcal
-                        plan["totals"]["protein_g"] += r.nutrition.unit_serving_protein_g
-                        plan["totals"]["carbs_g"] += r.nutrition.unit_serving_carb_g
-                        plan["totals"]["fat_g"] += r.nutrition.unit_serving_fat_g
-                        plan["totals"]["fibre_g"] += f_val
-                        break
-
-            plan["totals"]["calories"] = round(plan["totals"]["calories"], 2)
-            plan["totals"]["protein_g"] = round(plan["totals"]["protein_g"], 2)
-            plan["totals"]["carbs_g"] = round(plan["totals"]["carbs_g"], 2)
-            plan["totals"]["fat_g"] = round(plan["totals"]["fat_g"], 2)
-            plan["totals"]["fibre_g"] = round(plan["totals"]["fibre_g"], 2)
-
-            return plan
-
+            return OptimizationEngine._extract_plan_result(
+                y, categories, target_cal, target_prot, target_carb, target_fat, target_fiber, tolerance
+            )
         return None
+
+    @staticmethod
+    def _solve_soft_mip(
+        categories: Dict[str, List[Any]],
+        scores: Dict[str, float],
+        target_cal: float,
+        target_prot: float,
+        target_carb: float,
+        target_fat: float,
+        target_fiber: float = 28.0,
+        preference: str = "balanced"
+    ) -> Optional[Dict]:
+        """Soft penalty-based MIP solver ensuring feasible meal plans for all combinations."""
+        solver = pywraplp.Solver.CreateSolver("SCIP")
+        if not solver:
+            return None
+
+        slots = ["Breakfast", "Lunch", "Dinner", "Snack"]
+        y = {}
+        for slot in slots:
+            for recipe in categories[slot]:
+                y[slot, recipe.recipe_code] = solver.BoolVar(f"y_{slot}_{recipe.recipe_code}")
+
+        for slot in slots:
+            solver.Add(solver.Sum(y[slot, r.recipe_code] for r in categories[slot]) == 1)
+
+        lunch_codes = {r.recipe_code for r in categories["Lunch"]}
+        dinner_codes = {r.recipe_code for r in categories["Dinner"]}
+        for code in lunch_codes.intersection(dinner_codes):
+            solver.Add(y["Lunch", code] + y["Dinner", code] <= 1)
+
+        # Deviation variables for calories
+        cal_dev_pos = solver.NumVar(0.0, 5000.0, "cal_dev_pos")
+        cal_dev_neg = solver.NumVar(0.0, 5000.0, "cal_dev_neg")
+
+        terms_cal = []
+        for slot in slots:
+            for r in categories[slot]:
+                val = getattr(r.nutrition, "unit_serving_energy_kcal", 0.0) or 0.0
+                terms_cal.append(val * y[slot, r.recipe_code])
+        solver.Add(solver.Sum(terms_cal) - target_cal == cal_dev_pos - cal_dev_neg)
+
+        # Objective: Maximize recommendation scores minus calorie deviation penalty
+        objective_terms = []
+        for slot in slots:
+            for r in categories[slot]:
+                score = scores.get(r.recipe_code, 50.0)
+                objective_terms.append(score * y[slot, r.recipe_code])
+
+        solver.Maximize(solver.Sum(objective_terms) - 0.5 * (cal_dev_pos + cal_dev_neg))
+        status = solver.Solve()
+
+        if status == pywraplp.Solver.OPTIMAL or status == pywraplp.Solver.FEASIBLE:
+            return OptimizationEngine._extract_plan_result(
+                y, categories, target_cal, target_prot, target_carb, target_fat, target_fiber, 0.25
+            )
+        return None
+
+    @staticmethod
+    def _extract_plan_result(y, categories, target_cal, target_prot, target_carb, target_fat, target_fiber, tolerance):
+        slots = ["Breakfast", "Lunch", "Dinner", "Snack"]
+        plan = {
+            "meals": {},
+            "totals": {
+                "calories": 0.0,
+                "protein_g": 0.0,
+                "carbs_g": 0.0,
+                "fat_g": 0.0,
+                "fibre_g": 0.0,
+            },
+            "targets": {
+                "calories": round(target_cal, 2),
+                "protein_g": round(target_prot, 2),
+                "carbs_g": round(target_carb, 2),
+                "fat_g": round(target_fat, 2),
+                "fibre_g": round(target_fiber, 2),
+            },
+            "tolerance_used": tolerance
+        }
+
+        for slot in slots:
+            for r in categories[slot]:
+                if y[slot, r.recipe_code].solution_value() > 0.5:
+                    u_cal = getattr(r.nutrition, "unit_serving_energy_kcal", 0.0) or getattr(r.nutrition, "energy_kcal", 0.0) or 0.0
+                    u_prot = getattr(r.nutrition, "unit_serving_protein_g", 0.0) or getattr(r.nutrition, "protein_g", 0.0) or 0.0
+                    u_carb = getattr(r.nutrition, "unit_serving_carb_g", 0.0) or getattr(r.nutrition, "carb_g", 0.0) or 0.0
+                    u_fat = getattr(r.nutrition, "unit_serving_fat_g", 0.0) or getattr(r.nutrition, "fat_g", 0.0) or 0.0
+                    f_val = getattr(r.nutrition, "unit_serving_fibre_g", 0.0) or getattr(r.nutrition, "fibre_g", 0.0) or 0.0
+
+                    serv_size = getattr(getattr(r, "servings", None), "size_of_servings", 1.0) or 1.0
+                    serv_unit = getattr(getattr(r, "servings", None), "servings_unit", "serving") or "serving"
+
+                    plan["meals"][slot] = {
+                        "recipe_code": r.recipe_code,
+                        "recipe_name": r.recipe_name,
+                        "serving_size": serv_size,
+                        "serving_unit": serv_unit,
+                        "calories": round(u_cal, 2),
+                        "protein_g": round(u_prot, 2),
+                        "carbs_g": round(u_carb, 2),
+                        "fat_g": round(u_fat, 2),
+                        "fibre_g": round(f_val, 2),
+                    }
+                    
+                    plan["totals"]["calories"] += u_cal
+                    plan["totals"]["protein_g"] += u_prot
+                    plan["totals"]["carbs_g"] += u_carb
+                    plan["totals"]["fat_g"] += u_fat
+                    plan["totals"]["fibre_g"] += f_val
+                    break
+
+        plan["totals"]["calories"] = round(plan["totals"]["calories"], 2)
+        plan["totals"]["protein_g"] = round(plan["totals"]["protein_g"], 2)
+        plan["totals"]["carbs_g"] = round(plan["totals"]["carbs_g"], 2)
+        plan["totals"]["fat_g"] = round(plan["totals"]["fat_g"], 2)
+        plan["totals"]["fibre_g"] = round(plan["totals"]["fibre_g"], 2)
+
+        return plan

@@ -96,6 +96,8 @@ class NutritionEngine:
         else:
             bmi_status = "Obese"
 
+        water_target_ml = cls.calculate_water_target(weight, activity_level)
+
         return {
             "bmi": bmi,
             "bmi_status": bmi_status,
@@ -104,5 +106,20 @@ class NutritionEngine:
             "target_calories": target_calories,
             "target_protein_g": protein_g,
             "target_carbs_g": carbs_g,
-            "target_fat_g": fat_g
+            "target_fat_g": fat_g,
+            "water_target_ml": water_target_ml
         }
+
+    @staticmethod
+    def calculate_water_target(weight: float, activity_level: str = "sedentary") -> float:
+        """Calculate personalized daily water intake in ml based on weight & activity level."""
+        w = weight if weight and weight > 0 else 70.0
+        base = w * 35.0
+        activity_bonus = {
+            "sedentary": 0.0,
+            "lightly_active": 350.0,
+            "moderately_active": 700.0,
+            "active": 1000.0,
+            "very_active": 1400.0
+        }.get((activity_level or "").lower(), 0.0)
+        return round(base + activity_bonus, 0)

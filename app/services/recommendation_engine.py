@@ -152,10 +152,10 @@ class RecommendationEngine:
         # 2. Nutrient Density Score (NDS)
         kcal_100 = nutrition.energy_kcal / 100.0
         
-        prot_density = (nutrition.protein_g or 0.0) / kcal_100
-        fib_density = (nutrition.fibre_g or 0.0) / kcal_100
-        sod_density = (nutrition.sodium_mg or 0.0) / kcal_100
-        sug_density = (nutrition.freesugar_g or 0.0) / kcal_100
+        prot_density = (getattr(nutrition, "protein_g", 0.0) or 0.0) / kcal_100
+        fib_density = (getattr(nutrition, "fibre_g", 0.0) or 0.0) / kcal_100
+        sod_density = (getattr(nutrition, "sodium_mg", 0.0) or 0.0) / kcal_100
+        sug_density = (getattr(nutrition, "freesugar_g", None) or getattr(nutrition, "sugar_g", 0.0) or 0.0) / kcal_100
 
         nds = (min(prot_density * 2.0, 20.0) + 
                min(fib_density * 4.0, 20.0) - 
@@ -290,6 +290,8 @@ class RecommendationEngine:
 
         diet_lower = diet_type.lower()
 
+        import random
+
         query = db.query(Recipe).options(
             joinedload(Recipe.nutrition),
             joinedload(Recipe.ingredients)
@@ -297,7 +299,7 @@ class RecommendationEngine:
         if "jain" in diet_lower or "vegan" in diet_lower or ("vegetarian" in diet_lower and "non" not in diet_lower):
             query = query.filter(or_(Recipe.primarysource != "Non-Vegetarian", Recipe.primarysource.is_(None)))
 
-        recipes = query.limit(500).all()
+        recipes = query.limit(800).all()
         
         homely_meals = db.query(HomelyMeal).options(
             joinedload(HomelyMeal.nutrition),
@@ -345,7 +347,7 @@ class RecommendationEngine:
             if excluded:
                 continue
 
-            score = cls.calculate_score(recipe, user, likes)
+            score = cls.calculate_score(recipe, user, likes) + random.uniform(-3.0, 3.0)
             cuisine = cls.infer_cuisine(recipe.recipe_name, recipe.cuisine)
             health_sc = 80.0
             if hasattr(recipe, "health_score") and recipe.health_score:
@@ -364,6 +366,7 @@ class RecommendationEngine:
                 "carb_g": recipe.nutrition.carb_g if recipe.nutrition else 0.0,
                 "fat_g": recipe.nutrition.fat_g if recipe.nutrition else 0.0
             })
+
 
         # 2. Evaluate homely meals
         for meal in homely_meals:
