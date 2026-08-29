@@ -59,6 +59,11 @@ try:
         cols = [r[1] for r in res]
         if "water_target_ml" not in cols:
             conn.execute(text("ALTER TABLE profiles ADD COLUMN water_target_ml FLOAT;"))
+
+        res_u = conn.execute(text("PRAGMA table_info(users)")).fetchall()
+        cols_u = [r[1] for r in res_u]
+        if "is_onboarded" not in cols_u:
+            conn.execute(text("ALTER TABLE users ADD COLUMN is_onboarded BOOLEAN DEFAULT 1;"))
 except Exception as e:
     pass
 
@@ -172,6 +177,7 @@ def format_user_profile(user: models.User) -> Dict[str, Any]:
         "likes": ", ".join(likes_list),
         "allergies": ", ".join(allergies_list),
         "dislikes": ", ".join(dislikes_list),
+        "is_onboarded": bool(getattr(user, "is_onboarded", True)),
     }
 
 @app.post("/api/auth/register", response_model=schemas.AuthTokenResponse, status_code=status.HTTP_201_CREATED)
@@ -215,6 +221,7 @@ def register_user(req: schemas.UserRegisterRequest, db: Session = Depends(get_db
         name=req.name.strip(),
         email=req.email.strip().lower(),
         hashed_password=hash_password(req.password),
+        is_onboarded=True,
         age=req.age,
         gender=req.gender,
         height=req.height,
@@ -251,6 +258,7 @@ def register_user(req: schemas.UserRegisterRequest, db: Session = Depends(get_db
     return {
         "access_token": access_token,
         "token_type": "bearer",
+        "is_new_user": False,
         "user": user_profile
     }
 
@@ -313,8 +321,10 @@ async def login_google(req: schemas.GoogleLoginRequest, db: Session = Depends(ge
 
     # Check if user exists
     user = db.query(models.User).filter(models.User.email == email).first()
+    is_new_user = False
     if not user:
-        # Create a new user with default metrics
+        is_new_user = True
+        # Create a new user with default metrics and is_onboarded=False
         targets = NutritionEngine.calculate_targets(
             age=25,
             gender="male",
@@ -328,6 +338,7 @@ async def login_google(req: schemas.GoogleLoginRequest, db: Session = Depends(ge
             email=email,
             google_id=google_id,
             avatar_url=picture,
+            is_onboarded=False,
             age=25,
             gender="male",
             height=170.0,
@@ -362,6 +373,7 @@ async def login_google(req: schemas.GoogleLoginRequest, db: Session = Depends(ge
     return {
         "access_token": access_token,
         "token_type": "bearer",
+        "is_new_user": is_new_user,
         "user": user_profile
     }
 
@@ -595,6 +607,7 @@ def calculate_profile(profile_in: schemas.UserProfileCreate, db: Session = Depen
         user.target_carbs = targets["target_carbs_g"]
         user.target_fat = targets["target_fat_g"]
         user.water_target_ml = water_target
+        user.is_onboarded = True
         
         # Delete old preferences to replace them
         db.query(models.UserPreference).filter(models.UserPreference.user_id == user.id).delete()
@@ -603,6 +616,7 @@ def calculate_profile(profile_in: schemas.UserProfileCreate, db: Session = Depen
         user = models.User(
             name=profile_in.name,
             email=profile_in.email,
+            is_onboarded=True,
             age=profile_in.age,
             gender=profile_in.gender,
             height=profile_in.height,

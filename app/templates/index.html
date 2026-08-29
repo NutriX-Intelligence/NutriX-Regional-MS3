@@ -673,6 +673,137 @@
         </div>
     </div>
 
+    <!-- 1st-Time User Preferences & Metrics Onboarding Modal -->
+    <div id="onboardingOverlay" class="login-overlay" style="display:none; z-index:10001; background:rgba(10, 15, 29, 0.94); backdrop-filter:blur(14px);">
+        <div class="login-card" style="max-width: 720px; padding: 28px 32px; border: 1px solid rgba(16, 185, 129, 0.35); box-shadow: 0 25px 60px -15px rgba(0,0,0,0.8), 0 0 40px rgba(16, 185, 129, 0.18);">
+            <div style="text-align:center; margin-bottom: 20px;">
+                <div style="display:inline-flex; align-items:center; gap:8px; padding: 6px 16px; border-radius: 999px; background: rgba(16, 185, 129, 0.12); color: var(--primary); font-size: 13px; font-weight: 600; margin-bottom: 12px; border: 1px solid rgba(16, 185, 129, 0.3);">
+                    ✨ Initial Setup & Personalization
+                </div>
+                <h2 id="onboardingGreeting" style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">
+                    Welcome to NutriX!
+                </h2>
+                <p style="font-size: 13px; color: var(--text-muted); max-width: 540px; margin: 0 auto; line-height: 1.5;">
+                    Help us personalize your nutrition targets, meal plans, and diet recommendations. You only need to set this up once, and you can edit anytime later from your profile.
+                </p>
+            </div>
+
+            <form id="onboardingForm" onsubmit="submitOnboarding(event)">
+                <input type="hidden" id="onboardEmail">
+                <input type="hidden" id="onboardName">
+
+                <!-- Section 1: Biometrics -->
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 16px; text-align: left;">
+                    <div style="font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 12px; display:flex; align-items:center; gap:6px;">
+                        <span>👤</span> 1. Body Metrics & Biometrics
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Age (years) *</label>
+                            <input type="number" id="onboardAge" min="1" max="110" value="25" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Gender *</label>
+                            <select id="onboardGender" required>
+                                <option value="male" selected>Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Height (cm) *</label>
+                            <input type="number" id="onboardHeight" step="0.1" value="175" required oninput="updateOnboardWaterHint()">
+                        </div>
+                        <div class="form-group">
+                            <label>Weight (kg) *</label>
+                            <input type="number" id="onboardWeight" step="0.1" value="70" required oninput="updateOnboardWaterHint()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Goals & Activity -->
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 16px; text-align: left;">
+                    <div style="font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 12px; display:flex; align-items:center; gap:6px;">
+                        <span>🎯</span> 2. Fitness Goal & Activity Level
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Activity Level</label>
+                            <select id="onboardActivity">
+                                <option value="sedentary" selected>Sedentary (desk job, little exercise)</option>
+                                <option value="lightly_active">Lightly Active (1-3 days/week)</option>
+                                <option value="moderately_active">Moderately Active (3-5 days/week)</option>
+                                <option value="active">Active (6-7 days/week)</option>
+                                <option value="very_active">Very Active (heavy labor / athlete)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Primary Fitness Goal</label>
+                            <select id="onboardGoal">
+                                <option value="fat loss">Fat Loss / Weight Loss (Calorie Deficit)</option>
+                                <option value="maintenance" selected>Maintenance (Balanced Nutrition)</option>
+                                <option value="muscle gain">Muscle Gain (High Protein Hypertrophy)</option>
+                                <option value="weight gain">Weight Gain (Calorie Surplus)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Dietary Preferences & Allergies -->
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 16px; text-align: left;">
+                    <div style="font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 12px; display:flex; align-items:center; gap:6px;">
+                        <span>🥗</span> 3. Dietary Preferences & Allergies
+                    </div>
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label>Dietary Type *</label>
+                        <select id="onboardDietType" required>
+                            <option value="Vegetarian" selected>Vegetarian (Dairy allowed, no meat/fish/eggs)</option>
+                            <option value="Non-Vegetarian">Non-Vegetarian (All food groups)</option>
+                            <option value="Eggetarian">Eggetarian (Vegetarian + Eggs)</option>
+                            <option value="Jain">Jain Vegetarian (Strict: No root veg, onion, garlic)</option>
+                            <option value="Vegan">Vegan (100% Plant-based, no dairy/eggs/honey)</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Food Allergies (comma separated)</label>
+                            <input type="text" id="onboardAllergies" placeholder="e.g. peanuts, dairy, gluten, shellfish">
+                        </div>
+                        <div class="form-group">
+                            <label>Favorite Foods / Likes</label>
+                            <input type="text" id="onboardLikes" placeholder="e.g. oats, paneer, chicken, fruits">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Disliked Foods</label>
+                        <input type="text" id="onboardDislikes" placeholder="e.g. bitter gourd, mushrooms">
+                    </div>
+                </div>
+
+                <!-- Section 4: Daily Hydration Target -->
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 20px; text-align: left;">
+                    <div style="font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 8px; display:flex; align-items:center; gap:6px;">
+                        <span>💧</span> 4. Daily Hydration Target (ml)
+                    </div>
+                    <div class="form-row" style="align-items:center;">
+                        <div class="form-group" style="flex:1;">
+                            <input type="number" id="onboardWaterTarget" step="50" min="500" max="8000" placeholder="e.g. 2450">
+                        </div>
+                        <div style="font-size: 12px; color: var(--text-dim); flex: 1.5;" id="onboardWaterHint">
+                            Suggested: ~2450 ml / day (35ml per kg body weight)
+                        </div>
+                    </div>
+                </div>
+
+                <button id="onboardingSubmitBtn" type="submit" class="btn btn-primary" style="width:100%; padding:14px; font-size:15px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <span>Complete Setup & Generate My Plan</span>
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- Main Navigation Header -->
     <header>
         <div class="header-left">
@@ -2228,7 +2359,7 @@
         }
 
         // ==========================
-        // Google Auth & Simulator Handlers
+        // Google Auth & Onboarding Handlers
         // ==========================
         async function handleGoogleSignInResponse(response) {
             if (!response.credential) {
@@ -2250,11 +2381,111 @@
                 localStorage.setItem('token', data.access_token);
                 userId = data.user.id;
                 userData = data.user;
-                await loadUserProfile();
                 closeLogin();
-                showNotification('Welcome, ' + data.user.name + '!', 'success');
+
+                // Check if this is a brand new user or if user hasn't completed initial preference onboarding
+                if (data.is_new_user || data.user.is_onboarded === false) {
+                    openOnboardingModal(data.user);
+                } else {
+                    await loadUserProfile();
+                    showNotification('Welcome back, ' + data.user.name + '!', 'success');
+                }
             } catch (err) {
                 showAuthError(err.message || 'Google Sign-In failed.');
+            }
+        }
+
+        function openOnboardingModal(user) {
+            const overlay = document.getElementById('onboardingOverlay');
+            if (!overlay) return;
+            overlay.style.display = 'flex';
+            document.getElementById('onboardGreeting').textContent = 'Welcome, ' + (user.name || 'Friend') + '! 🎉';
+            document.getElementById('onboardName').value = user.name || '';
+            document.getElementById('onboardEmail').value = user.email || '';
+            document.getElementById('onboardAge').value = user.age || 25;
+            document.getElementById('onboardGender').value = user.gender || 'male';
+            document.getElementById('onboardHeight').value = user.height || 175;
+            document.getElementById('onboardWeight').value = user.weight || 70;
+            document.getElementById('onboardActivity').value = user.activity_level || 'sedentary';
+            document.getElementById('onboardGoal').value = user.goal || 'maintenance';
+            document.getElementById('onboardDietType').value = user.diet_type || 'Vegetarian';
+            document.getElementById('onboardAllergies').value = user.allergies || '';
+            document.getElementById('onboardLikes').value = user.likes || '';
+            document.getElementById('onboardDislikes').value = user.dislikes || '';
+            updateOnboardWaterHint();
+        }
+
+        function closeOnboardingModal() {
+            const overlay = document.getElementById('onboardingOverlay');
+            if (overlay) overlay.style.display = 'none';
+        }
+
+        function updateOnboardWaterHint() {
+            const w = parseFloat(document.getElementById('onboardWeight')?.value) || 70;
+            const target = Math.round(w * 35);
+            const waterIn = document.getElementById('onboardWaterTarget');
+            if (waterIn && !waterIn.value) {
+                waterIn.value = target;
+            }
+            const hint = document.getElementById('onboardWaterHint');
+            if (hint) hint.textContent = 'Suggested: ~' + target + ' ml / day (35ml per kg body weight)';
+        }
+
+        async function submitOnboarding(event) {
+            event.preventDefault();
+            const btn = document.getElementById('onboardingSubmitBtn');
+            setLoading(btn, true, 'Saving Preferences...');
+
+            const name = document.getElementById('onboardName').value.trim() || 'User';
+            const email = document.getElementById('onboardEmail').value.trim();
+            const age = parseInt(document.getElementById('onboardAge').value) || 25;
+            const gender = document.getElementById('onboardGender').value;
+            const height = parseFloat(document.getElementById('onboardHeight').value) || 175;
+            const weight = parseFloat(document.getElementById('onboardWeight').value) || 70;
+            const activity_level = document.getElementById('onboardActivity').value;
+            const goal = document.getElementById('onboardGoal').value;
+            const water_target_ml = parseFloat(document.getElementById('onboardWaterTarget').value) || Math.round(weight * 35);
+
+            const prefs = [
+                { preference_type: 'diet_type', value: document.getElementById('onboardDietType').value }
+            ];
+            document.getElementById('onboardLikes').value.split(',').map(s => s.trim()).filter(Boolean).forEach(v => prefs.push({ preference_type: 'like', value: v }));
+            document.getElementById('onboardAllergies').value.split(',').map(s => s.trim()).filter(Boolean).forEach(v => prefs.push({ preference_type: 'allergy', value: v }));
+            document.getElementById('onboardDislikes').value.split(',').map(s => s.trim()).filter(Boolean).forEach(v => prefs.push({ preference_type: 'dislike', value: v }));
+
+            const payload = {
+                name,
+                email,
+                age,
+                gender,
+                height,
+                weight,
+                activity_level,
+                goal,
+                water_target_ml,
+                preferences: prefs
+            };
+
+            try {
+                const res = await fetchWithAuth('/calculate-profile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!res.ok) {
+                    const errData = await res.json().catch(() => ({}));
+                    throw new Error(errData.detail || 'Could not save initial preferences.');
+                }
+                const data = await res.json();
+                userData = data;
+                userId = data.id;
+                setLoading(btn, false);
+                closeOnboardingModal();
+                await loadUserProfile();
+                showNotification('✨ Setup complete! Welcome to NutriX, ' + data.name + '!', 'success');
+            } catch (err) {
+                setLoading(btn, false);
+                showNotification('Error saving preferences: ' + err.message, 'error');
             }
         }
 
@@ -2421,6 +2652,11 @@
 
                 // Initialize Homely builder
                 initHomelyBuilder();
+
+                // If user has not completed onboarding yet, prompt them
+                if (data.is_onboarded === false) {
+                    openOnboardingModal(data);
+                }
 
             } catch (err) {
                 console.error('Profile load failed:', err);

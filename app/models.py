@@ -14,6 +14,7 @@ class User(Base):
     google_id = Column(String, nullable=True, unique=True)
     avatar_url = Column(String, nullable=True)
     is_active = Column(Boolean, default=True)
+    is_onboarded = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationships

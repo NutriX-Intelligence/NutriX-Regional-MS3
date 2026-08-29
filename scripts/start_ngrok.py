@@ -4,8 +4,9 @@ import urllib.request
 import json
 import os
 import sys
+import argparse
 
-def start_ngrok():
+def start_ngrok(port: int = 8000):
     authtoken = "3FAbA9nGXcCzkUj1jiUr92QYZym_DJ5ku1gfuRYEQrSPKfw8"
     local_ngrok = os.path.expandvars(r"%LOCALAPPDATA%\ngrok\ngrok.exe")
     if os.path.exists(local_ngrok):
@@ -13,9 +14,9 @@ def start_ngrok():
     else:
         ngrok_bin = "ngrok"
         
-    cmd = [ngrok_bin, "http", "8080", "--authtoken", authtoken, "--log", "stdout"]
+    cmd = [ngrok_bin, "http", str(port), "--authtoken", authtoken, "--log", "stdout"]
     
-    print(f"Starting ngrok process: {' '.join(cmd)}")
+    print(f"Starting ngrok process for port {port}: {' '.join(cmd)}")
     log_file = open("ngrok.log", "w", encoding="utf-8")
     process = subprocess.Popen(
         cmd,
@@ -26,7 +27,7 @@ def start_ngrok():
     
     # Let it initialize
     print("Waiting for ngrok to initialize and request tunnel...")
-    for i in range(15):
+    for i in range(20):
         time.sleep(1)
         # Check if process died
         poll = process.poll()
@@ -74,4 +75,8 @@ def start_ngrok():
     process.terminate()
 
 if __name__ == "__main__":
-    start_ngrok()
+    parser = argparse.ArgumentParser(description="Start ngrok tunnel for NutriX")
+    parser.add_argument("--port", type=int, default=8000, help="Port to tunnel (default: 8000)")
+    args = parser.parse_args()
+    start_ngrok(port=args.port)
+

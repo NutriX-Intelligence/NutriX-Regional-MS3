@@ -43,6 +43,7 @@ class UserProfileResponse(BaseModel):
     likes: Optional[str] = None
     allergies: Optional[str] = None
     dislikes: Optional[str] = None
+    is_onboarded: Optional[bool] = True
 
     class Config:
         from_attributes = True
@@ -343,6 +344,7 @@ class SettingsResponse(BaseModel):
 class AuthTokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
+    is_new_user: Optional[bool] = False
     user: UserProfileResponse
 
 

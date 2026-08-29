@@ -275,6 +275,20 @@ def test_homely_meals_creator_auto_approval():
     for item in pending_list:
         assert item["creator_id"] != creator_id
 
+    # Teardown / cleanup created test meals
+    from app.db import SessionLocal
+    from app.models import HomelyMeal, HomelyMealIngredient, HomelyMealNutrition
+    db = SessionLocal()
+    try:
+        test_meals = db.query(HomelyMeal).filter(HomelyMeal.creator_id == creator_id).all()
+        for m in test_meals:
+            db.query(HomelyMealIngredient).filter(HomelyMealIngredient.meal_id == m.id).delete()
+            db.query(HomelyMealNutrition).filter(HomelyMealNutrition.meal_id == m.id).delete()
+            db.delete(m)
+        db.commit()
+    finally:
+        db.close()
+
 
 # -------------------------------------------------------------
 # 7. Meal Optimizer Feasibility Across Cuisines
