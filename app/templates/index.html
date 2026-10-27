@@ -528,6 +528,129 @@
         }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Discover Meals & Fast Food Styles */
+        .discover-mode-nav {
+            display: flex; gap: 8px; margin-bottom: 14px;
+            border-bottom: 1px solid var(--card-border); padding-bottom: 10px;
+            overflow-x: auto;
+        }
+        .discover-mode-btn {
+            padding: 8px 14px; border-radius: var(--radius-sm);
+            background: transparent; border: 1px solid transparent;
+            color: var(--text-muted); font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s ease;
+            display: flex; align-items: center; gap: 6px; white-space: nowrap;
+        }
+        .discover-mode-btn:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.04); }
+        .discover-mode-btn.active {
+            background: var(--card-bg); border-color: var(--accent); color: var(--accent);
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.15);
+        }
+
+        .diet-pill-bar {
+            display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;
+        }
+        .diet-pill {
+            padding: 5px 12px; border-radius: 9999px; font-size: 12px; font-weight: 600;
+            cursor: pointer; border: 1px solid var(--card-border); background: var(--card-bg);
+            color: var(--text-muted); transition: all 0.2s ease;
+            display: inline-flex; align-items: center; gap: 5px; user-select: none;
+        }
+        .diet-pill:hover { border-color: var(--accent); color: var(--text-main); }
+        .diet-pill.active-veg {
+            background: rgba(16, 185, 129, 0.15); border-color: #10b981; color: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.25);
+        }
+        .diet-pill.active-nonveg {
+            background: rgba(239, 68, 68, 0.15); border-color: #ef4444; color: #ef4444;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.25);
+        }
+        .diet-pill.active-jain {
+            background: rgba(245, 158, 11, 0.15); border-color: #f59e0b; color: #f59e0b;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.25);
+        }
+        .diet-pill.active-vegan {
+            background: rgba(20, 184, 166, 0.15); border-color: #14b8a6; color: #14b8a6;
+            box-shadow: 0 0 10px rgba(20, 184, 166, 0.25);
+        }
+        .diet-pill.active-all {
+            background: rgba(99, 102, 241, 0.15); border-color: #6366f1; color: #6366f1;
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.25);
+        }
+
+        .chain-chips-scroll {
+            display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px;
+            margin-bottom: 14px; scrollbar-width: thin;
+        }
+        .chain-chip {
+            padding: 6px 12px; border-radius: var(--radius-sm); background: var(--card-bg);
+            border: 1px solid var(--card-border); color: var(--text-main); font-size: 12.5px;
+            font-weight: 600; cursor: pointer; transition: all 0.2s ease;
+            display: flex; align-items: center; gap: 6px; white-space: nowrap;
+        }
+        .chain-chip:hover { border-color: var(--accent); transform: translateY(-1px); }
+        .chain-chip.active {
+            background: rgba(99, 102, 241, 0.15); border-color: var(--accent);
+            color: var(--accent); box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+        }
+        .chain-chip .chip-count {
+            font-size: 10px; padding: 2px 5px; border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.1); color: var(--text-dim);
+        }
+
+        /* Chain Group Card Accordion */
+        .chain-group-card {
+            background: var(--bg-color); border: 1px solid var(--card-border);
+            border-radius: var(--radius-sm); margin-bottom: 14px; overflow: hidden;
+            transition: all 0.2s ease;
+        }
+        .chain-group-card:hover { border-color: rgba(99, 102, 241, 0.4); }
+        .chain-group-header {
+            padding: 14px 16px; display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer; background: var(--card-bg); user-select: none;
+            transition: background 0.2s ease;
+        }
+        .chain-group-header:hover { background: rgba(255, 255, 255, 0.03); }
+        .chain-group-title {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 15px; font-weight: 700; color: var(--text-main);
+        }
+        .chain-group-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .chain-group-body {
+            padding: 14px 16px; display: none; border-top: 1px solid var(--card-border);
+            background: rgba(15, 23, 42, 0.3);
+        }
+        .chain-group-body.expanded { display: block; animation: fadeIn 0.2s ease; }
+        .chain-section-title {
+            font-size: 12.5px; font-weight: 700; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 0.5px; margin: 14px 0 8px 0;
+            padding-bottom: 4px; border-bottom: 1px dashed var(--card-border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .chain-section-title:first-child { margin-top: 0; }
+        .chain-item-grid { display: flex; flex-direction: column; gap: 8px; }
+        .dish-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: var(--radius-xs); padding: 10px 14px;
+            display: flex; justify-content: space-between; align-items: center; gap: 12px;
+            transition: all 0.2s ease;
+        }
+        .dish-card:hover { border-color: var(--accent); transform: translateX(2px); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); }
+        .dish-card-info { flex: 1; min-width: 0; }
+        .dish-card-title {
+            font-size: 13.5px; font-weight: 700; color: var(--text-main);
+            display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;
+        }
+        .dish-card-macros { display: flex; gap: 8px; flex-wrap: wrap; font-size: 11.5px; color: var(--text-muted); }
+        .dish-macro-pill {
+            padding: 2px 6px; border-radius: 4px; background: rgba(255, 255, 255, 0.05);
+        }
+        .dish-card-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+        .dish-slot-select {
+            font-size: 11px; padding: 4px 6px; border-radius: var(--radius-xs);
+            background: var(--bg-color); border: 1px solid var(--card-border); color: var(--text-main);
+        }
     </style>
 </head>
 <body>
@@ -1392,34 +1515,96 @@
         </div>
 
         <!-- ================================================================= -->
-        <!-- TAB 3: DISCOVER MEALS (Renamed & Enhanced) -->
+        <!-- TAB 3: DISCOVER MEALS (Enhanced Fast Food & Full Dataset Catalog) -->
         <!-- ================================================================= -->
         <div id="tab-recommendations" class="tab-content">
             <div class="two-col-grid">
                 <div class="card">
-                    <div class="card-title">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                        Discover Meals & Nutrition Catalog
-                        <span id="recCount" class="badge badge-score" style="margin-left:auto; font-size:11px;"></span>
+                    <div class="card-title" style="flex-wrap:wrap; gap:8px;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                            Discover Meals & Fast Food Chains
+                        </div>
+                        <span id="recCount" class="badge badge-score" style="margin-left:auto; font-size:11px;">12,494 Meals Available</span>
+                    </div>
+
+                    <!-- Mode Navigation Tabs -->
+                    <div class="discover-mode-nav">
+                        <button class="discover-mode-btn active" id="modeBtnChains" onclick="setDiscoverMode('chains')">
+                            🏢 Fast Food & Restaurant Chains
+                        </button>
+                        <button class="discover-mode-btn" id="modeBtnAll" onclick="setDiscoverMode('all')">
+                            🍱 All Meals Catalog (12k+ Dishes)
+                        </button>
+                        <button class="discover-mode-btn" id="modeBtnRecommended" onclick="setDiscoverMode('recommended')">
+                            ✨ AI Target Recommendations
+                        </button>
+                    </div>
+
+                    <!-- Dietary Preference Selector (Matches user preference) -->
+                    <div style="margin-bottom:12px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <span style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Dietary Match Preference:</span>
+                            <span id="dietStatusText" style="font-size:11px; color:#10b981; font-weight:600;">🥬 Matched to Profile (Vegetarian)</span>
+                        </div>
+                        <div class="diet-pill-bar">
+                            <div class="diet-pill active-veg" id="dietPillVeg" onclick="setDietaryFilter('Vegetarian')">
+                                🥬 Vegetarian Only
+                            </div>
+                            <div class="diet-pill" id="dietPillNonVeg" onclick="setDietaryFilter('Non-Vegetarian')">
+                                🍗 Non-Vegetarian
+                            </div>
+                            <div class="diet-pill" id="dietPillJain" onclick="setDietaryFilter('Jain')">
+                                🕉️ Jain Friendly
+                            </div>
+                            <div class="diet-pill" id="dietPillVegan" onclick="setDietaryFilter('Vegan')">
+                                🌱 Vegan
+                            </div>
+                            <div class="diet-pill" id="dietPillAll" onclick="setDietaryFilter('all')">
+                                🌐 All Dishes
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fast Food Chain Brand Chips -->
+                    <div id="chainChipsContainer" class="chain-chips-scroll">
+                        <div class="chain-chip active" id="chip-all" onclick="selectBrandChip('all')">🌐 All Chains</div>
+                        <div class="chain-chip" id="chip-dominos" onclick="selectBrandChip('Domino\'s')">🍕 Domino's</div>
+                        <div class="chain-chip" id="chip-mcdonalds" onclick="selectBrandChip('McDonald\'s')">🍔 McDonald's</div>
+                        <div class="chain-chip" id="chip-subway" onclick="selectBrandChip('Subway')">🥪 Subway</div>
+                        <div class="chain-chip" id="chip-burgerking" onclick="selectBrandChip('Burger King')">👑 Burger King</div>
+                        <div class="chain-chip" id="chip-kfc" onclick="selectBrandChip('KFC')">🍗 KFC</div>
+                        <div class="chain-chip" id="chip-pizzahut" onclick="selectBrandChip('Pizza Hut')">🍕 Pizza Hut</div>
+                        <div class="chain-chip" id="chip-starbucks" onclick="selectBrandChip('Starbucks')">☕ Starbucks</div>
+                        <div class="chain-chip" id="chip-tacobell" onclick="selectBrandChip('Taco Bell')">🌮 Taco Bell</div>
                     </div>
 
                     <!-- Search & Filter Controls -->
                     <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
                         <div style="display:flex; gap:8px;">
-                            <input type="text" id="recSearch" placeholder="🔍 Search dishes by name or ingredients..." oninput="filterRecommendations()" style="flex:1;">
-                            <button class="btn btn-sm btn-outline" onclick="loadRecommendations()" style="width:auto; white-space:nowrap;">
+                            <input type="text" id="recSearch" placeholder="🔍 Search Domino's, McDonald's, Whopper, Margherita, Sub, Coffee, Biryani..." oninput="handleDiscoverSearch()" style="flex:1;">
+                            <button class="btn btn-sm btn-outline" onclick="refreshDiscoverMeals()" style="width:auto; white-space:nowrap;">
                                 🔄 Refresh
                             </button>
                         </div>
                         <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;">
-                            <select id="recCategory" onchange="filterRecommendations()" style="font-size:12px; padding:6px 8px;">
-                                <option value="all">All Meal Slots</option>
-                                <option value="Breakfast">Breakfast</option>
+                            <select id="recCategory" onchange="handleDiscoverSearch()" style="font-size:12px; padding:6px 8px;">
+                                <option value="all">All Meal Slots / Categories</option>
                                 <option value="Lunch/Dinner">Lunch & Dinner</option>
-                                <option value="Snack">Snack</option>
+                                <option value="Breakfast">Breakfast</option>
+                                <option value="Snack">Snack & Sides</option>
+                                <option value="Beverage">Beverages & Shakes</option>
                             </select>
-                            <select id="recCuisine" onchange="filterRecommendations()" style="font-size:12px; padding:6px 8px;">
-                                <option value="all">All Cuisines</option>
+                            <select id="recCuisine" onchange="handleDiscoverSearch()" style="font-size:12px; padding:6px 8px;">
+                                <option value="all">All Cuisines & Brands</option>
+                                <option value="Domino's">Domino's</option>
+                                <option value="McDonald's">McDonald's</option>
+                                <option value="Subway">Subway</option>
+                                <option value="Burger King">Burger King</option>
+                                <option value="KFC">KFC</option>
+                                <option value="Pizza Hut">Pizza Hut</option>
+                                <option value="Starbucks">Starbucks</option>
+                                <option value="Taco Bell">Taco Bell</option>
                                 <option value="North Indian">North Indian</option>
                                 <option value="South Indian">South Indian</option>
                                 <option value="Gujarati">Gujarati</option>
@@ -1430,20 +1615,27 @@
                                 <option value="Chinese">Chinese</option>
                                 <option value="Italian">Italian</option>
                                 <option value="Mexican">Mexican</option>
-                                <option value="Continental">Continental</option>
                             </select>
-                            <select id="recCookingTime" onchange="filterRecommendations()" style="font-size:12px; padding:6px 8px;">
-                                <option value="all">Any Cooking Time</option>
-                                <option value="15">≤ 15 mins</option>
-                                <option value="30">≤ 30 mins</option>
-                                <option value="45">≤ 45 mins</option>
-                                <option value="60">≤ 60 mins</option>
+                            <select id="recCalorieFilter" onchange="handleDiscoverSearch()" style="font-size:12px; padding:6px 8px;">
+                                <option value="all">Any Calories</option>
+                                <option value="250">≤ 250 kcal (Light)</option>
+                                <option value="450">≤ 450 kcal (Medium)</option>
+                                <option value="650">≤ 650 kcal (Hearty)</option>
+                                <option value="850">≤ 850 kcal (Full)</option>
                             </select>
                         </div>
                     </div>
 
+                    <!-- Dynamic List / Grouped Accordion Container -->
                     <div id="recipeListContainer" class="recipe-list">
-                        <div class="placeholder-text">Loading personalized meals for your profile...</div>
+                        <div class="placeholder-text">Loading meals catalog...</div>
+                    </div>
+
+                    <!-- Pagination for All Meals Catalog -->
+                    <div id="catalogPagination" style="display:none; text-align:center; margin-top:16px;">
+                        <button class="btn btn-outline" id="loadMoreMealsBtn" onclick="loadMoreCatalogMeals()" style="width:auto; padding:8px 24px;">
+                            ⬇️ Load More Meals (50+)
+                        </button>
                     </div>
                 </div>
 
@@ -2538,9 +2730,14 @@
                 localStorage.setItem('token', data.access_token);
                 userId = data.user.id;
                 userData = data.user;
-                await loadUserProfile();
                 closeLogin();
-                showNotification('Welcome back, ' + data.user.name + '!', 'success');
+
+                if (data.user && data.user.is_onboarded === false) {
+                    openOnboardingModal(data.user);
+                } else {
+                    await loadUserProfile();
+                    showNotification('Welcome back, ' + data.user.name + '!', 'success');
+                }
             } catch (err) {
                 setLoading(btn, false);
                 showAuthError(err.message || 'Authentication failed.', err.isNotFound);
@@ -2600,9 +2797,15 @@
                 localStorage.setItem('token', data.access_token);
                 userId = data.user.id;
                 userData = data.user;
-                await loadUserProfile();
                 closeLogin();
-                showNotification('Account created successfully! Welcome to NutriX, ' + data.user.name + '!', 'success');
+
+                // Open initial preferences & biometrics onboarding modal
+                if (data.is_new_user || (data.user && data.user.is_onboarded === false)) {
+                    openOnboardingModal(data.user);
+                } else {
+                    await loadUserProfile();
+                    showNotification('Account created successfully! Welcome to NutriX, ' + data.user.name + '!', 'success');
+                }
             } catch (err) {
                 setLoading(btn, false);
                 showAuthError(err.message);
@@ -2643,6 +2846,11 @@
                 showUserBadge(data);
                 updateTargetsDisplay(data);
                 autoCalculateWaterTargetHint();
+
+                // Sync dietary filter with user profile
+                if (data.diet_type && typeof setDietaryFilter === 'function') {
+                    setDietaryFilter(data.diet_type);
+                }
 
                 // Refresh All Dependent Modules
                 await loadTodayNutrition();
@@ -3504,14 +3712,149 @@
 
 
         // ==========================
-        // Personalized Meals (Recommendations)
+        // Enhanced Discover Meals & Fast Food Controller
         // ==========================
+        let currentDiscoverMode = 'chains'; // 'chains', 'all', 'recommended'
+        let currentDietFilter = 'Vegetarian';
+        let currentBrandFilter = 'all';
+        let groupedChainsData = [];
+        let catalogMealsData = [];
+        let catalogOffset = 0;
+        let isCatalogLoading = false;
+        let hasMoreCatalogMeals = true;
+        let expandedChainGroups = new Set();
+        let searchDebounceTimer = null;
+
+        function setDiscoverMode(mode) {
+            currentDiscoverMode = mode;
+            document.querySelectorAll('.discover-mode-btn').forEach(btn => btn.classList.remove('active'));
+            if (mode === 'chains') document.getElementById('modeBtnChains')?.classList.add('active');
+            else if (mode === 'all') document.getElementById('modeBtnAll')?.classList.add('active');
+            else if (mode === 'recommended') document.getElementById('modeBtnRecommended')?.classList.add('active');
+
+            const chips = document.getElementById('chainChipsContainer');
+            if (chips) chips.style.display = (mode === 'chains' ? 'flex' : 'none');
+
+            const pagination = document.getElementById('catalogPagination');
+            if (pagination) pagination.style.display = (mode === 'all' ? 'block' : 'none');
+
+            refreshDiscoverMeals();
+        }
+
+        function setDietaryFilter(diet) {
+            currentDietFilter = diet;
+            const pills = {
+                'Vegetarian': 'dietPillVeg',
+                'Non-Vegetarian': 'dietPillNonVeg',
+                'Jain': 'dietPillJain',
+                'Vegan': 'dietPillVegan',
+                'all': 'dietPillAll'
+            };
+            const activeClasses = {
+                'Vegetarian': 'active-veg',
+                'Non-Vegetarian': 'active-nonveg',
+                'Jain': 'active-jain',
+                'Vegan': 'active-vegan',
+                'all': 'active-all'
+            };
+
+            Object.keys(pills).forEach(k => {
+                const el = document.getElementById(pills[k]);
+                if (el) {
+                    el.className = 'diet-pill';
+                    if (k === diet) el.classList.add(activeClasses[k]);
+                }
+            });
+
+            const statusEl = document.getElementById('dietStatusText');
+            if (statusEl) {
+                if (diet === 'Vegetarian') statusEl.innerHTML = '🥬 Filtered: Vegetarian Dishes Only';
+                else if (diet === 'Non-Vegetarian') statusEl.innerHTML = '🍗 Filtered: Non-Vegetarian Dishes Only';
+                else if (diet === 'Jain') statusEl.innerHTML = '🕉️ Filtered: Jain Friendly Dishes';
+                else if (diet === 'Vegan') statusEl.innerHTML = '🌱 Filtered: 100% Plant-Based Vegan';
+                else statusEl.innerHTML = '🌐 Showing All Dishes';
+            }
+
+            refreshDiscoverMeals();
+        }
+
+        function selectBrandChip(brand) {
+            currentBrandFilter = brand;
+            document.querySelectorAll('.chain-chip').forEach(c => c.classList.remove('active'));
+            
+            const brandIdMap = {
+                'all': 'chip-all',
+                'Domino\'s': 'chip-dominos',
+                'McDonald\'s': 'chip-mcdonalds',
+                'Subway': 'chip-subway',
+                'Burger King': 'chip-burgerking',
+                'KFC': 'chip-kfc',
+                'Pizza Hut': 'chip-pizzahut',
+                'Starbucks': 'chip-starbucks',
+                'Taco Bell': 'chip-tacobell'
+            };
+            const targetId = brandIdMap[brand];
+            if (targetId && document.getElementById(targetId)) {
+                document.getElementById(targetId).classList.add('active');
+            }
+
+            if (brand !== 'all') {
+                expandedChainGroups.add(brand);
+            }
+
+            if (currentDiscoverMode !== 'chains') {
+                setDiscoverMode('chains');
+            } else {
+                refreshDiscoverMeals();
+            }
+        }
+
+        function handleDiscoverSearch() {
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => {
+                const q = (document.getElementById('recSearch')?.value || '').toLowerCase().trim();
+                const brandAliases = {
+                    'domino': 'Domino\'s',
+                    'dominos': 'Domino\'s',
+                    'mcdonald': 'McDonald\'s',
+                    'mcdonalds': 'McDonald\'s',
+                    'subway': 'Subway',
+                    'burger king': 'Burger King',
+                    'burgerking': 'Burger King',
+                    'kfc': 'KFC',
+                    'pizza hut': 'Pizza Hut',
+                    'pizzahut': 'Pizza Hut',
+                    'starbucks': 'Starbucks',
+                    'taco bell': 'Taco Bell',
+                    'tacobell': 'Taco Bell'
+                };
+                for (let k in brandAliases) {
+                    if (q.includes(k)) {
+                        expandedChainGroups.add(brandAliases[k]);
+                    }
+                }
+                refreshDiscoverMeals();
+            }, 250);
+        }
+
+        async function refreshDiscoverMeals() {
+            if (currentDiscoverMode === 'chains') {
+                await loadGroupedChains();
+            } else if (currentDiscoverMode === 'all') {
+                catalogOffset = 0;
+                catalogMealsData = [];
+                hasMoreCatalogMeals = true;
+                await loadCatalogMeals(false);
+            } else {
+                await loadTargetRecommendations();
+            }
+        }
+
+        // Master loader called on tab switch
         async function loadRecommendations() {
             if (!userId) return;
-            const container = document.getElementById('recipeListContainer');
-            container.innerHTML = '<div style="text-align:center; padding:16px;"><span class="spinner"></span> Loading personalized meals...</div>';
 
-            // Show targets in reference card
+            // Render targets in reference card
             if (userTargets) {
                 document.getElementById('recTargetsDisplay').innerHTML = `
                     <div class="metrics-grid" style="margin-top:0;">
@@ -3535,77 +3878,365 @@
                 `;
             }
 
+            // Sync user profile dietary preference
+            const userPref = (userData && userData.diet_type) || document.getElementById('diet_type')?.value;
+            if (userPref) {
+                setDietaryFilter(userPref);
+            } else {
+                refreshDiscoverMeals();
+            }
+        }
+
+        // 1. Grouped Chains Loader
+        async function loadGroupedChains() {
+            const container = document.getElementById('recipeListContainer');
+            if (!container) return;
+            container.innerHTML = '<div style="text-align:center; padding:24px;"><span class="spinner"></span> Loading fast food chain menus...</div>';
+
+            const search = (document.getElementById('recSearch')?.value || '').trim();
+            const category = document.getElementById('recCategory')?.value || 'all';
+            const cuisine = document.getElementById('recCuisine')?.value || 'all';
+            const calFilter = document.getElementById('recCalorieFilter')?.value || 'all';
+
+            const params = new URLSearchParams();
+            if (search) params.append('q', search);
+            if (currentBrandFilter && currentBrandFilter !== 'all') params.append('brand', currentBrandFilter);
+            else if (cuisine && cuisine !== 'all') params.append('brand', cuisine);
+            if (currentDietFilter && currentDietFilter !== 'all') params.append('diet_filter', currentDietFilter);
+            if (category && category !== 'all') params.append('category', category);
+            if (userId) params.append('user_id', userId);
+
+            try {
+                const res = await fetchWithAuth(`/api/fast-food/grouped?${params.toString()}`);
+                if (!res.ok) throw new Error('Could not fetch fast food chains.');
+                const groups = await res.json();
+                groupedChainsData = groups;
+                renderGroupedChains(groups, calFilter);
+            } catch (err) {
+                container.innerHTML = `<div class="placeholder-text">Could not load restaurant chains: ${err.message}</div>`;
+            }
+        }
+
+        function toggleChainAccordion(brand) {
+            if (expandedChainGroups.has(brand)) {
+                expandedChainGroups.delete(brand);
+            } else {
+                expandedChainGroups.add(brand);
+            }
+            renderGroupedChains(groupedChainsData);
+        }
+
+        function renderGroupedChains(groups, calFilter = 'all') {
+            const container = document.getElementById('recipeListContainer');
+            if (!container) return;
+
+            const maxCal = calFilter !== 'all' ? parseFloat(calFilter) : Infinity;
+
+            if (!groups || groups.length === 0) {
+                container.innerHTML = `
+                    <div class="placeholder-text">
+                        <div style="font-size:24px; margin-bottom:8px;">🔍 No Matching Fast Food Items</div>
+                        <div>No dishes found matching your current search and dietary filter (${currentDietFilter}). Try switching to "All Dishes" or clearing the search box.</div>
+                    </div>
+                `;
+                document.getElementById('recCount').textContent = '0 items';
+                return;
+            }
+
+            let totalFilteredItems = 0;
+            const brandIcons = {
+                'Domino\'s': '🍕',
+                'McDonald\'s': '🍔',
+                'Subway': '🥪',
+                'Burger King': '👑',
+                'KFC': '🍗',
+                'Pizza Hut': '🍕',
+                'Starbucks': '☕',
+                'Taco Bell': '🌮'
+            };
+
+            const html = groups.map(g => {
+                const icon = brandIcons[g.brand] || '🍴';
+                const isExpanded = expandedChainGroups.has(g.brand) || groups.length === 1;
+
+                // Filter sections items by calorie limit if set
+                const filteredSections = g.sections.map(sec => {
+                    const filteredItems = sec.items.filter(it => it.energy_kcal <= maxCal);
+                    return { section_name: sec.section_name, items: filteredItems };
+                }).filter(sec => sec.items.length > 0);
+
+                const brandCount = filteredSections.reduce((acc, s) => acc + s.items.length, 0);
+                totalFilteredItems += brandCount;
+
+                if (brandCount === 0) return '';
+
+                const vegCount = filteredSections.reduce((acc, s) => acc + s.items.filter(it => it.dietary_tag !== 'Non-Vegetarian').length, 0);
+                const nonVegCount = filteredSections.reduce((acc, s) => acc + s.items.filter(it => it.dietary_tag === 'Non-Vegetarian').length, 0);
+
+                return `
+                    <div class="chain-group-card" id="group-${g.brand.replace(/[^a-zA-Z0-9]/g, '_')}">
+                        <div class="chain-group-header" onclick="toggleChainAccordion('${g.brand.replace(/'/g, "\\'")}')">
+                            <div class="chain-group-title">
+                                <span style="font-size:20px;">${icon}</span>
+                                <div>
+                                    <span>${g.brand}</span>
+                                    <div style="font-size:11.5px; font-weight:normal; color:var(--text-muted); margin-top:2px;">
+                                        🔥 ${Math.round(g.min_calories)} - ${Math.round(g.max_calories)} kcal per serve
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chain-group-meta">
+                                <span class="badge badge-purple" style="font-weight:700;">${brandCount} items</span>
+                                ${vegCount > 0 ? `<span class="badge" style="background:rgba(16,185,129,0.15); color:#10b981;">🥬 ${vegCount} Veg</span>` : ''}
+                                ${nonVegCount > 0 ? `<span class="badge" style="background:rgba(239,68,68,0.15); color:#ef4444;">🍗 ${nonVegCount} Non-Veg</span>` : ''}
+                                <span style="font-size:13px; color:var(--text-muted); margin-left:6px;">
+                                    ${isExpanded ? '▲' : '▼ Click to View'}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="chain-group-body ${isExpanded ? 'expanded' : ''}">
+                            ${filteredSections.map(sec => `
+                                <div class="chain-section-title">
+                                    <span>${sec.section_name}</span>
+                                    <span style="font-size:11px; color:var(--text-dim);">${sec.items.length} options</span>
+                                </div>
+                                <div class="chain-item-grid">
+                                    ${sec.items.map(it => `
+                                        <div class="dish-card">
+                                            <div class="dish-card-info">
+                                                <div class="dish-card-title">
+                                                    <span>${it.recipe_name}</span>
+                                                    ${it.portion_str ? `<span class="badge badge-score" style="font-size:10px;">${it.portion_str}</span>` : ''}
+                                                    ${it.dietary_tag === 'Non-Vegetarian' 
+                                                        ? `<span class="badge" style="background:rgba(239,68,68,0.2); color:#ef4444; font-size:10px;">🔴 Non-Veg</span>` 
+                                                        : (it.dietary_tag === 'Jain'
+                                                            ? `<span class="badge" style="background:rgba(245,158,11,0.2); color:#f59e0b; font-size:10px;">🕉️ Jain</span>`
+                                                            : (it.dietary_tag === 'Vegan'
+                                                                ? `<span class="badge" style="background:rgba(20,184,166,0.2); color:#14b8a6; font-size:10px;">🌱 Vegan</span>`
+                                                                : `<span class="badge" style="background:rgba(16,185,129,0.2); color:#10b981; font-size:10px;">🟢 Veg</span>`
+                                                            )
+                                                        )
+                                                    }
+                                                </div>
+                                                <div class="dish-card-macros">
+                                                    <span class="dish-macro-pill" style="color:#f59e0b; font-weight:700;">🔥 ${Math.round(it.energy_kcal)} kcal</span>
+                                                    <span class="dish-macro-pill" style="color:#60a5fa; font-weight:600;">💪 ${Math.round(it.protein_g)}g Prot</span>
+                                                    <span class="dish-macro-pill" style="color:#34d399; font-weight:600;">🌾 ${Math.round(it.carb_g)}g Carb</span>
+                                                    <span class="dish-macro-pill" style="color:#f87171; font-weight:600;">🥑 ${Math.round(it.fat_g)}g Fat</span>
+                                                    ${it.sodium_mg > 0 ? `<span class="dish-macro-pill" style="color:var(--text-muted);">🧂 ${Math.round(it.sodium_mg)}mg Sod</span>` : ''}
+                                                </div>
+                                            </div>
+                                            <div class="dish-card-actions">
+                                                <select id="slot-${it.recipe_code}" class="dish-slot-select" title="Select meal slot">
+                                                    <option value="Lunch">Lunch</option>
+                                                    <option value="Dinner">Dinner</option>
+                                                    <option value="Breakfast">Breakfast</option>
+                                                    <option value="Snack">Snack</option>
+                                                </select>
+                                                <button class="btn btn-xs btn-primary" onclick="logFromCard('${it.recipe_code}', '${it.recipe_name.replace(/'/g, "\\'")}', ${it.energy_kcal}, ${it.protein_g}, ${it.carb_g}, ${it.fat_g})">
+                                                    ➕ Log Meal
+                                                </button>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = html || `
+                <div class="placeholder-text">No dishes found with calorie filter ≤ ${maxCal} kcal.</div>
+            `;
+            document.getElementById('recCount').textContent = `${totalFilteredItems} fast food items`;
+        }
+
+        // 2. All Meals Catalog Loader (12,494 Dataset)
+        async function loadCatalogMeals(append = false) {
+            const container = document.getElementById('recipeListContainer');
+            if (!container) return;
+
+            if (!append) {
+                container.innerHTML = '<div style="text-align:center; padding:24px;"><span class="spinner"></span> Loading full meals catalog...</div>';
+                catalogOffset = 0;
+            }
+
+            const search = (document.getElementById('recSearch')?.value || '').trim();
+            const category = document.getElementById('recCategory')?.value || 'all';
+            const cuisine = document.getElementById('recCuisine')?.value || 'all';
+
+            const body = {
+                user_id: userId,
+                limit: 50,
+                offset: catalogOffset,
+                query: search || null,
+                category: category !== 'all' ? category : null,
+                cuisine: cuisine !== 'all' ? cuisine : null,
+                diet_filter: currentDietFilter !== 'all' ? currentDietFilter : null
+            };
+
+            try {
+                isCatalogLoading = true;
+                const res = await fetchWithAuth('/recommend-foods', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                if (!res.ok) throw new Error('Could not fetch meals catalog.');
+                const items = await res.json();
+                
+                if (append) {
+                    catalogMealsData = catalogMealsData.concat(items);
+                } else {
+                    catalogMealsData = items;
+                }
+
+                catalogOffset += items.length;
+                hasMoreCatalogMeals = items.length === 50;
+                renderCatalogMeals(catalogMealsData, append);
+            } catch (err) {
+                container.innerHTML = `<div class="placeholder-text">Failed to load meals catalog: ${err.message}</div>`;
+            } finally {
+                isCatalogLoading = false;
+            }
+        }
+
+        function loadMoreCatalogMeals() {
+            if (isCatalogLoading || !hasMoreCatalogMeals) return;
+            const btn = document.getElementById('loadMoreMealsBtn');
+            if (btn) btn.innerHTML = '<span class="spinner"></span> Loading 50 more...';
+            loadCatalogMeals(true).then(() => {
+                if (btn) btn.innerHTML = '⬇️ Load More Meals (50+)';
+            });
+        }
+
+        function renderCatalogMeals(items, append = false) {
+            const container = document.getElementById('recipeListContainer');
+            if (!container) return;
+
+            const calFilter = document.getElementById('recCalorieFilter')?.value || 'all';
+            const maxCal = calFilter !== 'all' ? parseFloat(calFilter) : Infinity;
+
+            const filtered = items.filter(it => it.energy_kcal <= maxCal);
+            document.getElementById('recCount').textContent = `Showing ${filtered.length} of 12,494 meals`;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="placeholder-text">No meals match your filter criteria (${currentDietFilter}). Try widening filters.</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map((it, idx) => `
+                <div class="dish-card" style="margin-bottom:8px;">
+                    <div class="dish-card-info">
+                        <div class="dish-card-title">
+                            <span>${idx + 1}. ${it.recipe_name}</span>
+                            ${it.brand ? `<span class="badge badge-purple">${it.brand}</span>` : (it.cuisine ? `<span class="badge badge-purple">${it.cuisine}</span>` : '')}
+                            ${it.portion_str ? `<span class="badge badge-score">${it.portion_str}</span>` : ''}
+                            ${it.dietary_tag === 'Non-Vegetarian' 
+                                ? `<span class="badge" style="background:rgba(239,68,68,0.2); color:#ef4444;">🔴 Non-Veg</span>` 
+                                : (it.dietary_tag === 'Jain'
+                                    ? `<span class="badge" style="background:rgba(245,158,11,0.2); color:#f59e0b;">🕉️ Jain</span>`
+                                    : (it.dietary_tag === 'Vegan'
+                                        ? `<span class="badge" style="background:rgba(20,184,166,0.2); color:#14b8a6;">🌱 Vegan</span>`
+                                        : `<span class="badge" style="background:rgba(16,185,129,0.2); color:#10b981;">🟢 Veg</span>`
+                                    )
+                                )
+                            }
+                        </div>
+                        <div class="dish-card-macros">
+                            <span>${it.category}</span>
+                            <span class="dish-macro-pill" style="color:#f59e0b; font-weight:700;">🔥 ${Math.round(it.energy_kcal)} kcal</span>
+                            <span class="dish-macro-pill" style="color:#60a5fa; font-weight:600;">💪 ${Math.round(it.protein_g)}g P</span>
+                            <span class="dish-macro-pill" style="color:#34d399; font-weight:600;">🌾 ${Math.round(it.carb_g)}g C</span>
+                            <span class="dish-macro-pill" style="color:#f87171; font-weight:600;">🥑 ${Math.round(it.fat_g)}g F</span>
+                        </div>
+                    </div>
+                    <div class="dish-card-actions">
+                        <select id="slot-${it.recipe_code}" class="dish-slot-select">
+                            <option value="Lunch">Lunch</option>
+                            <option value="Dinner">Dinner</option>
+                            <option value="Breakfast">Breakfast</option>
+                            <option value="Snack">Snack</option>
+                        </select>
+                        <button class="btn btn-xs btn-primary" onclick="logFromCard('${it.recipe_code}', '${it.recipe_name.replace(/'/g, "\\'")}', ${it.energy_kcal}, ${it.protein_g}, ${it.carb_g}, ${it.fat_g})">
+                            ➕ Log Meal
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            const pagination = document.getElementById('catalogPagination');
+            if (pagination) {
+                pagination.style.display = hasMoreCatalogMeals ? 'block' : 'none';
+            }
+        }
+
+        // 3. AI Target Recommendations Loader
+        async function loadTargetRecommendations() {
+            const container = document.getElementById('recipeListContainer');
+            if (!container) return;
+            container.innerHTML = '<div style="text-align:center; padding:24px;"><span class="spinner"></span> Calculating personalized meal recommendations...</div>';
+
+            const search = (document.getElementById('recSearch')?.value || '').trim();
+            const category = document.getElementById('recCategory')?.value || 'all';
+            const cuisine = document.getElementById('recCuisine')?.value || 'all';
+
+            const body = {
+                user_id: userId,
+                limit: 60,
+                query: search || null,
+                category: category !== 'all' ? category : null,
+                cuisine: cuisine !== 'all' ? cuisine : null,
+                diet_filter: currentDietFilter !== 'all' ? currentDietFilter : null
+            };
+
             try {
                 const res = await fetchWithAuth('/recommend-foods', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: userId, limit: 60 })
+                    body: JSON.stringify(body)
                 });
-                if (!res.ok) throw new Error('Failed to load personalized meals.');
-                rawRecommendationsData = await res.json();
-                filterRecommendations();
+                if (!res.ok) throw new Error('Could not calculate target recommendations.');
+                const items = await res.json();
+                renderCatalogMeals(items, false);
+                document.getElementById('recCount').textContent = `${items.length} AI matches`;
             } catch (err) {
                 container.innerHTML = `<div class="placeholder-text">Could not load recommendations: ${err.message}</div>`;
             }
         }
 
-        function filterRecommendations() {
-            const container = document.getElementById('recipeListContainer');
-            if (!container) return;
-
-            if (!rawRecommendationsData || rawRecommendationsData.length === 0) {
-                container.innerHTML = '<div class="placeholder-text">No recommendations available. Save your profile to discover meals.</div>';
+        // Quick log helper from any card
+        async function logFromCard(code, name, cal, prot, carb, fat) {
+            const slotSelect = document.getElementById('slot-' + code);
+            const slot = slotSelect ? slotSelect.value : 'Lunch';
+            if (!userId) {
+                showNotification('Please log in or select a user profile first.', 'warning');
                 return;
             }
-
-            const search = (document.getElementById('recSearch')?.value || '').toLowerCase().trim();
-            const category = document.getElementById('recCategory')?.value || 'all';
-            const cuisine = document.getElementById('recCuisine')?.value || 'all';
-
-            let items = rawRecommendationsData.slice();
-
-            if (category !== 'all') {
-                items = items.filter(item => (item.category || '').toLowerCase() === category.toLowerCase());
+            try {
+                const payload = {
+                    user_id: userId,
+                    log_date: typeof getLocalISODate === 'function' ? getLocalISODate() : new Date().toISOString().split('T')[0],
+                    meal_type: slot,
+                    food_name: name,
+                    calories: parseFloat(cal) || 0,
+                    protein: parseFloat(prot) || 0,
+                    carbs: parseFloat(carb) || 0,
+                    fat: parseFloat(fat) || 0
+                };
+                const res = await fetchWithAuth('/api/meal-logs', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!res.ok) throw new Error('Failed to log meal.');
+                showNotification(`Logged "${name}" to ${slot}!`, 'success');
+                if (typeof loadTodayNutrition === 'function') loadTodayNutrition();
+                if (typeof loadAnalytics === 'function') loadAnalytics();
+            } catch (err) {
+                showNotification('Error logging meal: ' + err.message, 'error');
             }
-
-            if (cuisine !== 'all') {
-                items = items.filter(item => (item.cuisine || '').toLowerCase().includes(cuisine.toLowerCase()));
-            }
-
-            if (search) {
-                items = items.filter(item => (item.recipe_name || '').toLowerCase().includes(search) || (item.cuisine || '').toLowerCase().includes(search));
-            }
-
-            document.getElementById('recCount').textContent = `${items.length} recipes`;
-
-            if (items.length === 0) {
-                container.innerHTML = '<div class="placeholder-text">No recipes match current filter criteria.</div>';
-                return;
-            }
-
-            container.innerHTML = items.map((item, idx) => `
-                <div class="recipe-item">
-                    <div class="recipe-info">
-                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                            <h4 style="font-size:14px; font-weight:700; color:var(--text-main); margin:0;">${idx + 1}. ${item.recipe_name}</h4>
-                            <span class="badge badge-score">${item.dietary_tag || 'Vegetarian'}</span>
-                            ${item.cuisine ? `<span class="badge badge-purple">${item.cuisine}</span>` : ''}
-                        </div>
-                        <div class="recipe-meta" style="margin-top:4px;">
-                            <span>${item.category}</span>
-                            <span>🔥 ${Math.round(item.energy_kcal)} kcal</span>
-                            <span>💪 ${Math.round(item.protein_g)}g P</span>
-                            <span>🌾 ${Math.round(item.carb_g)}g C</span>
-                            <span>🥑 ${Math.round(item.fat_g)}g F</span>
-                        </div>
-                    </div>
-                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
-                        <button class="btn btn-xs btn-primary" onclick="logRecipeToDaily('${item.recipe_code}', '${item.recipe_name.replace(/'/g, "\\'")}', ${item.energy_kcal}, ${item.protein_g}, ${item.carb_g}, ${item.fat_g})">
-                            ➕ Log Dish
-                        </button>
-                    </div>
-                </div>
-            `).join('');
         }
 
         // ==========================

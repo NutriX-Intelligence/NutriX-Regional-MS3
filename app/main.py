@@ -15,7 +15,8 @@ except Exception:
 
 from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File, Form
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from sqlalchemy.orm import Session
+from sqlalchemy import or_, and_, func
+from sqlalchemy.orm import Session, joinedload
 from datetime import datetime, date
 from typing import List, Dict, Any, Optional
 
@@ -63,7 +64,7 @@ try:
         res_u = conn.execute(text("PRAGMA table_info(users)")).fetchall()
         cols_u = [r[1] for r in res_u]
         if "is_onboarded" not in cols_u:
-            conn.execute(text("ALTER TABLE users ADD COLUMN is_onboarded BOOLEAN DEFAULT 1;"))
+            conn.execute(text("ALTER TABLE users ADD COLUMN is_onboarded BOOLEAN DEFAULT 0;"))
 except Exception as e:
     pass
 
@@ -177,7 +178,7 @@ def format_user_profile(user: models.User) -> Dict[str, Any]:
         "likes": ", ".join(likes_list),
         "allergies": ", ".join(allergies_list),
         "dislikes": ", ".join(dislikes_list),
-        "is_onboarded": bool(getattr(user, "is_onboarded", True)),
+        "is_onboarded": bool(user.is_onboarded) if getattr(user, "is_onboarded", None) is not None else False,
     }
 
 @app.post("/api/auth/register", response_model=schemas.AuthTokenResponse, status_code=status.HTTP_201_CREATED)
@@ -221,7 +222,7 @@ def register_user(req: schemas.UserRegisterRequest, db: Session = Depends(get_db
         name=req.name.strip(),
         email=req.email.strip().lower(),
         hashed_password=hash_password(req.password),
-        is_onboarded=True,
+        is_onboarded=False,
         age=req.age,
         gender=req.gender,
         height=req.height,
@@ -258,7 +259,7 @@ def register_user(req: schemas.UserRegisterRequest, db: Session = Depends(get_db
     return {
         "access_token": access_token,
         "token_type": "bearer",
-        "is_new_user": False,
+        "is_new_user": True,
         "user": user_profile
     }
 
@@ -660,9 +661,258 @@ def recommend_foods(req: schemas.RecommendFoodsRequest, db: Session = Depends(ge
     recommendations = RecommendationEngine.get_recommendations(
         db=db, 
         user_id=req.user_id, 
-        limit=req.limit
+        limit=req.limit or 60,
+        query_str=req.query,
+        category=req.category,
+        cuisine=req.cuisine,
+        max_cooking_time=req.max_cooking_time,
+        brand=req.brand,
+        diet_filter=req.diet_filter,
+        offset=req.offset or 0
     )
     return recommendations
+
+@app.get("/api/fast-food/chains", response_model=List[schemas.FastFoodChainSummary])
+def get_fast_food_chains(db: Session = Depends(get_db)):
+    """Get summary statistics for all fast food chains with dietary breakdown."""
+    brand_icons = {
+        "Domino's": "🍕",
+        "McDonald's": "🍔",
+        "Subway": "🥪",
+        "Burger King": "👑",
+        "KFC": "🍗",
+        "Pizza Hut": "🍕",
+        "Starbucks": "☕",
+        "Taco Bell": "🌮"
+    }
+
+    results = []
+    for brand, icon in brand_icons.items():
+        recipes = db.query(models.Recipe).options(
+            joinedload(models.Recipe.nutrition)
+        ).filter(models.Recipe.brand == brand).all()
+
+        if not recipes:
+            continue
+
+        total = len(recipes)
+        veg_cnt = sum(1 for r in recipes if r.dietary_tag in ("Vegetarian", "Vegan", "Jain"))
+        non_veg_cnt = sum(1 for r in recipes if r.dietary_tag == "Non-Vegetarian")
+        jain_cnt = sum(1 for r in recipes if r.dietary_tag == "Jain")
+        vegan_cnt = sum(1 for r in recipes if r.dietary_tag in ("Vegan", "Jain"))
+        
+        cals = [r.nutrition.energy_kcal for r in recipes if r.nutrition and r.nutrition.energy_kcal]
+        avg_cal = round(sum(cals) / len(cals), 1) if cals else 0.0
+
+        cats = sorted(list(set(
+            r.category for r in recipes if r.category
+        )))
+
+        results.append(schemas.FastFoodChainSummary(
+            brand=brand,
+            icon=icon,
+            total_items=total,
+            veg_count=veg_cnt,
+            non_veg_count=non_veg_cnt,
+            jain_count=jain_cnt,
+            vegan_count=vegan_cnt,
+            avg_calories=avg_cal,
+            categories=cats
+        ))
+
+    return results
+
+@app.get("/api/fast-food/grouped", response_model=List[schemas.FastFoodGroup])
+def get_fast_food_grouped(
+    q: Optional[str] = None,
+    brand: Optional[str] = None,
+    diet_filter: Optional[str] = None,
+    category: Optional[str] = None,
+    user_id: Optional[int] = None,
+    db: Session = Depends(get_db)
+):
+    """
+    Search and group fast food items by brand and category sections.
+    Supports user preference (veg/non-veg/jain/vegan), brand search ('dominos'), and category filtering.
+    """
+    effective_diet = diet_filter
+    if (not effective_diet or effective_diet.lower() in ("all", "any")) and user_id:
+        user_prof = db.query(models.Profile).filter(models.Profile.user_id == user_id).first()
+        if user_prof and user_prof.diet_type:
+            effective_diet = user_prof.diet_type
+
+    base_query = db.query(models.Recipe).options(
+        joinedload(models.Recipe.nutrition),
+        joinedload(models.Recipe.servings)
+    ).filter(models.Recipe.recipe_code.like("FF_%"))
+
+    # Dietary filter
+    if effective_diet and effective_diet.lower() not in ("all", "any"):
+        d_low = effective_diet.lower()
+        if "jain" in d_low:
+            base_query = base_query.filter(models.Recipe.dietary_tag == "Jain")
+        elif "vegan" in d_low:
+            base_query = base_query.filter(models.Recipe.dietary_tag.in_(["Vegan", "Jain"]))
+        elif "vegetarian" in d_low and "non" not in d_low:
+            base_query = base_query.filter(models.Recipe.dietary_tag.in_(["Vegetarian", "Vegan", "Jain"]))
+        elif "non" in d_low:
+            base_query = base_query.filter(models.Recipe.dietary_tag == "Non-Vegetarian")
+
+    # Category filter
+    if category and category.lower() != "all":
+        base_query = base_query.filter(models.Recipe.category.ilike(f"%{category}%"))
+
+    # Brand filter with alias resolution
+    brand_aliases = {
+        "domino": "Domino's",
+        "dominos": "Domino's",
+        "domino's": "Domino's",
+        "mcdonald": "McDonald's",
+        "mcdonalds": "McDonald's",
+        "mcdonald's": "McDonald's",
+        "mcd": "McDonald's",
+        "burger king": "Burger King",
+        "burgerking": "Burger King",
+        "bk": "Burger King",
+        "subway": "Subway",
+        "kfc": "KFC",
+        "kentucky": "KFC",
+        "pizza hut": "Pizza Hut",
+        "pizzahut": "Pizza Hut",
+        "starbucks": "Starbucks",
+        "sbux": "Starbucks",
+        "taco bell": "Taco Bell",
+        "tacobell": "Taco Bell"
+    }
+
+    if brand and brand.lower() != "all":
+        canon_brand = brand_aliases.get(brand.strip().lower(), brand)
+        base_query = base_query.filter(
+            or_(
+                models.Recipe.brand.ilike(f"%{canon_brand}%"),
+                models.Recipe.cuisine.ilike(f"%{canon_brand}%")
+            )
+        )
+
+    # Search query
+    if q and q.strip():
+        search_str = q.strip().lower()
+        search_no_punct = search_str.replace("'", "").replace("-", " ")
+        canon_from_q = brand_aliases.get(search_str) or brand_aliases.get(search_no_punct)
+
+        if canon_from_q:
+            base_query = base_query.filter(
+                or_(
+                    models.Recipe.brand == canon_from_q,
+                    models.Recipe.brand.ilike(f"%{canon_from_q}%"),
+                    models.Recipe.recipe_name.ilike(f"%{search_str}%")
+                )
+            )
+        else:
+            words = search_str.split()
+            word_clauses = []
+            for w in words:
+                w_canon = brand_aliases.get(w.replace("'", ""))
+                if w_canon:
+                    word_clauses.append(models.Recipe.brand == w_canon)
+                else:
+                    word_clauses.append(
+                        or_(
+                            models.Recipe.recipe_name.ilike(f"%{w}%"),
+                            models.Recipe.brand.ilike(f"%{w}%"),
+                            models.Recipe.instructions.ilike(f"%{w}%")
+                        )
+                    )
+            base_query = base_query.filter(
+                or_(
+                    models.Recipe.recipe_name.ilike(f"%{search_str}%"),
+                    models.Recipe.brand.ilike(f"%{search_str}%"),
+                    models.Recipe.instructions.ilike(f"%{search_str}%"),
+                    and_(*word_clauses)
+                )
+            )
+
+    all_recipes = base_query.all()
+
+    # Group by brand
+    from collections import defaultdict
+    brand_map = defaultdict(list)
+    for r in all_recipes:
+        b_name = r.brand or "Fast Food"
+        brand_map[b_name].append(r)
+
+    groups = []
+    ordered_brands = ["Domino's", "McDonald's", "Subway", "Burger King", "KFC", "Pizza Hut", "Starbucks", "Taco Bell"]
+    remaining_brands = [b for b in brand_map.keys() if b not in ordered_brands]
+    all_brand_keys = [b for b in ordered_brands if b in brand_map] + remaining_brands
+
+    for b in all_brand_keys:
+        b_recipes = brand_map[b]
+        if not b_recipes:
+            continue
+
+        veg_count = sum(1 for r in b_recipes if r.dietary_tag in ("Vegetarian", "Vegan", "Jain"))
+        non_veg_count = sum(1 for r in b_recipes if r.dietary_tag == "Non-Vegetarian")
+        jain_count = sum(1 for r in b_recipes if r.dietary_tag == "Jain")
+        vegan_count = sum(1 for r in b_recipes if r.dietary_tag in ("Vegan", "Jain"))
+
+        cals = [r.nutrition.energy_kcal for r in b_recipes if r.nutrition and r.nutrition.energy_kcal]
+        min_c = min(cals) if cals else 0.0
+        max_c = max(cals) if cals else 0.0
+
+        sections_map = defaultdict(list)
+        for r in b_recipes:
+            sec_name = r.category
+            if r.instructions and "(" in r.instructions and ")" in r.instructions:
+                try:
+                    sec_name = r.instructions.split("(")[1].split(")")[0].strip()
+                except:
+                    sec_name = r.category
+
+            portion_desc = None
+            if r.servings and r.servings.servings_unit:
+                portion_desc = str(r.servings.servings_unit)
+            elif r.servings and r.servings.size_of_servings:
+                portion_desc = f"{int(r.servings.size_of_servings)}g"
+
+            item_data = schemas.FastFoodItem(
+                recipe_code=r.recipe_code,
+                recipe_name=r.recipe_name,
+                brand=b,
+                category=r.category,
+                sub_category=sec_name,
+                dietary_tag=r.dietary_tag or "Vegetarian",
+                portion_str=portion_desc or "1 serve",
+                energy_kcal=round(r.nutrition.energy_kcal, 1) if r.nutrition else 0.0,
+                protein_g=round(r.nutrition.protein_g, 1) if r.nutrition else 0.0,
+                carb_g=round(r.nutrition.carb_g, 1) if r.nutrition else 0.0,
+                fat_g=round(r.nutrition.fat_g, 1) if r.nutrition else 0.0,
+                sugar_g=round(r.nutrition.freesugar_g, 1) if (r.nutrition and r.nutrition.freesugar_g) else 0.0,
+                sodium_mg=round(r.nutrition.sodium_mg, 1) if (r.nutrition and r.nutrition.sodium_mg) else 0.0,
+                fibre_g=round(r.nutrition.fibre_g, 1) if (r.nutrition and r.nutrition.fibre_g) else 0.0
+            )
+            sections_map[sec_name].append(item_data)
+
+        sections = [
+            schemas.FastFoodSection(section_name=s_name, items=s_items)
+            for s_name, s_items in sorted(sections_map.items())
+        ]
+
+        groups.append(schemas.FastFoodGroup(
+            brand=b,
+            cuisine=b,
+            item_count=len(b_recipes),
+            veg_count=veg_count,
+            non_veg_count=non_veg_count,
+            jain_count=jain_count,
+            vegan_count=vegan_count,
+            min_calories=round(min_c, 1),
+            max_calories=round(max_c, 1),
+            sections=sections
+        ))
+
+    return groups
+
 
 @app.post("/generate-meal-plan", response_model=schemas.MealPlanResponse)
 def generate_meal_plan(req: schemas.GenerateMealPlanRequest, db: Session = Depends(get_db)):

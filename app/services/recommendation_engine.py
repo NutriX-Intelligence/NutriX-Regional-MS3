@@ -1,6 +1,6 @@
 import functools
 from typing import Optional, List, Dict, Any
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 from sqlalchemy.orm import Session, joinedload
 from app.models import Recipe, RecipeIngredient, RecipeNutrition, UserPreference, User, HomelyMeal
 from app.services.classification_engine import ClassificationEngine
@@ -15,6 +15,19 @@ class RecommendationEngine:
         code = recipe.recipe_code or str(recipe.id)
         if code in cls._RECIPE_TAG_CACHE:
             return cls._RECIPE_TAG_CACHE[code]
+
+        if getattr(recipe, "dietary_tag", None):
+            d_tag = recipe.dietary_tag
+            res = {
+                "is_vegan": d_tag in ("Vegan", "Jain"),
+                "is_vegetarian": d_tag in ("Vegetarian", "Vegan", "Jain"),
+                "is_jain": d_tag == "Jain",
+                "is_eggetarian": d_tag in ("Eggetarian", "Vegetarian", "Vegan", "Jain"),
+                "dietary_tag": d_tag
+            }
+            if len(cls._RECIPE_TAG_CACHE) < 50000:
+                cls._RECIPE_TAG_CACHE[code] = res
+            return res
 
         ps = (recipe.primarysource or "").strip()
         rname = (recipe.recipe_name or "").lower()
@@ -258,19 +271,42 @@ class RecommendationEngine:
         return "Indian"
 
     @classmethod
-    def recommend_foods(cls, db: Session, user_id: int, limit: int = 50) -> list:
-        # Alias for get_recommendations
-        return cls.get_recommendations(db, user_id, limit)
+    def recommend_foods(
+        cls, 
+        db: Session, 
+        user_id: int, 
+        limit: int = 60,
+        query_str: Optional[str] = None,
+        category: Optional[str] = None,
+        cuisine: Optional[str] = None,
+        max_cooking_time: Optional[int] = None,
+        brand: Optional[str] = None,
+        diet_filter: Optional[str] = None,
+        offset: int = 0
+    ) -> list:
+        return cls.get_recommendations(db, user_id, limit, query_str, category, cuisine, max_cooking_time, brand, diet_filter, offset)
 
     @classmethod
-    def get_recommendations(cls, db: Session, user_id: int, limit: int = 50) -> list:
+    def get_recommendations(
+        cls, 
+        db: Session, 
+        user_id: int, 
+        limit: int = 60,
+        query_str: Optional[str] = None,
+        category: Optional[str] = None,
+        cuisine: Optional[str] = None,
+        max_cooking_time: Optional[int] = None,
+        brand: Optional[str] = None,
+        diet_filter: Optional[str] = None,
+        offset: int = 0
+    ) -> list:
         # Load user and profile
         user = db.query(User).options(joinedload(User.profile), joinedload(User.preferences)).filter(User.id == user_id).first()
         if not user or not user.profile:
             return []
 
         # Extract Preferences
-        prefs = user.preferences
+        prefs = user.preferences or []
         allergies = []
         dislikes = []
         likes = []
@@ -288,31 +324,157 @@ class RecommendationEngine:
             elif t == "diet_type":
                 diet_type = val
 
+        # Allow explicit user override filter from the UI
+        if diet_filter and diet_filter.lower() not in ("all", "any"):
+            diet_type = diet_filter
+
         diet_lower = diet_type.lower()
 
-        import random
-
-        query = db.query(Recipe).options(
+        base_query = db.query(Recipe).options(
             joinedload(Recipe.nutrition),
-            joinedload(Recipe.ingredients)
+            joinedload(Recipe.ingredients),
+            joinedload(Recipe.servings)
         )
-        if "jain" in diet_lower or "vegan" in diet_lower or ("vegetarian" in diet_lower and "non" not in diet_lower):
-            query = query.filter(or_(Recipe.primarysource != "Non-Vegetarian", Recipe.primarysource.is_(None)))
 
-        recipes = query.limit(800).all()
+        # Apply strict dietary filter at SQL level
+        if "jain" in diet_lower:
+            base_query = base_query.filter(Recipe.dietary_tag == "Jain")
+        elif "vegan" in diet_lower:
+            base_query = base_query.filter(or_(Recipe.dietary_tag == "Vegan", Recipe.dietary_tag == "Jain"))
+        elif "vegetarian" in diet_lower and "non" not in diet_lower:
+            base_query = base_query.filter(Recipe.dietary_tag.in_(["Vegetarian", "Vegan", "Jain"]))
+
+        brand_aliases = {
+            "domino": "Domino's",
+            "dominos": "Domino's",
+            "domino's": "Domino's",
+            "mcdonald": "McDonald's",
+            "mcdonalds": "McDonald's",
+            "mcdonald's": "McDonald's",
+            "mcd": "McDonald's",
+            "burger king": "Burger King",
+            "burgerking": "Burger King",
+            "bk": "Burger King",
+            "subway": "Subway",
+            "kfc": "KFC",
+            "kentucky": "KFC",
+            "pizza hut": "Pizza Hut",
+            "pizzahut": "Pizza Hut",
+            "starbucks": "Starbucks",
+            "sbux": "Starbucks",
+            "taco bell": "Taco Bell",
+            "tacobell": "Taco Bell"
+        }
+
+        search_clean = (query_str or "").strip()
+        has_search = bool(search_clean)
+        has_brand_filter = bool(brand and brand.lower() != "all")
+        has_category_filter = bool(category and category.lower() != "all")
+        has_cuisine_filter = bool(cuisine and cuisine.lower() != "all")
+        has_time_filter = bool(max_cooking_time and max_cooking_time > 0)
+
+        recipes = []
+        if has_search or has_brand_filter or has_category_filter or has_cuisine_filter or has_time_filter:
+            filtered_query = base_query
+            if has_search:
+                s_lower = search_clean.lower()
+                s_no_punct = s_lower.replace("'", "").replace("-", " ")
+                canon_from_s = brand_aliases.get(s_lower) or brand_aliases.get(s_no_punct)
+
+                if canon_from_s:
+                    filtered_query = filtered_query.filter(
+                        or_(
+                            Recipe.brand == canon_from_s,
+                            Recipe.brand.ilike(f"%{canon_from_s}%"),
+                            Recipe.recipe_name.ilike(f"%{search_clean}%")
+                        )
+                    )
+                else:
+                    words = search_clean.split()
+                    word_clauses = [
+                        or_(
+                            Recipe.recipe_name.ilike(f"%{w}%"),
+                            Recipe.brand.ilike(f"%{w}%"),
+                            Recipe.cuisine.ilike(f"%{w}%")
+                        )
+                        for w in words
+                    ]
+                    filtered_query = filtered_query.filter(
+                        or_(
+                            Recipe.recipe_name.ilike(f"%{search_clean}%"),
+                            Recipe.brand.ilike(f"%{search_clean}%"),
+                            Recipe.cuisine.ilike(f"%{search_clean}%"),
+                            and_(*word_clauses),
+                            Recipe.ingredients.any(RecipeIngredient.ingredient_name.ilike(f"%{search_clean}%")),
+                            Recipe.ingredients.any(RecipeIngredient.food_name.ilike(f"%{search_clean}%"))
+                        )
+                    )
+
+            if has_brand_filter:
+                canon_brand = brand_aliases.get(brand.strip().lower(), brand)
+                filtered_query = filtered_query.filter(
+                    or_(
+                        Recipe.brand.ilike(f"%{canon_brand}%"),
+                        Recipe.cuisine.ilike(f"%{canon_brand}%")
+                    )
+                )
+
+            if has_category_filter:
+                if category.lower() in ("lunch/dinner", "lunch", "dinner"):
+                    filtered_query = filtered_query.filter(Recipe.category == "Lunch/Dinner")
+                else:
+                    filtered_query = filtered_query.filter(Recipe.category.ilike(f"%{category}%"))
+
+            if has_cuisine_filter:
+                filtered_query = filtered_query.filter(
+                    or_(
+                        Recipe.cuisine.ilike(f"%{cuisine}%"),
+                        Recipe.brand.ilike(f"%{cuisine}%")
+                    )
+                )
+
+            if has_time_filter:
+                filtered_query = filtered_query.filter(Recipe.cooking_time_minutes <= max_cooking_time)
+
+            fetch_limit = max(500, limit * 3)
+            recipes = filtered_query.limit(fetch_limit).all()
+        else:
+            # Default browse view: Load a diverse, representative sample including fast food and regional classes
+            ff_recipes = base_query.filter(Recipe.recipe_code.like("FF_%")).limit(400).all()
+            reg_recipes = base_query.filter(Recipe.recipe_code.like("REG_%")).all()
+            lunch_recipes = base_query.filter(Recipe.category == "Lunch/Dinner").limit(350).all()
+            bf_recipes = base_query.filter(Recipe.category == "Breakfast").limit(200).all()
+            snack_recipes = base_query.filter(Recipe.category.in_(["Snack", "Beverage"])).limit(200).all()
+            
+            combined_map = {r.recipe_code: r for r in (ff_recipes + reg_recipes + lunch_recipes + bf_recipes + snack_recipes)}
+            recipes = list(combined_map.values())
         
-        homely_meals = db.query(HomelyMeal).options(
-            joinedload(HomelyMeal.nutrition),
-            joinedload(HomelyMeal.ingredients)
-        ).filter(
-            or_(
-                HomelyMeal.status == "approved",
-                HomelyMeal.creator_id == user_id
+        # Homely meals query (unless brand is specified)
+        homely_meals = []
+        if not has_brand_filter:
+            homely_query = db.query(HomelyMeal).options(
+                joinedload(HomelyMeal.nutrition),
+                joinedload(HomelyMeal.ingredients)
+            ).filter(
+                or_(
+                    HomelyMeal.status == "approved",
+                    HomelyMeal.creator_id == user_id
+                )
             )
-        ).all()
+            all_homely = homely_query.all()
+            if has_search:
+                s_low = search_clean.lower()
+                words_low = search_clean.lower().split()
+                homely_meals = [
+                    m for m in all_homely
+                    if s_low in (m.name or "").lower()
+                    or all(w in (m.name or "").lower() for w in words_low)
+                    or any(s_low in (i.ingredient_name or "").lower() for i in (m.ingredients or []))
+                ]
+            else:
+                homely_meals = all_homely
         
         ranked_recipes = []
-        diet_lower = diet_type.lower()
         
         # 1. Evaluate recipes
         for recipe in recipes:
@@ -335,7 +497,7 @@ class RecommendationEngine:
                 if term_lower in recipe_name_lower:
                     excluded = True
                     break
-                for ing in recipe.ingredients:
+                for ing in (recipe.ingredients or []):
                     ing_name = (ing.food_name or "").lower()
                     ing_org_name = (ing.ingredient_name or "").lower()
                     if term_lower in ing_name or term_lower in ing_org_name:
@@ -347,26 +509,45 @@ class RecommendationEngine:
             if excluded:
                 continue
 
-            score = cls.calculate_score(recipe, user, likes) + random.uniform(-3.0, 3.0)
-            cuisine = cls.infer_cuisine(recipe.recipe_name, recipe.cuisine)
+            score = cls.calculate_score(recipe, user, likes)
+            # Relevance boost for exact brand or dish match
+            if has_search:
+                s_lower = search_clean.lower()
+                if recipe.brand and s_lower in recipe.brand.lower():
+                    score += 60.0
+                elif s_lower in recipe_name_lower:
+                    score += 50.0
+
+            cuisine_name = recipe.brand or cls.infer_cuisine(recipe.recipe_name, recipe.cuisine)
             health_sc = 80.0
             if hasattr(recipe, "health_score") and recipe.health_score:
                 health_sc = float(recipe.health_score)
+
+            portion_desc = None
+            if recipe.servings and recipe.servings.servings_unit:
+                portion_desc = str(recipe.servings.servings_unit)
+            elif recipe.servings and recipe.servings.size_of_servings:
+                portion_desc = f"{int(recipe.servings.size_of_servings)}g"
 
             ranked_recipes.append({
                 "recipe_code": recipe.recipe_code,
                 "recipe_name": recipe.recipe_name,
                 "category": recipe.category,
-                "cuisine": cuisine,
+                "cuisine": cuisine_name,
+                "brand": recipe.brand,
+                "portion_str": portion_desc or "1 serving",
+                "cooking_time_minutes": recipe.cooking_time_minutes or 10,
                 "score": score,
                 "health_score": health_sc,
                 "dietary_tag": cls.get_dietary_tag(recipe),
-                "energy_kcal": recipe.nutrition.energy_kcal if recipe.nutrition else 0.0,
-                "protein_g": recipe.nutrition.protein_g if recipe.nutrition else 0.0,
-                "carb_g": recipe.nutrition.carb_g if recipe.nutrition else 0.0,
-                "fat_g": recipe.nutrition.fat_g if recipe.nutrition else 0.0
+                "energy_kcal": round(recipe.nutrition.energy_kcal, 1) if recipe.nutrition else 0.0,
+                "protein_g": round(recipe.nutrition.protein_g, 1) if recipe.nutrition else 0.0,
+                "carb_g": round(recipe.nutrition.carb_g, 1) if recipe.nutrition else 0.0,
+                "fat_g": round(recipe.nutrition.fat_g, 1) if recipe.nutrition else 0.0,
+                "sodium_mg": round(recipe.nutrition.sodium_mg, 1) if (recipe.nutrition and recipe.nutrition.sodium_mg) else 0.0,
+                "sugar_g": round(recipe.nutrition.freesugar_g, 1) if (recipe.nutrition and recipe.nutrition.freesugar_g) else 0.0,
+                "fibre_g": round(recipe.nutrition.fibre_g, 1) if (recipe.nutrition and recipe.nutrition.fibre_g) else 0.0,
             })
-
 
         # 2. Evaluate homely meals
         for meal in homely_meals:
@@ -389,8 +570,8 @@ class RecommendationEngine:
                 if term_lower in meal_name_lower:
                     excluded = True
                     break
-                for ing in meal.ingredients:
-                    if term_lower in ing.ingredient_name.lower():
+                for ing in (meal.ingredients or []):
+                    if term_lower in (ing.ingredient_name or "").lower():
                         excluded = True
                         break
                 if excluded:
@@ -400,20 +581,31 @@ class RecommendationEngine:
                 continue
 
             score = cls.calculate_homely_score(meal, user, likes)
+            if has_search and (search_clean.lower() in meal_name_lower):
+                score += 50.0
+
             cuisine = cls.infer_cuisine(meal.name, "Homely Indian")
             ranked_recipes.append({
                 "recipe_code": f"HOMELY_{meal.id}",
                 "recipe_name": meal.name,
                 "category": "Lunch/Dinner",
                 "cuisine": cuisine,
+                "brand": "Homely Meal",
+                "portion_str": "1 plate",
+                "cooking_time_minutes": 25,
                 "score": score,
                 "health_score": 85.0,
                 "dietary_tag": cls.get_homely_meal_dietary_tag(meal),
-                "energy_kcal": meal.nutrition.energy_kcal if meal.nutrition else 0.0,
-                "protein_g": meal.nutrition.protein_g if meal.nutrition else 0.0,
-                "carb_g": meal.nutrition.carb_g if meal.nutrition else 0.0,
-                "fat_g": meal.nutrition.fat_g if meal.nutrition else 0.0
+                "energy_kcal": round(meal.nutrition.energy_kcal, 1) if meal.nutrition else 0.0,
+                "protein_g": round(meal.nutrition.protein_g, 1) if meal.nutrition else 0.0,
+                "carb_g": round(meal.nutrition.carb_g, 1) if meal.nutrition else 0.0,
+                "fat_g": round(meal.nutrition.fat_g, 1) if meal.nutrition else 0.0,
+                "sodium_mg": round(meal.nutrition.sodium_mg, 1) if (meal.nutrition and meal.nutrition.sodium_mg) else 0.0,
+                "sugar_g": round(meal.nutrition.sugar_g, 1) if (meal.nutrition and meal.nutrition.sugar_g) else 0.0,
+                "fibre_g": round(meal.nutrition.fibre_g, 1) if (meal.nutrition and meal.nutrition.fibre_g) else 0.0,
             })
 
         ranked_recipes.sort(key=lambda x: x["score"], reverse=True)
-        return ranked_recipes[:limit]
+        start_idx = offset or 0
+        return ranked_recipes[start_idx:start_idx + limit]
+

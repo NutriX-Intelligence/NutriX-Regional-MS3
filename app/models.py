@@ -14,7 +14,7 @@ class User(Base):
     google_id = Column(String, nullable=True, unique=True)
     avatar_url = Column(String, nullable=True)
     is_active = Column(Boolean, default=True)
-    is_onboarded = Column(Boolean, default=True)
+    is_onboarded = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationships
@@ -246,6 +246,8 @@ class Recipe(Base):
     recipe_name = Column(String, nullable=False)
     category = Column(String, nullable=False)  # 'Breakfast', 'Lunch/Dinner', 'Snack'
     cuisine = Column(String)
+    brand = Column(String, nullable=True, index=True)
+    dietary_tag = Column(String, nullable=True, index=True)
     difficulty = Column(String)  # 'Easy', 'Medium', 'Hard'
     cooking_time_minutes = Column(Integer)
     instructions = Column(Text)

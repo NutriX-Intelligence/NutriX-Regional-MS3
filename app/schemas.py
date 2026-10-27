@@ -43,7 +43,7 @@ class UserProfileResponse(BaseModel):
     likes: Optional[str] = None
     allergies: Optional[str] = None
     dislikes: Optional[str] = None
-    is_onboarded: Optional[bool] = True
+    is_onboarded: Optional[bool] = False
 
     class Config:
         from_attributes = True
@@ -51,20 +51,77 @@ class UserProfileResponse(BaseModel):
 
 class RecommendFoodsRequest(BaseModel):
     user_id: int
-    limit: Optional[int] = Field(50, ge=1, le=200)
+    limit: Optional[int] = Field(60, ge=1, le=2000)
+    query: Optional[str] = None
+    category: Optional[str] = None
+    cuisine: Optional[str] = None
+    brand: Optional[str] = None
+    diet_filter: Optional[str] = None
+    offset: Optional[int] = 0
+    max_cooking_time: Optional[int] = None
 
 class RankedFoodItem(BaseModel):
     recipe_code: str
     recipe_name: str
     category: str
     cuisine: Optional[str] = "Indian"
+    brand: Optional[str] = None
+    cooking_time_minutes: Optional[int] = None
     score: float
     health_score: Optional[float] = 80.0
     dietary_tag: Optional[str] = "Vegetarian"
+    portion_str: Optional[str] = None
     energy_kcal: float
     protein_g: float
     carb_g: float
     fat_g: float
+    sodium_mg: Optional[float] = 0.0
+    sugar_g: Optional[float] = 0.0
+    fibre_g: Optional[float] = 0.0
+
+class FastFoodItem(BaseModel):
+    recipe_code: str
+    recipe_name: str
+    brand: str
+    category: str
+    sub_category: Optional[str] = None
+    dietary_tag: str
+    portion_str: Optional[str] = "1 serve"
+    energy_kcal: float
+    protein_g: float
+    carb_g: float
+    fat_g: float
+    sugar_g: Optional[float] = 0.0
+    sodium_mg: Optional[float] = 0.0
+    fibre_g: Optional[float] = 0.0
+
+class FastFoodSection(BaseModel):
+    section_name: str
+    items: List[FastFoodItem]
+
+class FastFoodGroup(BaseModel):
+    brand: str
+    cuisine: str
+    item_count: int
+    veg_count: int
+    non_veg_count: int
+    jain_count: Optional[int] = 0
+    vegan_count: Optional[int] = 0
+    min_calories: Optional[float] = 0.0
+    max_calories: Optional[float] = 0.0
+    sections: List[FastFoodSection]
+
+class FastFoodChainSummary(BaseModel):
+    brand: str
+    icon: str
+    total_items: int
+    veg_count: int
+    non_veg_count: int
+    jain_count: int
+    vegan_count: int
+    avg_calories: float
+    categories: List[str]
+
 
 
 class GenerateMealPlanRequest(BaseModel):
